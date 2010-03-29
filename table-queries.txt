@@ -1,0 +1,18 @@
+- Ändra namn på colls till records
+- För att flytta över alla unika artistnamn till artists med varsitt unikt id:
+		INSERT INTO artists (name) SELECT DISTINCT artist FROM records
+- Indexera records.artist och artists.name.
+- Kör följande query för att lägga in korrekta id från artists:
+		UPDATE records, artists SET records.artist_id = artists.id WHERE records.artist = artists.name
+- Skapa en ny tabell med följande query:
+		CREATE TABLE records_tmp (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) SELECT DISTINCT artist_id, title, year, format FROM records
+- Indexera följadne fält i records och records_tmp: artist_id, title, year, format
+- Kör följande query för att skapa records_users:
+		CREATE TABLE records_users (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) SELECT records.uid AS user_id, records_tmp.id AS record_id FROM records RIGHT JOIN records_tmp ON records.artist_id = records_tmp.artist_id AND records.title = records_tmp.title AND (records.year = records_tmp.year OR (records.year IS NULL AND records_tmp.year IS NULL)) AND (records.format = records_tmp.format OR (records.format IS NULL AND records_tmp.format IS NULL))
+- Skapa comments tabell:
+		CREATE TABLE comments (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, record_id INT NOT NULL, `text` TEXT NOT NULL, INDEX (record_id))
+- Kör följande för att kopiera in alla kommentarer:
+		SELECT records.uid, records_tmp.id, comment FROM records RIGHT JOIN records_tmp ON records.artist_id = records_tmp.artist_id AND records.title = records_tmp.title AND (records.year = records_tmp.year OR (records.year IS NULL AND records_tmp.year IS NULL)) AND (records.format = records_tmp.format OR (records.format IS NULL AND records_tmp.format IS NULL)) AND comment IS NOT NULL AND comment != ''
+- Droppa records och byt namn på records_tmp till records.
+- Ändra usr till username och psw till password i users och password från TEXT till CHAR(64) (OBS! 64 för sha256)
+- Ta bort kolumnerna warnings och pm_accept i users och lägg till public_email TINYINT(1)
