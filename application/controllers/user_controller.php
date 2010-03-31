@@ -37,8 +37,6 @@ class User_Controller extends MY_Controller {
 		
 		$this->firephp->log($this->db->last_query());
 
-		$num_records = Doctrine_Query::create()->select('r.id, a.name, COUNT(r.id) as num')->from('Artist a INDEXBY a.id, a.Records r, r.Users u')->where('u.username = ?', $username)->groupBy('a.id')->setHydrationMode(Doctrine::HYDRATE_ARRAY);
-		$this->firephp->log($num_records->getSqlQuery());
 		$q_num_records = $this->db->select('COUNT(*) AS num')
 				 ->from('records_users ru')
 				 ->join('users u', 'ru.user_id = u.id')

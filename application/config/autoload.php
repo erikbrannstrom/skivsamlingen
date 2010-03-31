@@ -63,7 +63,7 @@ $autoload['helper'] = array('url','form','php');
 |	$autoload['plugin'] = array('captcha', 'js_calendar');
 */
 
-$autoload['plugin'] = array('doctrine');
+$autoload['plugin'] = array();
 
 
 /*
