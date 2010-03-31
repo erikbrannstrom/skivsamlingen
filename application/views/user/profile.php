@@ -3,6 +3,9 @@
 <?=$this->notice->get($key)?>
 <?php endforeach; ?>
 <h2><?=$user->username?></h2>
+
+<?=$pagination?>
+
 <table width="100%" cellspacing="0">
 	<?php
 	$prev_artist = NULL;

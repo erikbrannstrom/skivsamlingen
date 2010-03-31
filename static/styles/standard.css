@@ -80,6 +80,62 @@ code {
  padding: 12px 10px 12px 10px;
 }
 
+/*** PAGINATION ***/
+
+.pagination {
+	display: block;
+	float: left;
+	border: 0;
+	margin: 2em 0 3em 0;
+}
+	
+	.pagination li{
+		display: inline;
+		border:0; 
+		margin:0; 
+		padding:0;
+		font-size:11px;
+		list-style:none;
+	}
+	.pagination a {
+		border:solid 1px #DDDDDD;
+		margin-right:2px;
+	}
+	.pagination .off {
+		color:#666666;
+		float:left;
+		font-weight:bold;
+		padding:4px 6px;
+		margin-right: 2px;
+	}
+	.pagination .title, .pagination.title{
+		color:#666;
+		float:left;
+		padding:4px 10px;
+	}
+	.pagination .step a {
+		font-weight:bold;
+		border:solid 1px #FFFFFF;
+	}
+	.pagination .active{
+		color:#ff0084;
+		font-weight:bold;
+		float:left;
+		padding:4px 6px;
+	}
+	.pagination a:link,
+	.pagination a:visited {
+		color:#0063e3;
+		display:block;
+		float:left;
+		padding:3px 6px;
+		text-decoration:none;
+	}
+	.pagination a:hover{
+		border:solid 1px #666;
+	}
+
+
 /* Success, notice and error boxes
 -------------------------------------------------------------- */
 

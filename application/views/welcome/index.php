@@ -112,7 +112,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 
   <h3>Nyheter</h3>
   <p>
-	<?php foreach ($news as $item): ?>
+	<?php foreach ($news->result() as $item): ?>
 	<h4><?= $item->title ?></h4>
 	<?= $item->body ?>
 	<?php endforeach; ?>

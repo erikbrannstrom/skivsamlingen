@@ -10,7 +10,7 @@ class Welcome_Controller extends MY_Controller {
 	function index()
 	{
 		$this->data['page_title'] = 'Skivsamlingen';
-		$this->data['news'] = $q = Doctrine_Query::create()->from('News')->orderBy('posted desc')->limit(1)->execute();
+		$this->data['news'] = $this->db->limit(1)->order_by('posted DESC')->get('news');
 		
 		$this->data['latest_users'] = $this->getNewUsers();
 		$this->data['toplist'] = $this->getTopList();

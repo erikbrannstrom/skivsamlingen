@@ -26,23 +26,38 @@ class User_Controller extends MY_Controller {
 		
 		$user = $this->db->where('username', $username)
 						 ->get('users')->row();
-		
-		$this->db->select('r.title, r.year, r.format, a.name, a.id AS artist_id, ru.id')
-				 ->from('records_users ru')
-				 ->join('records r', 'r.id = ru.record_id', 'left')
-				 ->join('artists a', 'r.artist_id = a.id', 'left')
-				 ->where('ru.user_id', $user->id)
-				 ->order_by('a.name ASC, r.title ASC, r.year DESC');
-		$this->data['q_records'] = $this->db->get();
-		
-		$this->firephp->log($this->db->last_query());
-
+						 
 		$q_num_records = $this->db->select('COUNT(*) AS num')
 				 ->from('records_users ru')
 				 ->join('users u', 'ru.user_id = u.id')
 				 ->where('u.username', $username)
 				 ->group_by('u.id')
 				 ->get();
+		$this->data['num_records'] = $q_num_records->row()->num;
+						 
+		$this->load->library('pagination');
+
+		$config['base_url'] = base_url() . 'user/profile/'. $username.'/';
+		$config['total_rows'] = $this->data['num_records'];
+		$config['per_page'] = 20;
+		$config['uri_segment'] = 4;
+		
+		$this->pagination->initialize($config);
+		
+		$start_record = $this->uri->segment(4, 0);
+		
+		$this->data['pagination'] = $this->pagination->create_links(); 
+		
+		$this->db->select('r.title, r.year, r.format, a.name, a.id AS artist_id, ru.id')
+				 ->from('records_users ru')
+				 ->join('records r', 'r.id = ru.record_id', 'left')
+				 ->join('artists a', 'r.artist_id = a.id', 'left')
+				 ->where('ru.user_id', $user->id)
+				 ->order_by('a.name ASC, r.title ASC, r.year DESC')
+				 ->limit(20, $start_record);
+		$this->data['q_records'] = $this->db->get();
+		
+		$this->firephp->log($this->db->last_query());
 		
 		$this->data['q_records_per_artist'] = $this->db
 				 ->select('a.id, a.name, COUNT(r.id) AS num')
@@ -55,7 +70,6 @@ class User_Controller extends MY_Controller {
 				 ->order_by('a.name ASC')
 				 ->get();
 		$this->data['user'] = $user;
-		$this->data['num_records'] = $q_num_records->row()->num;
 	}
 	
 	function search($query = NULL)
