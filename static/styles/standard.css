@@ -24,7 +24,7 @@ body {
 #menu a.item { letter-spacing: 0.1em; color: #fff; font-size: 20px; font-family: BorisBlackBloxx; height: 30px; line-height: 28px; border: 0px solid black; display: block; float: left; padding: 0 10px; margin: 0 10px; text-decoration: none;; vertical-align: middle }
 #menu a.item:hover { color: #000; background: url('../images/white.png'); }
 
-input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px; -moz-border-radius: 3px; height: 18px; width: 267px; margin: 5px 10px; background: #eedf9e url("../images/icons/search.png") no-repeat; background-position: 3px 50%; display: block }
+input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px; -moz-border-radius: 3px; height: 18px; width: 267px; margin: 4px 0px; background: #eedf9e url("../images/icons/search.png") no-repeat; background-position: 3px 50%; display: block }
 input#query:hover, input#query:focus { background: #efefef url("../images/icons/search.png") no-repeat; background-position: 3px 50%; }
 
 #footer .streambur { float: right }

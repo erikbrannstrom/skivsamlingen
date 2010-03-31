@@ -79,8 +79,8 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <div style="width: 200px; float: left;">
 <h3>Största samlingarna</h3>
 <ol style="list-style-position: inside;">
-<?php foreach($toplist->result() as $user): ?>
-<li><?=$user->username?> (<?=$user->recs?>)</li>
+<?php foreach($toplist as $user): ?>
+<li><a href="<?=site_url('/user/profile/'.$user->username)?>"><?=$user->username?></a> (<?=$user->recs?>)</li>
 <?php endforeach; ?>
 </ol>
 </div>
@@ -88,7 +88,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <div style="width: 200px; float: left;">
 <h3>Populäraste artisterna</h3>
 <ol style="list-style-position: inside;">
-<? foreach($q_popular_artists->result() as $row): ?>
+<? foreach($popular_artists as $row): ?>
 <li><strong><?=$row->name?></strong> med <?=$row->records?> skivor</li>
 <? endforeach; ?>
 </ol>
@@ -99,7 +99,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <div style="width: 400px; float: left;">
 <h3>Populäraste albumen</h3>
 <ol style="list-style-position: inside;">
-<? foreach($q_popular_albums->result() as $row): ?>
+<? foreach($popular_albums as $row): ?>
 <li><strong><?=$row->name?> - <?=$row->title?></strong> med <?=$row->records?> skivor</li>
 <? endforeach; ?>
 </ol>

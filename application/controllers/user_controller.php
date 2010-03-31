@@ -9,12 +9,7 @@ class User_Controller extends MY_Controller {
 	
 	function index()
 	{
-		if($this->auth->isUser()) {
-			echo "is user!";
-		} else {
-			echo "is not user!";
-		}
-		exit;
+		redirect('welcome');
 	}
 
 	function profile($username = NULL)

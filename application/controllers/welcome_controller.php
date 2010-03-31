@@ -8,17 +8,26 @@ class Welcome_Controller extends MY_Controller {
 	}
 	
 	function index()
-	{
+	{	
+		$this->load->library('mp_cache');
+		$stats = $this->mp_cache->get('statistics');
 		$this->data['page_title'] = 'Skivsamlingen';
 		$this->data['news'] = $this->db->limit(1)->order_by('posted DESC')->get('news');
-		
-		$this->data['latest_users'] = $this->getNewUsers();
-		$this->data['toplist'] = $this->getTopList();
-		$this->data['sex'] = $this->getSexPercentage();
-		$this->data['members'] = $this->getMemberStats();
-		$this->data['total_recs'] = $this->getNumRecords();
-		$this->data['q_popular_artists'] = $this->getPopularArtist(10);
-		$this->data['q_popular_albums'] = $this->getPopularAlbums(10);
+		if($stats === FALSE) {
+			$stats['latest_users'] = $this->getNewUsers()->result();
+			$stats['toplist'] = $this->getTopList()->result();
+			$stats['sex'] = $this->getSexPercentage();
+			$stats['members'] = $this->getMemberStats();
+			$stats['total_recs'] = $this->getNumRecords();
+			$stats['popular_artists'] = $this->getPopularArtist(10)->result();
+			$stats['popular_albums'] = $this->getPopularAlbums(10)->result();
+			$this->mp_cache->write($stats, 'statistics', 60);
+			$this->firephp->log($stats);
+			
+		}
+		foreach($stats as $key => $value) {
+			$this->data[$key] = $value;
+		}
 	}
 	
 	function getMemberStats()
@@ -63,7 +72,6 @@ class Welcome_Controller extends MY_Controller {
 		if(is_numeric($uid)) $this->db->where('uid',$uid);
 		$this->db->select('COUNT(id) AS recs')->from('records_users');
 		$query = $this->db->get()->row();
-		//die($this->db->last_query());
 		return $query->recs;
 	}
 	
