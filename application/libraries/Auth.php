@@ -14,6 +14,7 @@ class Auth {
 	{
 		$this->CI =& get_instance();
 		$this->session =& $this->CI->session;
+		$this->db =& $this->CI->db;
 		if($this->session->userdata('username') !== false) {
 			$this->is_user = true;
 		} else {
@@ -23,17 +24,14 @@ class Auth {
 
 	public function login($username, $password)
 	{
-		$db_user = Doctrine::getTable('User')->findOneByUsername($username);
-		$psw_user = new User();
-		$psw_user->username = $username;
-		$psw_user->password = $password;
+		$db_user = $this->db->where('username', $username)->get('users')->row();
+		$this->CI->load->model('User');
 		// Fix users without salted passwords.
 		if($db_user->password == sha1($password)) {
-			$db_user->password = $password;
-			$db_user->save();
+			$this->db->where('id', $db_user->id)->update(array('password' => User::encrypt_password($username, $password)));
 			$this->CI->notice->info('Ditt lösenord har blivit säkrare, yay!', 'safer');
 		}
-		if($db_user->password == $psw_user->password) {
+		if($db_user->password == User::encrypt_password($username, $password)) {
 			$this->session->set_userdata('username',$db_user->username);
 			$this->session->set_userdata('user_id',$db_user->id);
 			$this->CI->notice->info('Du är inloggad!', 'login');
