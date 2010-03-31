@@ -59,6 +59,11 @@ class Auth {
 	{
 		return $this->session->userdata('username');
 	}
+
+	public function getUserID()
+	{
+		return $this->session->userdata('user_id');
+	}
 	
 	public function isUser()
 	{

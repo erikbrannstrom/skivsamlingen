@@ -1,6 +1,6 @@
 <?php
 
-class MusicController extends MY_Controller {
+class Music_Controller extends MY_Controller {
 
 	function __construct()
 	{

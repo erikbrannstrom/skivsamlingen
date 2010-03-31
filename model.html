@@ -1,0 +1,17 @@
+<?php
+
+class User extends CI_Model {
+	protected $id;
+	protected $username;
+	
+	function save()
+	{
+		// insert / update
+	}
+	
+	function get($id)
+	{
+		$this->db->from('Users')->where('id', $id);
+	}
+
+}

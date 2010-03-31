@@ -37,7 +37,73 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <?php endif; ?>
 
 <h2>Statistik</h2>
-<?=$stats_num_members?>
+
+<div style="width: 200px; float: left;">
+<h3>Medlemmar</h3>
+<table cellspacing="0">
+<tr>
+	<th>Totalt</th>
+    <td><?=$members['total']?></td>
+</tr>
+<tr>
+	<th>Denna veckan</th>
+    <td><?=$members['this_week']?></td>
+</tr>
+<tr class="separator">
+	<th>Förra veckan</th>
+    <td><?=$members['last_week']?></td>
+</tr>
+<tr>
+	<th>Män</th>
+    <td><?=$sex['male']?></td>
+</tr>
+<tr>
+	<th>Kvinnor</th>
+    <td><?=$sex['female']?></td>
+</tr>
+<tr class="separator">
+	<th>Okänt</th>
+    <td><?=$sex['unknown']?></td>
+</tr>
+<tr>
+	<th>Antal skivor</th>
+    <td><?=$total_recs?></td>
+</tr>
+<tr>
+	<th>Skivor / användare</th>
+    <td><?=round($total_recs / $members['total'], 1)?></td>
+</tr>
+</table>
+</div>
+
+<div style="width: 200px; float: left;">
+<h3>Största samlingarna</h3>
+<ol style="list-style-position: inside;">
+<?php foreach($toplist->result() as $user): ?>
+<li><?=$user->username?> (<?=$user->recs?>)</li>
+<?php endforeach; ?>
+</ol>
+</div>
+
+<div style="width: 200px; float: left;">
+<h3>Populäraste artisterna</h3>
+<ol style="list-style-position: inside;">
+<? foreach($q_popular_artists->result() as $row): ?>
+<li><strong><?=$row->name?></strong> med <?=$row->records?> skivor</li>
+<? endforeach; ?>
+</ol>
+</div>
+
+<div style="clear: both; height: 0px; display: block"></div>
+
+<div style="width: 400px; float: left;">
+<h3>Populäraste albumen</h3>
+<ol style="list-style-position: inside;">
+<? foreach($q_popular_albums->result() as $row): ?>
+<li><strong><?=$row->name?> - <?=$row->title?></strong> med <?=$row->records?> skivor</li>
+<? endforeach; ?>
+</ol>
+</div>
 
 </div> <!-- End: Main content -->
 <div id="" class="grid_4 "> <!-- Start: Sidebar -->

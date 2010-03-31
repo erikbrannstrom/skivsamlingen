@@ -40,10 +40,10 @@
 |
 */
 
-$route['default_controller'] = "welcomecontroller";
+$route['default_controller'] = "welcome_controller";
 $route['scaffolding_trigger'] = "";
 
-$route['([^/]*)(.*)'] = "$1controller$2";
+$route['([^/]*)(.*)'] = "$1_controller$2";
 
 /*
 $route['user/(:any)/(:any)'] = "usercontroller/$1/$2";

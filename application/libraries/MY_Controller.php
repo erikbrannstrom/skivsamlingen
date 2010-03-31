@@ -31,7 +31,9 @@ class MY_Controller extends Controller {
 	 *
 	 * @var array
 	 */
-	protected $data = array('page_title' => 'DEV: Skivsamlingen', 'controller_suffix' => '_Controller');
+	protected $data = array('page_title' => 'DEV: Skivsamlingen');
+	
+	protected $controller_suffix = '_Controller';
 	
 	/**
 	 * The layout to load the view into. Only
@@ -128,7 +130,8 @@ class MY_Controller extends Controller {
 				} elseif (file_exists(APPPATH . 'views/layouts/application.php')) {
 					$this->load->view('layouts/application.php', $this->_load_view_partials());
 				} else {
-					$view = ($this->view !== null) ? $this->view . '.php' : $this->router->directory . str_replace($this->data['controller_suffix'], '', $this->router->class) . '/' . $this->router->method . '.php';
+				
+					$view = ($this->view !== null) ? $this->view . '.php' : $this->router->directory . str_ireplace($this->controller_suffix, '', $this->router->class) . '/' . $this->router->method . '.php';
 					$this->load->view($view, $this->data);
 				}
 			} else {
@@ -138,8 +141,7 @@ class MY_Controller extends Controller {
 	}
 	
 	private function _load_view_partials() {
-		$view = ($this->view !== null) ? $this->view . '.php' : $this->router->directory . str_replace('controller', '', $this->router->class) . '/' . $this->router->method . '.php';
-		
+		$view = ($this->view !== null) ? $this->view . '.php' : $this->router->directory . str_ireplace($this->controller_suffix, '', $this->router->class) . '/' . $this->router->method . '.php';
 		$data['yield'] =  $this->prerendered_data;
 		$data['yield'] .= $this->load->view($view, $this->data, TRUE);
 
