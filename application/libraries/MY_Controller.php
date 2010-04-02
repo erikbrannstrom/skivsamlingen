@@ -84,7 +84,7 @@ class MY_Controller extends Controller {
 	 */
 	public function MY_Controller() {
 		parent::Controller();
-		$this->output->enable_profiler(TRUE);
+		$this->output->enable_profiler(FALSE);
 	}
 	
 	/**

@@ -13,6 +13,7 @@ class MY_Model extends Model
 {
 	protected $primary_key = 'id';
 	protected $table = '';
+	private $_exists = false;
 	
 	public function MY_Model() {
 		$this->__construct();
@@ -23,29 +24,52 @@ class MY_Model extends Model
 		parent::Model();
 	}
 	
-	protected function apply($key, $column)
-	{
-		if($key !== NULL) {
-			if($column !== NULL) {
-				$this->_create_object($key, $column);
+	public function save() {
+		if($this->exists()) {
+			if(is_array($this->primary_key)) {
+				foreach($this->primary_key as $key) {
+					$this->db->where($key, $this->$key);
+				}
 			} else {
-				$this->_create_object($key, $this->primary_key);
+				$this->db->where($this->primary_key, $this->{$this->primary_key});
 			}
+			$this->db->update($this->table, $this);
+		} else {
+			$this->db->insert($this->table, $this);
+			$this->_exists = true;
 		}
 	}
 	
-    private function _create_object($key, $column)
+	protected function apply($column, $key)
+	{
+		if($column != NULL) {
+			if($key == NULL) {
+				$key = $column;
+				$column = $this->primary_key;
+			}
+	    	if(is_array($column)) {
+	    		for($i = 0; $i < count($column); $i++)
+	    			$this->db->where($column[$i], $key[$i]);
+	    	} else {
+	    		$this->db->where($column, $key);
+	    	}
+	    	$this->_create_object($this->db->get($this->table)->row());
+		}
+	}
+	
+    protected function _create_object($result)
     {
-    	if(is_array($column)) {
-    		for($i = 0; $i < count($column); $i++)
-    			$this->db->where($column[$i], $key[$i]);
-    	} else {
-    		$this->db->where($column, $key);
+    	if($result != NULL) {
+    		foreach(get_object_vars($result) as $key => $value) {
+    			$this->$key = $value;
+    		}
+    		$this->_exists = true;
     	}
-    	$obj = $this->db->get($this->table)->row();
-    	foreach(get_object_vars($obj) as $key => $value) {
-    		$this->$key = $value;
-    	}
+    }
+    
+    public function exists()
+    {
+    	return $this->_exists;
     }
 	
 	/**

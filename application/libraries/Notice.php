@@ -11,7 +11,7 @@ class Notice {
 	function __construct()
 	{
 		$this->CI =& get_instance();
-		//$this->CI->load->library('session');
+		$this->CI->load->library('session');
 	}
   
 	function set($content, $name = 'flash', $type = 'notice')

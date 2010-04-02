@@ -29,7 +29,7 @@
 <?php endif; ?>
 
 <form method="post" action="<?=site_url('user/search')?>" name="search" id="search">
-	<input type="text" name="query" id="query" value="Sök användare.." />
+	<input type="text" name="query" id="query" value="" />
 </form>
 </div>
 
@@ -40,8 +40,8 @@
 <div class="clear"></div>
 
 <div id="page"> <!-- Start: page -->
-
 <div id="content" class="container_12"> <!-- Start: content -->
+
 	<?=$yield?>
 <div class="clear"></div>
 </div> <!-- End: content -->

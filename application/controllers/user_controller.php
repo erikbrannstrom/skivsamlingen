@@ -15,47 +15,25 @@ class User_Controller extends MY_Controller {
 
 	function profile($username = NULL)
 	{
-		if($username == NULL) {
+		$user = new User('username', $username);
+		if(!$user->exists()) {
+			$this->notice->error('Användaren kunde inte hittas.');
 			redirect('welcome');
 		}
 		$this->data['page_title'] = 'Local: Skivsamlingen - '.$username;
-		
-		$user = new User($username, 'username');
-		$this->firephp->log($user);
-
-		$q_num_records = $this->db->select('COUNT(*) AS num')
-				 ->from('records_users ru')
-				 ->join('users u', 'ru.user_id = u.id')
-				 ->where('u.username', $username)
-				 ->group_by('u.id')
-				 ->get();
-		$this->data['num_records'] = $q_num_records->row()->num;
 						 
 		$this->load->library('pagination');
-
 		$config['base_url'] = base_url() . 'user/profile/'. $username.'/';
-		$config['total_rows'] = $this->data['num_records'];
+		$config['total_rows'] = $user->getNumberOfRecords();
 		$config['per_page'] = 20;
 		$config['uri_segment'] = 4;
-		
 		$this->pagination->initialize($config);
-		
-		$start_record = $this->uri->segment(4, 0);
-		
-		$this->data['pagination'] = $this->pagination->create_links(); 
-		
-		$this->db->select('r.title, r.year, r.format, a.name, a.id AS artist_id, ru.id, (SELECT COUNT(r2.id) FROM records_users ru2, records r2 WHERE ru2.user_id = ru.user_id AND ru2.record_id = r2.id AND r2.artist_id = a.id GROUP BY r2.artist_id) AS num_records')
-				 ->from('records_users ru')
-				 ->join('records r', 'r.id = ru.record_id', 'left')
-				 ->join('artists a', 'r.artist_id = a.id', 'left')
-				 ->where('ru.user_id', $user->id)
-				 ->order_by('a.name ASC, r.title ASC, r.year DESC')
-				 ->limit(20, $start_record);
-		$this->data['q_records'] = $this->db->get();
-		
-		$this->firephp->log($this->db->last_query());
+		$offset = $this->uri->segment(4, 0);
 
 		$this->data['user'] = $user;
+		$this->data['num_records'] = $config['total_rows'];
+		$this->data['pagination'] = $this->pagination->create_links(); 
+		$this->data['records'] = $user->getRecords(20, $offset);
 	}
 	
 	function search($query = NULL)
@@ -66,7 +44,7 @@ class User_Controller extends MY_Controller {
 		if($query === FALSE) {
 			redirect('welcome');
 		}
-		$users = Doctrine_Query::create()->from('User u')->where('u.username LIKE ? OR u.name LIKE ?', array('%'.$query.'%', '%'.$query.'%'))->execute();
+		$users = User::search($query);
 		$this->data['query'] = $query;
 		$this->data['users'] = $users;
 	}
@@ -88,9 +66,18 @@ class User_Controller extends MY_Controller {
 	
 	function login()
 	{
-		
-		$this->auth->login('erik.brannstrom','hvlmki');
-		redirect('welcome');
+		if($this->auth->isUser())
+			redirect('user/profile/'.$this->auth->getUsername());
+		$username = $this->input->post('username', TRUE);
+		if( $username !== FALSE ) {
+			if($this->auth->login($username, $this->input->post('password'))) {
+				$this->notice->success('Du är inloggad!', 'login');
+				redirect('user/profile/'.$this->auth->getUsername());
+			} else {
+				$this->notice->error('Felaktiga användaruppgifter.');
+				redirect('user/login');
+			}
+		}
 	}
 	
 	function logout()

@@ -11,7 +11,7 @@
 	$prev_artist = NULL;
 	$even = false;
 	$i = 0;
-	foreach ($q_records->result() as $record):
+	foreach ($records as $record):
 		if($prev_artist == NULL || $prev_artist != $record->artist_id): 
 			$even = false;?>
 	<tr>
@@ -40,12 +40,17 @@
 
 <div class="box">
 <h3>Profil</h3>
+<?php if($user->name): ?>
 <strong>Namn:</strong> <?=$user->name?><br />
-<?php if($sex = $user->sex): ?>
-<strong>Kön:</strong> <?=$sex?><br />
 <?php endif; ?>
-<strong>Ålder:</strong> <?=$user->birth?> år<br />
-<strong>Medlem sedan:</strong> <?=$user->registered?>
+<?php if($user->getSex()): ?>
+<strong>Kön:</strong> <?=$user->getSex()?><br />
+<?php endif; ?>
+<strong>Antal skivor:</strong> <?=$num_records?><br />
+<?php if($user->getAge()): ?>
+<strong>Ålder:</strong> <?=$user->getAge()?> år<br />
+<?php endif; ?>
+<strong>Medlem sedan:</strong> <?=$user->getRegistered()?>
 </div>
 
 <div class="box">
@@ -58,11 +63,11 @@
 <div class="box">
 <h3>Populära artister</h3>
 <ol>
-<?php /*
+<?php
 $all = $user->getTopArtists(5);
 foreach($all as $artist): ?>
-<li><?= $artist->name?>, <?= $artist->num ?> skivor</li>
-<?php endforeach; */?>
+<li><?= $artist->name?>, <?= $artist->records ?> skivor</li>
+<?php endforeach; ?>
 </ol>
 </div>
 
