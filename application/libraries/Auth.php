@@ -29,7 +29,7 @@ class Auth {
 		// Fix users without salted passwords.
 		if($db_user->password == sha1($password)) {
 			$this->db->where('id', $db_user->id)->update(array('password' => User::encrypt_password($username, $password)));
-			$this->CI->notice->info('Ditt lösenord har blivit säkrare, yay!', 'safer');
+			$this->CI->notice->info('Ditt lösenord har blivit säkrare!', 'safer');
 		}
 		if($db_user->password == User::encrypt_password($username, $password)) {
 			$this->session->set_userdata('username',$db_user->username);

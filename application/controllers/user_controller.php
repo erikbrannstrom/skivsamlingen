@@ -4,7 +4,8 @@ class User_Controller extends MY_Controller {
 
 	function __construct()
 	{
-		parent::MY_Controller();	
+		parent::MY_Controller();
+		$this->load->model('User');
 	}
 	
 	function index()
@@ -19,9 +20,9 @@ class User_Controller extends MY_Controller {
 		}
 		$this->data['page_title'] = 'Local: Skivsamlingen - '.$username;
 		
-		$user = $this->db->where('username', $username)
-						 ->get('users')->row();
-						 
+		$user = new User($username, 'username');
+		$this->firephp->log($user);
+
 		$q_num_records = $this->db->select('COUNT(*) AS num')
 				 ->from('records_users ru')
 				 ->join('users u', 'ru.user_id = u.id')
@@ -43,7 +44,7 @@ class User_Controller extends MY_Controller {
 		
 		$this->data['pagination'] = $this->pagination->create_links(); 
 		
-		$this->db->select('r.title, r.year, r.format, a.name, a.id AS artist_id, ru.id')
+		$this->db->select('r.title, r.year, r.format, a.name, a.id AS artist_id, ru.id, (SELECT COUNT(r2.id) FROM records_users ru2, records r2 WHERE ru2.user_id = ru.user_id AND ru2.record_id = r2.id AND r2.artist_id = a.id GROUP BY r2.artist_id) AS num_records')
 				 ->from('records_users ru')
 				 ->join('records r', 'r.id = ru.record_id', 'left')
 				 ->join('artists a', 'r.artist_id = a.id', 'left')
@@ -53,17 +54,7 @@ class User_Controller extends MY_Controller {
 		$this->data['q_records'] = $this->db->get();
 		
 		$this->firephp->log($this->db->last_query());
-		
-		$this->data['q_records_per_artist'] = $this->db
-				 ->select('a.id, a.name, COUNT(r.id) AS num')
-				 ->from('artists a')
-				 ->join('records r', 'a.id = r.artist_id', 'left')
-				 ->join('records_users ru', 'r.id = ru.record_id', 'left')
-				 ->join('users u', 'u.id = ru.user_id', 'left')
-				 ->where('u.id', $user->id)
-				 ->group_by('a.id')
-				 ->order_by('a.name ASC')
-				 ->get();
+
 		$this->data['user'] = $user;
 	}
 	

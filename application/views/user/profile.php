@@ -10,14 +10,13 @@
 	<?php
 	$prev_artist = NULL;
 	$even = false;
-	$records_per_artist = $q_records_per_artist->result_array();
 	$i = 0;
 	foreach ($q_records->result() as $record):
 		if($prev_artist == NULL || $prev_artist != $record->artist_id): 
 			$even = false;?>
 	<tr>
 		<td width="70%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><strong><?=$record->name?></strong></td>
-		<td width="25%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><em><?=$records_per_artist[$i]['num']?> <?=($records_per_artist[$i]['num'] == 1) ? 'skiva' : 'skivor'?></em></td>
+		<td width="25%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
 	<?php
 		$i++;

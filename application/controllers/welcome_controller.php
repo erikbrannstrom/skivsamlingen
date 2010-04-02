@@ -13,8 +13,6 @@ class Welcome_Controller extends MY_Controller {
 		$stats = $this->mp_cache->get('statistics');
 		$this->data['page_title'] = 'Skivsamlingen';
 		$this->data['news'] = $this->db->limit(1)->order_by('posted DESC')->get('news');
-		$this->load->model('User');
-		$user = new User(1);
 		if($stats === FALSE) {
 			$stats['latest_users'] = $this->getNewUsers()->result();
 			$stats['toplist'] = $this->getTopList()->result();
@@ -24,8 +22,6 @@ class Welcome_Controller extends MY_Controller {
 			$stats['popular_artists'] = $this->getPopularArtist(10)->result();
 			$stats['popular_albums'] = $this->getPopularAlbums(10)->result();
 			$this->mp_cache->write($stats, 'statistics', 3600);
-			$this->firephp->log('Cached for an hour.');
-			
 		}
 		foreach($stats as $key => $value) {
 			$this->data[$key] = $value;

@@ -23,15 +23,47 @@ class MY_Model extends Model
 		parent::Model();
 	}
 	
-	/*protected function __set($name, $value)
+	protected function apply($key, $column)
 	{
-		echo "Set $name to $value<br/>";
-		if(method_exists($this, '_set_'.$name)) {
-			$method = '_set_'.$name;
-			$this->$method($value);
-		} else {
-			$this->$name = $value;
+		if($key !== NULL) {
+			if($column !== NULL) {
+				$this->_create_object($key, $column);
+			} else {
+				$this->_create_object($key, $this->primary_key);
+			}
 		}
-	}*/
+	}
+	
+    private function _create_object($key, $column)
+    {
+    	if(is_array($column)) {
+    		for($i = 0; $i < count($column); $i++)
+    			$this->db->where($column[$i], $key[$i]);
+    	} else {
+    		$this->db->where($column, $key);
+    	}
+    	$obj = $this->db->get($this->table)->row();
+    	foreach(get_object_vars($obj) as $key => $value) {
+    		$this->$key = $value;
+    	}
+    }
+	
+	/**
+	 * Static factory method for generating new model
+	 * objects depending on the key.
+	 *
+	 * REQUIRES PHP 5.3 (late static bidning)
+	 *
+    public static function get($key)
+    {
+		$class_name = get_called_class();
+    	$result = new $class_name();
+    	$obj = get_instance()->db->where(self::primary_key, $get)->get($result->table)->row();
+    	foreach(get_object_vars($obj) as $key => $value) {
+    		$result->$key = $value;
+    	}
+    	return $result;
+    }
+    */
 
 }
