@@ -19,13 +19,13 @@
 
 <div id="menu" class="grid_12">
 <a href="<?=site_url('welcome')?>" class="item">hem</a>
-<a href="<?=site_url('welcome')?>" class="item">statistik</a>
 <?php if($this->auth->isUser()): ?>
+<a href="<?=site_url('collection/add')?>" class="item">ny skiva</a>
 <a href="<?=site_url('user/profile/'.$this->auth->getUsername())?>" class="item">min profil</a>
 <a href="<?=site_url('user/logout')?>" class="item">logga ut</a>
 <?php else: ?>
 <a href="<?=site_url('user/login')?>" class="item">logga in</a>
-<a href="<?=site_url('welcome')?>" class="item">bli medlem</a>
+<a href="<?=site_url('user/register')?>" class="item">bli medlem</a>
 <?php endif; ?>
 
 <form method="post" action="<?=site_url('user/search')?>" name="search" id="search">

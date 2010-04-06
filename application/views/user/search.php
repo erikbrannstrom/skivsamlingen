@@ -8,6 +8,7 @@ Inga anvŠndare kunde hittas.
 <tr>
 	<td><a href="<?=site_url('user/profile/'.$user->username)?>"><?=$user->username?></a></td>
 	<td><?=$user->name?></td>
+	<td><?=$user->getNumberOfRecords()?> skivor</td>
 </tr>
 <?php endforeach; ?>
 </table>

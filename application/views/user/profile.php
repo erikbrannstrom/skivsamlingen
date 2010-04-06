@@ -15,7 +15,14 @@
 		if($prev_artist == NULL || $prev_artist != $record->artist_id): 
 			$even = false;?>
 	<tr>
-		<td width="70%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><strong><?=$record->name?></strong></td>
+		<td width="70%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><strong><?php
+		$has_the = stripos($record->name, 'the ');
+		if($has_the !== FALSE && $has_the == 0) {
+			echo rtrim(substr($record->name, 4), ",") . ", " . substr($record->name, 0, 3);
+		} else {
+			echo $record->name;
+		}
+		?></strong></td>
 		<td width="25%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
 	<?php
@@ -25,7 +32,7 @@
 		<td style="padding: 0.3em"><?=$record->title?></td>
 		<td style="padding: 0.3em"><?=$record->year?> (<?=$record->format?>)
 		<?php if($user->id == $this->auth->getUserID()): ?>
-		<a href="<?=site_url('user/delete/'.$record->id)?>">DEL</a>
+		<a href="<?=site_url('collection/delete/'.$record->id)?>">DEL</a>
 		<?php endif; ?>
 		</td>
 	</tr>
@@ -74,11 +81,11 @@ foreach($all as $artist): ?>
 <div class="box">
 <h3>Senaste skivorna</h3>
 <ol>
-<?php /*
+<?php
 $all = $user->getLatestRecords(5);
 foreach($all as $record): ?>
-<li><?= $record->Artist->name?> - <?= $record->title ?><br /></li>
-<?php endforeach; */?>
+<li><?= $record->name?> - <?= $record->title ?></li>
+<?php endforeach; ?>
 </ol>
 </div>
 

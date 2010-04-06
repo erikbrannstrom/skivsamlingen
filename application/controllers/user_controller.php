@@ -49,17 +49,33 @@ class User_Controller extends MY_Controller {
 		$this->data['users'] = $users;
 	}
 	
-	function delete($record = NULL)
-	{
-		if($record != NULL && $this->is_digits($record) && $this->auth->isUser() ) {
-
-			$res = $this->db->where('id', $record)
-					 		->where('user_id', $this->auth->getUserID())
-					 		->delete('records_users');
-			$this->notice->success('Skivan har tagits bort.');
-			redirect('user/profile/'.$this->auth->getUsername());
-		} else {
-			$this->notice->error('Skivan kunde inte tas bort.');
+	function register()
+	{		
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+		$this->form_validation->set_rules('username', 'Användarnamn', 'required|xss_clean|min_length[3]|max_length[20]|callback_alpha_dash_dot');
+		$this->form_validation->set_rules('password', 'Lösenord', 'required|min_length[6]|matches[passconf]');
+		$this->form_validation->set_rules('passconf', 'Lösenordsbekräftelse', 'required');
+		$this->form_validation->set_rules('email', 'E-post', 'valid_email|max_length[80]');
+		$this->form_validation->set_rules('name', 'Namn', 'max_length[50]');
+		$this->form_validation->set_rules('birth', 'Födelsedag', 'callback_date_check');
+		$this->form_validation->set_rules('sex', 'Kön', 'callback_valid_sex');
+				
+		if ($this->form_validation->run() !== FALSE) { // If validation has completed
+			$this->load->model('User');
+			$user = new User();
+			$user->username = $this->input->post('username', TRUE);
+			$user->password = User::encrypt_password($user->username, $this->input->post('password'));
+			if($var = $this->input->post('email'))
+				$user->email = $var;
+			if($var = $this->input->post('name'))
+				$user->name = $var;
+			if($var = $this->input->post('sex'))
+				$user->sex = $var;
+			if($var = $this->input->post('birth'))
+				$user->birth = $var;
+			$user->save();
+			$this->notice->success('Korrekt!');
 			redirect('welcome');
 		}
 	}
@@ -89,6 +105,54 @@ class User_Controller extends MY_Controller {
 	private function is_digits($element) {
 		return !preg_match ("/[^0-9]/", $element);
 	}
+	
+	function username_check($str)
+	{
+		if ($str == 'test')
+		{
+			$this->form_validation->set_message('username_check', 'The %s field can not be the word "test"');
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+	
+	function valid_sex($str)
+	{
+		if ($str == 'x' || $str == 'm' || $str == 'f')
+		{
+			return TRUE;
+		}
+		else
+		{
+			$this->form_validation->set_message('valid_sex', '%s måste vara man, kvinna eller hemligt.');
+			return FALSE;
+		}
+	}
+	
+	/**
+	 * Alpha-numeric with underscores, dashes and dots
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	bool
+	 */	
+	function alpha_dash_dot($str)
+	{
+		return ( ! preg_match("/^([-a-z0-9\._-])+$/i", $str)) ? FALSE : TRUE;
+	}
+	
+	function date_check($date) {
+		$ddmmyyy='(19|20)[0-9]{2}[- \/.](0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])';
+		if(preg_match("/$ddmmyyy$/", $date)) {
+			return true;
+		} else {
+			$this->form_validation->set_message('date_check', '%s är felformaterad. Använd ÅÅÅÅ-MM-DD.');
+			return false;
+		}
+	} 
 	
 }
 
