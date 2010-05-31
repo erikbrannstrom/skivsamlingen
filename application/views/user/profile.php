@@ -23,16 +23,16 @@
 			echo $record->name;
 		}
 		?></strong></td>
-		<td width="25%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
+		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
 	<?php
 		$i++;
 		endif; ?>
 	<tr style="background-color: <?=$even ? '#fff' : '#fff'?>">
 		<td style="padding: 0.3em"><?=$record->title?></td>
-		<td style="padding: 0.3em"><?=$record->year?> (<?=$record->format?>)
+		<td style="padding: 0.3em"><?=$record->year?> (<?=$record->format?>)</td>
 		<?php if($user->id == $this->auth->getUserID()): ?>
-		<a href="<?=site_url('collection/delete/'.$record->id)?>">DEL</a>
+		<td><a href="<?=site_url('collection/delete/'.$record->id)?>"><img src="<?=static_url('images/icons/delete.png')?>" /></a></td>
 		<?php endif; ?>
 		</td>
 	</tr>

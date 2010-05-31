@@ -35,6 +35,8 @@ input#query:hover, input#query:focus { background: #efefef url("../images/icons/
 
 #content { padding: 10px 5px; border: 1px solid #ccc; background-color: #fff; -moz-border-radius: 3px; -webkit-border-radius: 3px }
 
+img { border: 0 }
+
 /* layout
    ------ */
 

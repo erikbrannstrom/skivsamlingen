@@ -1,10 +1,10 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class MY_Validation extends CI_Validation {
+class MY_Form_Validation extends CI_Form_Validation {
 
-	function My_Validation()
+	function __construct()
 	{
-		parent::CI_Validation();
+		parent::__construct();
 	}
 	
 	function set_default_values($data, $value = null)

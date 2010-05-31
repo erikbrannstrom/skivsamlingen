@@ -53,7 +53,7 @@ class User_Controller extends MY_Controller {
 	{		
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
-		$this->form_validation->set_rules('username', 'Användarnamn', 'required|xss_clean|min_length[3]|max_length[20]|callback_alpha_dash_dot');
+		$this->form_validation->set_rules('username', 'Användarnamn', 'required|xss_clean|min_length[3]|max_length[20]|alpha_dash_dot');
 		$this->form_validation->set_rules('password', 'Lösenord', 'required|min_length[6]|matches[passconf]');
 		$this->form_validation->set_rules('passconf', 'Lösenordsbekräftelse', 'required');
 		$this->form_validation->set_rules('email', 'E-post', 'valid_email|max_length[80]');
