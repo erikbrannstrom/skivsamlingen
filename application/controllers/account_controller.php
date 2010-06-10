@@ -41,15 +41,19 @@ class Account_Controller extends MY_Controller {
             $this->form_validation->set_error('rem_password', 'Lösenordet är felaktigt.');
         }
 		if ($this->form_validation->run()) { // If validation has completed
-            $user_id = $this->auth->getUserID();
+            $user = $this->auth->getUser();
             $this->auth->logout();
             // Remove all records from user
             $this->load->model('Collection');
-            $removed_num = $this->Collection->delete(array('user_id' => $user_id));
+            $removed_num = $this->Collection->delete(array('user_id' => $user->id));
             // Remove user
             $this->load->model('User');
-            $this->User->deleteOne($user_id);
+            $this->User->deleteOne($user->id);
             // Redirect
+            $this->session->set_flashdata('action', 'unregistered');
+            $this->session->set_flashdata('email', $user->email);
+            $this->session->set_flashdata('name', $user->name);
+            $this->session->set_flashdata('username', $user->username);
             redirect('home/unregistered');
 		}
 	}
@@ -116,7 +120,7 @@ class Account_Controller extends MY_Controller {
 	function logout()
 	{
 		$this->auth->logout();
-		redirect('welcome');
+		redirect('');
 	}
 
 }
