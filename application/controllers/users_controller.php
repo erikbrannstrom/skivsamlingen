@@ -37,7 +37,7 @@ class Users_Controller extends MY_Controller {
 		$this->data['num_records'] = $config['total_rows'];
 		$this->data['pagination'] = $this->pagination->create_links(); 
 		$this->data['records'] = $this->User->getRecords($user->id, $config['per_page'], $offset);
-        $this->data['top_artists'] = $this->User->getTopArtists($user->id, 5);
+        $this->data['top_artists'] = $this->User->getTopArtists(5, $user->id);
         $this->data['latest_records'] = $this->User->getLatestRecords($user->id, 5);
 	}
 
