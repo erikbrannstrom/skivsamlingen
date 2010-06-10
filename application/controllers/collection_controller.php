@@ -39,27 +39,20 @@ class Collection_Controller extends MY_Controller {
 		$this->form_validation->set_rules('title', 'Titel', 'required|max_length[150]|xss_clean');
 		$this->form_validation->set_rules('year', 'År', 'is_natural_no_zero|exact_length[4]');
 		$this->form_validation->set_rules('format', 'Format', 'xss_clean|max_length[30]');
+        $this->form_validation->nonce();
 
 		if ($this->form_validation->run() !== FALSE) { // If validation has completed
+            $this->form_validation->save_nonce();
 			$this->load->model('Record');
 			$this->load->model('Artist');
 			$this->load->model('Collection');
-			$rec = new Record();
-			$rec->artist_id = Artist::getArtistID($this->input->post('artist'));
-			$rec->title = $this->input->post('title');
-
-			if($var = $this->input->post('year'))
-				$rec->year = $var;
-			if($var = $this->input->post('format'))
-				$rec->format = $var;
-			Collection::addItem($this->auth->getUserID(), $rec->getID());
-			$this->notice->success("{$rec->title} har lagts till.");
-			redirect('user/profile/'.$this->auth->getUsername());
+            $artist_id = $this->Artist->getArtistId($this->input->post('artist'));
+            $record_id = $this->Record->getId($artist_id, $this->input->post('title'),
+                    $this->input->post('year'), $this->input->post('format'));
+            $this->Collection->addItem($this->auth->getUserId(), $record_id);
+			$this->notice->success('Skapad.');
+			//redirect('users/'.$this->auth->getUsername());
 		}
-	}
-	
-	private function is_digits($element) {
-		return !preg_match ("/[^0-9]/", $element);
 	}
 	
 }

@@ -80,7 +80,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <h3>Största samlingarna</h3>
 <ol style="list-style-position: inside;">
 <?php foreach($toplist as $user): ?>
-<li><a href="<?=site_url('/user/profile/'.$user->username)?>"><?=$user->username?></a> (<?=$user->recs?>)</li>
+<li><a href="<?=site_url('/users/'.$user->username)?>"><?=$user->username?></a> (<?=$user->recs?>)</li>
 <?php endforeach; ?>
 </ol>
 </div>

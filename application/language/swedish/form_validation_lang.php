@@ -11,10 +11,18 @@ $lang['exact_length']	= "%s måste vara exakt %s tecken.";
 $lang['alpha']			= "%s får bara innehålla bokstäver.";
 $lang['alpha_numeric']	= "%s får bara innehålla alfanumeriska tecken.";
 $lang['alpha_dash']		= "%s får bara innehålla alfanumeriska tecken, understreck och bindestreck.";
-$lang['alpha_dash_dot']		= "%s får bara innehålla alfanumeriska tecken, understreck, bindestreck och punkt.";
+$lang['alpha_dash_dot']	= "%s får bara innehålla alfanumeriska tecken, understreck, bindestreck och punkt.";
+$lang['valid_date']		= "%s måste vara ett giltigt datum på det angivna formatet.";
+$lang['in_list']		= "%s måste vara ett av de förbestämda värdena.";
 $lang['numeric']		= "%s måste innehålla ett nummer.";
+$lang['is_natural']		= "%s måste vara ett heltal större än eller lika med noll.";
+$lang['is_natural_no_zero']		= "%s måste vara ett heltal större än noll.";
+$lang['numeric_max']	= "%s måste vara ett nummer mindre eller lika med %s.";
+$lang['numeric_min']	= "%s måste vara ett nummer större eller lika med %s.";
 $lang['integer']		= "T%s måste innehålla ett heltal.";
 $lang['matches']		= "%s skiljer sig från fältet %s.";
+$lang['unique']		= "%s måste vara unikt.";
+$lang['nonce']		= "Denna sida är inte längre aktiv.";
 
 
 /* End of file validation_lang.php */

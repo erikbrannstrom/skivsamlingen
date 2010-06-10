@@ -2,7 +2,7 @@
 
 $lang['ut_test_name']		= 'Test-namn';
 $lang['ut_test_datatype']	= 'Test-datatyp';
-$lang['ut_res_datatype']	= 'Förväntad datatyp';
+$lang['ut_res_datatype']	= 'FÃ¶rvÃ¤ntad datatyp';
 $lang['ut_result']			= 'Resultat';
 $lang['ut_undefined']		= 'Odefinerat test-namn';
 $lang['ut_file']			= 'Filnamn';
@@ -17,7 +17,7 @@ $lang['ut_string']			= 'String';
 $lang['ut_array']			= 'Array';
 $lang['ut_object']			= 'Object';
 $lang['ut_resource']		= 'Resource';
-$lang['ut_null']			= 'Null'
+$lang['ut_null']			= 'Null';
 
 
 

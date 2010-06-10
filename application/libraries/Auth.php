@@ -15,6 +15,7 @@ class Auth {
 		$this->CI =& get_instance();
 		$this->CI->load->library('session');
 		$this->CI->load->model('User');
+        $this->User = new User();
 		$this->session =& $this->CI->session;
 		if($this->session->userdata('username') !== false) {
 			$this->is_user = true;
@@ -25,16 +26,18 @@ class Auth {
 
 	public function login($username, $password)
 	{
-		$db_user = new User('username', $username);
-		if(!$db_user->exists())
+		$db_user = $this->User->fetchOne(array('username' => $username));
+		if(!$db_user)
 			return false;
 		// Fix users without salted passwords.
 		if($db_user->password == sha1($password)) {
-			$db_user->password = User::encrypt_password($username, $password);
-			$db_user->save();
+			$data['password'] = $this->User->encrypt_password($username, $password);
+			$this->User->update(array('username' => $username), $data);
 			$this->CI->notice->info('Ditt lösenord har blivit säkrare!', 'safer');
-		}
-		if($db_user->password == User::encrypt_password($username, $password)) {
+            $this->session->set_userdata('username',$db_user->username);
+			$this->session->set_userdata('user_id',$db_user->id);
+			return true;
+		} else if($db_user->password == $this->User->encrypt_password($username, $password)) {
 			$this->session->set_userdata('username',$db_user->username);
 			$this->session->set_userdata('user_id',$db_user->id);
 			return true;
@@ -65,8 +68,8 @@ class Auth {
 	
 	public function getUser()
 	{
-		$user = new User($this->getUserID());
-		if($user->exists())
+		$user = $this->User->fetchOne($this->getUserID());
+		if($user)
 			return $user;
 		else
 			return NULL;

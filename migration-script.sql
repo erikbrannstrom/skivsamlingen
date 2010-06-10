@@ -36,3 +36,16 @@ ALTER TABLE `records` CHANGE `artist_id` `artist_id` MEDIUMINT UNSIGNED NOT NULL
 ALTER TABLE `users` CHANGE `id` `id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT ;
 ALTER TABLE `records_users` CHANGE `user_id` `user_id` SMALLINT UNSIGNED NULL DEFAULT NULL ;
 ALTER TABLE `records_users` CHANGE `record_id` `record_id` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0';
+
+-- Create message system tables
+CREATE TABLE `skivsamlingen_s`.`messages` (
+`id` SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`message` TINYTEXT NOT NULL ,
+`created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE `messages_users` (
+  `user_id` smallint(6) NOT NULL,
+  `message_id` smallint(6) NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`,`message_id`)
+);

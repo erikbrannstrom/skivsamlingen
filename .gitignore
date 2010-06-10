@@ -1,0 +1,4 @@
+*.cache
+application/cache/statistics.cache
+*.cache
+application/cache/

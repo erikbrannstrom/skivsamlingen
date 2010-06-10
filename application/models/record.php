@@ -3,33 +3,29 @@
 class Record extends MY_Model
 {
 	
-	public function __construct($column = NULL, $key = NULL)
+	public function __construct()
 	{
 		parent::__construct();
 		$this->table = 'records';
-		$this->apply($column, $key);
 	}
 	
-	public function getID()
+	public function getId($artist_id, $title, $year = null, $format = null)
 	{
-		
-		$this->db->select('id')
-				 ->where('artist_id', $this->artist_id)
-		  		 ->where('title COLLATE utf8_bin = ', $this->title);
-		if(property_exists($this, 'year'))
-			$this->db->where('year', $this->year);
-		else
-			$this->db->where('year', NULL);
-		if(property_exists($this, 'format'))
-			$this->db->where('format', $this->format);
-		else
-			$this->db->where('format', NULL);
-		$res = $this->db->get($this->table)->row();
-		if($res != NULL) {
+		$res = $this->fetchOne(array(
+            'artist_id' => $artist_id,
+            'title COLLATE utf8_bin = ' => $title,
+            'year' => $year,
+            'format' => $format
+        ));
+		if($res) {
 			return $res->id;
 		} else {
-			$this->save();
-			return $this->db->insert_id();
+            return $this->create(array(
+                'artist_id' => $artist_id,
+                'title' => $title,
+                'year' => $year,
+                'format' => $format
+            ), false);
 		}
 	}	
 

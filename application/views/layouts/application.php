@@ -21,11 +21,11 @@
 <a href="<?=site_url('welcome')?>" class="item">hem</a>
 <?php if($this->auth->isUser()): ?>
 <a href="<?=site_url('collection/add')?>" class="item">ny skiva</a>
-<a href="<?=site_url('user/profile/'.$this->auth->getUsername())?>" class="item">min profil</a>
-<a href="<?=site_url('user/logout')?>" class="item">logga ut</a>
+<a href="<?=site_url('users/'.$this->auth->getUsername())?>" class="item">min profil</a>
+<a href="<?=site_url('account/logout')?>" class="item">logga ut</a>
 <?php else: ?>
-<a href="<?=site_url('user/login')?>" class="item">logga in</a>
-<a href="<?=site_url('user/register')?>" class="item">bli medlem</a>
+<a href="<?=site_url('account/login')?>" class="item">logga in</a>
+<a href="<?=site_url('account/register')?>" class="item">bli medlem</a>
 <?php endif; ?>
 
 <form method="post" action="<?=site_url('user/search')?>" name="search" id="search">
@@ -41,7 +41,7 @@
 
 <div id="page"> <!-- Start: page -->
 <div id="content" class="container_12"> <!-- Start: content -->
-
+    <?=notifications($this->auth->getUserId())?>
 	<?=$yield?>
 <div class="clear"></div>
 </div> <!-- End: content -->
