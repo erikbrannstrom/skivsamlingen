@@ -15,14 +15,48 @@ class Users_Controller extends MY_Controller {
 			redirect('users/search/'.$username);
 		}
 		$this->data['page_title'] = 'Local: Skivsamlingen - '.$username;
+        $offset = $this->uri->segment(3, 0);
+		$order = $this->uri->segment(4,'artist');
+		$direction = $this->uri->segment(5,'asc');
 		 
 		$this->load->library('pagination');
-		$config['base_url'] = base_url() . 'users/'. $username.'/';
+		$config['base_url'] = base_url() . 'users/'. $username;
 		$config['total_rows'] = $this->User->getNumberOfRecords($user->id);
 		$config['per_page'] = ($this->auth->isUser() ? $this->auth->getUser()->per_page : 20);
 		$config['uri_segment'] = 3;
+        $config['post_url'] = "$order/$direction";
+        //$config['title'] = 'Visar ' . ($offset+1).' - '.( (($offset+1+$config['per_page']) > $config['total_rows']) ? $config['total_rows'] : ($offset+1+$config['per_page']) ).' av '.$config['total_rows'].' skivor';
 		$this->pagination->initialize($config);
-		$offset = $this->uri->segment(3, 0);
+
+        // Create sort links
+		$sorts = array('Artist' => 'artist',
+						'Format' => 'format',
+						'År' => 'year'
+		);
+		foreach($sorts as $key => $sort) {
+			if($order == $sort) {
+                $new_dir = ($direction == 'asc') ? 'desc' : 'asc';
+                $arr = ($direction == 'desc') ? '&darr;' : '&uarr;';
+				$sorts[$key] = '<li class="active">'.anchor('users/'.$user->username.'/'.$offset.'/'.$sort.'/'.$new_dir, $key . " $arr").'</li>';
+			} else {
+				$sorts[$key] = '<li>'.anchor('users/'.$user->username.'/'.$offset.'/'.$sort.'/'.$direction, $key).'</li>';
+			}
+		}
+
+		$directions = array('Stigande' => 'asc',
+						'Fallande' => 'desc'/*,
+						'Slumpad' => 'random'*/
+		);
+		foreach($directions as $key => $dir) {
+			if($direction == $dir) {
+				$directions[$key] = '<li class="active">'.$key.'</li>';
+			} else {
+				$directions[$key] = '<li>'.anchor('users/'.$user->username.'/'.$offset.'/'.$order.'/'.$dir, $key).'</li>';
+			}
+		}
+
+		$this->data['sort_links'] = $sorts;
+		$this->data['order_links'] = $directions;
 
         switch ($user->sex) {
             case 'f':
@@ -36,7 +70,7 @@ class Users_Controller extends MY_Controller {
 		$this->data['user'] = $user;
 		$this->data['num_records'] = $config['total_rows'];
 		$this->data['pagination'] = $this->pagination->create_links(); 
-		$this->data['records'] = $this->User->getRecords($user->id, $config['per_page'], $offset);
+		$this->data['records'] = $this->User->getRecords($user->id, $config['per_page'], $offset, $order, $direction);
         $this->data['top_artists'] = $this->User->getTopArtists(5, $user->id);
         $this->data['latest_records'] = $this->User->getLatestRecords($user->id, 5);
 	}

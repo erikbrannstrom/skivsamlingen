@@ -39,6 +39,8 @@ img { border: 0 }
 
 p { margin-top: 0.7em;}
 
+
+
 /* layout
    ------ */
 
@@ -138,6 +140,11 @@ code {
 	.pagination a:hover{
 		border:solid 1px #666;
 	}
+
+.order { margin: 2em 0 0 0; float: right }
+.order li.active { padding: 0; }
+.order .active a { border-color: #000; font-weight: bold; }
+.direction { margin: 2em 0; float: right }
 
 /* Form fields
 -------------------------------------------------------------- */

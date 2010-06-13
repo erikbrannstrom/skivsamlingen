@@ -108,6 +108,9 @@ class Account_Controller extends MY_Controller {
 		$username = $this->input->post('username', TRUE);
 		if( $username !== FALSE ) {
 			if($this->auth->login($username, $this->input->post('password'))) {
+                if($this->input->post('remember_me')) {
+                    $this->auth->remember();
+                }
 				$this->notice->success('Du är inloggad!', 'login');
 				redirect('users/'.$this->auth->getUsername());
 			} else {

@@ -49,3 +49,11 @@ CREATE TABLE `messages_users` (
   `is_read` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`message_id`)
 );
+
+-- Table for storing persistent logins
+CREATE TABLE `persistent_logins` (
+  `user_id` smallint(6) NOT NULL,
+  `series` char(40) COLLATE utf8_swedish_ci NOT NULL,
+  `token` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`,`series`,`token`)
+);

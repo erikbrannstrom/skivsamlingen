@@ -6,6 +6,22 @@
 
 <?=$pagination?>
 
+<div style="float: right">
+<ul class="pagination order">
+<? foreach($sort_links as $link): ?>
+	<?= $link ?>
+<? endforeach; ?>
+</ul>
+<? /*<ul class="pagination direction">
+<? foreach($order_links as $order): ?>
+	<?= $order ?>
+<? endforeach; ?>
+</ul>*/ ?>
+</div>
+<div style="clear: both;"></div>
+
+
+
 <table width="100%" cellspacing="0">
 	<?php
 	$prev_artist = NULL;

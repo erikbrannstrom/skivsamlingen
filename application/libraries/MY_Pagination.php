@@ -38,7 +38,7 @@ class MY_Pagination extends CI_Pagination {
 
 	var $post_url			= ''; // URL for posted data
 	var $num_links			=  2; // Number of "digit" links to show before/after the currently viewed page
-	var $num_links_end		=  2; // Number of "digit" links to show at the very ends of the list (e.g. first and last pages)
+	var $num_links_end		=  1; // Number of "digit" links to show at the very ends of the list (e.g. first and last pages)
 	var $cur_page	 		=  0; // The current page being viewed
 	
 	var $next_link			= '&gt;';
