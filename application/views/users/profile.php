@@ -45,10 +45,22 @@
 		$i++;
 		endif; ?>
 	<tr style="background-color: <?=$even ? '#fff' : '#fff'?>">
-		<td style="padding: 0.3em"><?=$record->title?></td>
+		<td style="padding: 0.3em"><?=$record->title?> <?
+        if($user->id == $this->auth->getUserID()):
+            if($record->comment): ?>
+            <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_edit.png')?>" title="<?=$record->comment?>" /></a>
+            <? else: ?>
+            <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_add.png')?>" /></a>
+            <? endif; ?>
+        <? else:
+            if($record->comment): ?>
+            <img src="<?=static_url('images/icons/comment.png')?>" title="<?=$record->comment?>" />
+            <? endif; ?>
+        <? endif; ?>
+        </td>
 		<td style="padding: 0.3em"><?=$record->year?> (<?=$record->format?>)</td>
 		<?php if($user->id == $this->auth->getUserID()): ?>
-		<td><a href="<?=site_url('collection/delete/'.$record->id)?>"><img src="<?=static_url('images/icons/delete.png')?>" /></a></td>
+		<td width="20" valign="middle" align="center"><a href="<?=site_url('collection/delete/'.$record->id)?>"><img src="<?=static_url('images/icons/delete-icon.png')?>" width="14" /></a></td>
 		<?php endif; ?>
 		</td>
 	</tr>

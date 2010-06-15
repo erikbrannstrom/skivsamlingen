@@ -8,6 +8,17 @@ class Record extends MY_Model
 		parent::__construct();
 		$this->table = 'records';
 	}
+
+    public function get($id, $user_id) {
+        $this->db->select('r.title, r.year, r.format, a.name, ru.id, ru.comment')
+				 ->from('records_users ru')
+				 ->join('records r', 'r.id = ru.record_id', 'left')
+				 ->join('artists a', 'r.artist_id = a.id', 'left')
+				 ->where('ru.user_id', $user_id)
+                 ->where('ru.id', $id);
+        $result = $this->db->get()->row();
+        return $result;
+    }
 	
 	public function getId($artist_id, $title, $year = null, $format = null)
 	{

@@ -12,9 +12,12 @@ ALTER TABLE `records_tmp` ADD INDEX ( `artist_id` ) ;
 ALTER TABLE `records_tmp` ADD INDEX ( `title` ) ;
 ALTER TABLE `records_tmp` ADD INDEX ( `year` ) ;
 ALTER TABLE `records_tmp` ADD INDEX ( `format` ) ;
-CREATE TABLE records_users (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) SELECT records.uid AS user_id, records_tmp.id AS record_id FROM records RIGHT JOIN records_tmp ON records.artist_id = records_tmp.artist_id AND records.title = records_tmp.title AND (records.year = records_tmp.year OR (records.year IS NULL AND records_tmp.year IS NULL)) AND (records.format = records_tmp.format OR (records.format IS NULL AND records_tmp.format IS NULL));
-CREATE TABLE comments (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, record_id INT NOT NULL, `text` TEXT NOT NULL, INDEX (record_id));
-INSERT INTO comments SELECT 0 AS id, records.uid AS user_id, records_tmp.id AS record_id, comment AS text FROM records RIGHT JOIN records_tmp ON records.artist_id = records_tmp.artist_id AND records.title = records_tmp.title AND (records.year = records_tmp.year OR (records.year IS NULL AND records_tmp.year IS NULL)) AND (records.format = records_tmp.format OR (records.format IS NULL AND records_tmp.format IS NULL)) AND comment IS NOT NULL AND comment != '' WHERE uid IS NOT NULL;
+CREATE TABLE records_users (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) SELECT records.uid AS user_id, records_tmp.id AS record_id, records.comment AS comment FROM records RIGHT JOIN records_tmp ON records.artist_id = records_tmp.artist_id AND records.title = records_tmp.title AND (records.year = records_tmp.year OR (records.year IS NULL AND records_tmp.year IS NULL)) AND (records.format = records_tmp.format OR (records.format IS NULL AND records_tmp.format IS NULL));
+ALTER TABLE `records_users` ADD INDEX ( `record_id` ) ;
+ALTER TABLE `records_users` ADD INDEX ( `user_id` );
+UPDATE records_users SET comment = NULL WHERE comment = '';
+# CREATE TABLE comments (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, record_id INT NOT NULL, `text` TEXT NOT NULL, INDEX (record_id));
+# INSERT INTO comments SELECT 0 AS id, records.uid AS user_id, records_tmp.id AS record_id, comment AS text FROM records RIGHT JOIN records_tmp ON records.artist_id = records_tmp.artist_id AND records.title = records_tmp.title AND (records.year = records_tmp.year OR (records.year IS NULL AND records_tmp.year IS NULL)) AND (records.format = records_tmp.format OR (records.format IS NULL AND records_tmp.format IS NULL)) AND comment IS NOT NULL AND comment != '' WHERE uid IS NOT NULL;
 DROP TABLE `records`;
 RENAME TABLE `skivsamlingen_s`.`records_tmp`  TO `skivsamlingen_s`.`records` ;
 ALTER TABLE `users` CHANGE `usr` `username` VARCHAR( 24 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL;
@@ -30,14 +33,17 @@ ALTER TABLE `records` CHANGE `title` `title` VARCHAR( 150 ) CHARACTER SET utf8 C
 ALTER TABLE `artists` CHANGE `name` `name` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL ;
 ALTER TABLE `users` CHANGE `email` `email` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL ;
 ALTER TABLE `users` DROP INDEX `password` ;
+UPDATE users SET per_page = 100 WHERE per_page > 100 OR per_page = 0;
 ALTER TABLE `records` CHANGE `id` `id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT ;
 ALTER TABLE `artists` CHANGE `id` `id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT ;
 ALTER TABLE `records` CHANGE `artist_id` `artist_id` MEDIUMINT UNSIGNED NOT NULL ;
 ALTER TABLE `users` CHANGE `id` `id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT ;
 ALTER TABLE `records_users` CHANGE `user_id` `user_id` SMALLINT UNSIGNED NULL DEFAULT NULL ;
 ALTER TABLE `records_users` CHANGE `record_id` `record_id` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0';
+DROP TABLE `friends`;
 
 -- Create message system tables
+DROP TABLE messages;
 CREATE TABLE `skivsamlingen_s`.`messages` (
 `id` SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `message` TINYTEXT NOT NULL ,
@@ -56,4 +62,14 @@ CREATE TABLE `persistent_logins` (
   `series` char(40) COLLATE utf8_swedish_ci NOT NULL,
   `token` int(11) unsigned NOT NULL,
   PRIMARY KEY (`user_id`,`series`,`token`)
+);
+
+-- Session table
+CREATE TABLE IF NOT EXISTS  `ci_sessions` (
+session_id varchar(40) DEFAULT '0' NOT NULL,
+ip_address varchar(16) DEFAULT '0' NOT NULL,
+user_agent varchar(50) NOT NULL,
+last_activity int(10) unsigned DEFAULT 0 NOT NULL,
+user_data text NOT NULL,
+PRIMARY KEY (session_id)
 );
