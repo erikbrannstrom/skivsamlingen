@@ -14,6 +14,7 @@ class Auth {
 	{
 		$this->CI =& get_instance();
 		$this->CI->load->library('session');
+        $this->CI->load->library('notice');
         $this->CI->load->database();
 		$this->CI->load->model('User');
         $this->CI->load->helper('cookie');

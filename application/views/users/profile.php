@@ -1,3 +1,17 @@
+<script type="text/javascript">
+<!--
+var orig = '#000';
+$(function() {
+    $("tr:not(.artist)").hover(function() {
+        orig = $(this).css('background-color');
+        $(this).css('background-color', '#f0f0f0');
+    }, function() {
+        $(this).css('background-color', orig);
+    })
+})
+//-->
+</script>
+
 <div id="" class="grid_8 "> <!-- Start: Main content -->
 <?php foreach($this->notice->getAllKeys() as $key): ?>
 <?=$this->notice->get($key)?>
@@ -30,8 +44,8 @@
 	foreach ($records as $record):
 		if($prev_artist == NULL || $prev_artist != $record->artist_id): 
 			$even = false;?>
-	<tr>
-		<td width="70%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><strong><?php
+	<tr class="artist">
+		<td width="70%"><strong><?php
 		$has_the = stripos($record->name, 'the ');
 		if($has_the !== FALSE && $has_the == 0) {
 			echo rtrim(substr($record->name, 4), ",") . ", " . substr($record->name, 0, 3);
@@ -39,13 +53,13 @@
 			echo $record->name;
 		}
 		?></strong></td>
-		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%" style="border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
+		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
 	<?php
 		$i++;
 		endif; ?>
 	<tr style="background-color: <?=$even ? '#fff' : '#fff'?>">
-		<td style="padding: 0.3em"><?=$record->title?> <?
+		<td><?=$record->title?> <?
         if($user->id == $this->auth->getUserID()):
             if($record->comment): ?>
             <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_edit.png')?>" title="<?=$record->comment?>" /></a>
@@ -58,7 +72,7 @@
             <? endif; ?>
         <? endif; ?>
         </td>
-		<td style="padding: 0.3em"><?=$record->year?> (<?=$record->format?>)</td>
+		<td><?=$record->year?> (<?=$record->format?>)</td>
 		<?php if($user->id == $this->auth->getUserID()): ?>
 		<td width="20" valign="middle" align="center"><a href="<?=site_url('collection/delete/'.$record->id)?>"><img src="<?=static_url('images/icons/delete-icon.png')?>" width="14" /></a></td>
 		<?php endif; ?>
@@ -80,7 +94,7 @@
     <li><a href="<?=site_url('users/'.$user->username.'/export')?>">Exportera skivsamling (XML)</a></li>
     <li><a href="<?=site_url('users/'.$user->username.'/print')?>">Visa utskriftsvy</a></li>
     <li><a href="<?=site_url('account/edit')?>">Ändra dina uppgifter</a></li>
-    <li>Lägg till skiva</li>
+    <li><a href="<?=site_url('collection/add')?>" class="item">Lägg till skiva</a></li>
 </ul>
 </div>
 <? endif; ?>

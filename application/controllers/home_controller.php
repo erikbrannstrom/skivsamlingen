@@ -16,6 +16,7 @@ class Home_Controller extends MY_Controller {
 		if($stats === FALSE) {
             $this->load->model('User');
 			$stats['latest_users'] = $this->User->getNewUsers();
+            
 			$stats['toplist'] = $this->User->getTopList();
 			$stats['sex'] = $this->User->getSexes();
 			$stats['members'] = $this->User->getMemberStatistics();
@@ -24,6 +25,8 @@ class Home_Controller extends MY_Controller {
 			$stats['popular_albums'] = $this->User->getPopularAlbums(10);
 			$this->mp_cache->write($stats, 'statistics', 3600);
 		}
+        $this->load->model('Record');
+        $stats['latest_records'] = $this->Record->getLatestRecords(5);
 		foreach($stats as $key => $value) {
 			$this->data[$key] = $value;
 		}

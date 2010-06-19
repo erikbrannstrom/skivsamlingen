@@ -45,7 +45,6 @@ class History {
      */
     public function push($path) {
         if(!$this->exclude) {
-			
                             
             // don't want duplicates
             if(current($this->history) != $path) {

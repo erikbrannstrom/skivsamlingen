@@ -7,18 +7,20 @@
 
 <?php echo form_open('account/login'); ?>
 
+<label for="username">Användarnamn</label>
+<input type="text" name="username" class="text" size="50" />
 
-<h5>Username</h5>
-<input type="text" name="username" value="" size="50" />
-
-
-
-<h5>Password</h5>
-<input type="password" name="password" value="" size="50" />
+<label for="password">Lösenord</label>
+<input type="password" name="password" class="text" size="50" />
 
 <p><input type="checkbox" name="remember_me" value="true" /> Kom ihåg inloggningen i 30 dagar</p>
-
-<div><input type="submit" value="Submit" /></div>
+<br />
+<div class="buttons">
+    <button type="submit" class="positive">
+        <img src="<?=static_url('/images/icons/tick.png')?>" alt=""/>
+        Logga in
+    </button>
+</div>
 
 </form>
 

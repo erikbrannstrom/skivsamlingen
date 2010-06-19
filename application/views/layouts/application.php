@@ -6,6 +6,8 @@
 
 <link href="<?= base_url() ?>static/styles/grid.css" rel="stylesheet" media="screen" type="text/css" />
 <link href="<?= base_url() ?>static/styles/standard.css" rel="stylesheet" media="screen" type="text/css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
 </head>
 <body>
                 
@@ -28,8 +30,8 @@
 <a href="<?=site_url('account/register')?>" class="item">bli medlem</a>
 <?php endif; ?>
 
-<form method="post" action="<?=site_url('user/search')?>" name="search" id="search">
-	<input type="text" name="query" id="query" value="" />
+<form method="post" action="<?=site_url('users/search')?>" name="search" id="search">
+	<input type="text" name="query" id="query" value="<?=isset($_POST['query']) ? $_POST['query'] : ''?>" />
 </form>
 </div>
 
@@ -48,14 +50,13 @@
 
 <div class="clear"></div>
 
-
 <div id="footer" class="container_12"> <!-- Start: footer -->
 
 <div class="grid_12 ">
 Denna webbsida använder cookies.
-<span class="streambur">Streambur Consulting</span>
+<span class="streambur"><a href="http://streambur.se/"><img src="<?=static_url('images/streambur-logo.png')?>" /></a></span>
 </div>
-
+<div class="clear"></div>
 </div> <!-- End: footer -->
 
 </div> <!-- End: page -->

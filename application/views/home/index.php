@@ -34,23 +34,35 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
   <h2>Kostar det något?</h2>
   <p><strong>Nej!</strong> Det enda du behöver är en webbläsare - för bästa resultat rekommenderas <a href="http://www.mozilla-europe.org/en/firefox/">Firefox 3+</a> eller Google Chrome - och en internetuppkoppling (vilket du ju verkar ha). Annars är det bara att sätta igång med samlandet och organiserandet.
   
+<?php else: $user = $this->auth->getUser();?>
+<h2>Hej <?=($user->name) ? $user->name : $user->username?>!</h2>
+<p>Du har nu loggat in på nya Skivsamlingen. Oavsett om du har varit medlem sedan starten eller precis registrerade dig så följer här en introduktion till hur man använder sidan.</p>
+
+<p><strong>Lägga till skivor</strong> - I menyn längst upp finns en direktlänk för att lägga till nya skivor. Du kan även komma åt denna sida via din egen profil.</p>
+
+<p><strong>Ändra inställningar</strong> - Genom att gå in på din profil via menyn längt upp på sidan så får du tillgång till en rad alternativ i högerspalten.</p>
+
+<p>Förhoppningsvis räcker det för att du ska komma igång! Om det fortfarande finns frågetecken så går det bra att skicka ett mail så ska vi försöka räta ut dem.</p>
+
+<p><strong>Med vänliga hälsningar,</strong><br />Erik
+
 <?php endif; ?>
 
 <h2>Statistik</h2>
 
-<div style="width: 200px; float: left;">
+<div style="width: 45%; float: left;">
 <h3>Medlemmar</h3>
-<table cellspacing="0">
+<table class="statistics" cellspacing="0">
 <tr>
 	<th>Totalt</th>
     <td><?=$members['total']?></td>
 </tr>
 <tr>
-	<th>Denna veckan</th>
+	<th>Nya denna vecka</th>
     <td><?=$members['this_week']?></td>
 </tr>
 <tr class="separator">
-	<th>Förra veckan</th>
+	<th>Nya förra veckan</th>
     <td><?=$members['last_week']?></td>
 </tr>
 <tr>
@@ -64,7 +76,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <tr class="separator">
 	<th>Okänt</th>
     <td><?=$sex['unknown']?></td>
-</tr>
+</tr><!--
 <tr>
 	<th>Antal skivor</th>
     <td><?=$total_recs?></td>
@@ -72,20 +84,20 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <tr>
 	<th>Skivor / användare</th>
     <td><?=round($total_recs / $members['total'], 1)?></td>
-</tr>
+</tr>-->
 </table>
 </div>
 
-<div style="width: 200px; float: left;">
+<div style="width: 45%; float: left;">
 <h3>Största samlingarna</h3>
 <ol style="list-style-position: inside;">
 <?php foreach($toplist as $user): ?>
-<li><a href="<?=site_url('/users/'.$user->username)?>"><?=$user->username?></a> (<?=$user->recs?>)</li>
+<li><a href="<?=site_url('/users/'.$user->username)?>"><?=$user->username?></a> med <?=$user->recs?></li>
 <?php endforeach; ?>
 </ol>
 </div>
 
-<div style="width: 200px; float: left;">
+<div style="width: 45%; float: left;">
 <h3>Populäraste artisterna</h3>
 <ol style="list-style-position: inside;">
 <? foreach($popular_artists as $row): ?>
@@ -94,9 +106,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 </ol>
 </div>
 
-<div style="clear: both; height: 0px; display: block"></div>
-
-<div style="width: 400px; float: left;">
+<div style="width: 45%; float: left;">
 <h3>Populäraste albumen</h3>
 <ol style="list-style-position: inside;">
 <? foreach($popular_albums as $row): ?>
@@ -106,7 +116,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 </div>
 
 </div> <!-- End: Main content -->
-<div id="" class="grid_4 "> <!-- Start: Sidebar -->
+<div id="" class="grid_4 sidebar"> <!-- Start: Sidebar -->
 
 <div class="box">
 
@@ -123,17 +133,9 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <div class="box">
 
 <h3>Senaste skivor</h3>
-
-<a href="http://skivsamlingen.se/users/marmaskt">Desmond Dekker And The Specials - King of Kings</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Lee Perry - Skanking whit the upsetter Rare dubs 1971-1974</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Lee Perry - The Upsetter</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Linval Thompson Meets King Tubbys - In a reggae dub style/Dis a yard dub</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Louis Armstrong - And his all stars. Rocking Chair</a><br />
-
+<? foreach($latest_records as $record): ?>
+    <a href="<?=site_url('users/'.$record->username)?>"><?=$record->name?> - <?=$record->title?></a><br />
+<? endforeach; ?>
 </div>
 
 </div> <!-- End: Sidebar -->
