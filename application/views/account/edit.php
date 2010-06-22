@@ -1,3 +1,16 @@
+<script type="text/javascript" src="<?=static_url('scripts/jquery.ui.datepicker-sv.js')?>"></script>
+<script type="text/javascript">
+$(function() {
+    $.datepicker.setDefaults($.datepicker.regional['sv']);
+    $('#datepicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true
+    });
+});
+</script>
+
+
 <?php foreach($this->notice->getAllKeys() as $key): ?>
 <?=$this->notice->get($key)?>
 <?php endforeach; ?>
@@ -33,7 +46,7 @@
 <span>Om du vill att andra medlemmar ska kunna se din e-postadress, välj ja.</span>
 
 <?=form_error('birth')?>
-<label>Födelsedag</label> <input type="text" name="birth" value="<?=is_set($user->birth, '')?>" maxlength="10" class="text small" />
+<label>Födelsedag</label> <input type="text" name="birth" value="<?=is_set($user->birth, '')?>" maxlength="10" class="text small" id="datepicker" />
 <span>Fylls i som ÅÅÅÅ-MM-DD.</span>
 
 <?=form_error('about')?>

@@ -16,9 +16,6 @@ CDON</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16153296)a(13018
 
 Ginza</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(402088)a(1301841)">
 <br />
-<a href="http://clk.tradedoubler.com/click?p=37616&a=1301841&g=16159818" target="_blank">
-CD WOW!</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16159818)a(1301841)">
-<br />
 <a href="http://clk.tradedoubler.com/click?p=50697&a=1301841&g=16726524" target="_blank">
 Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(1301841)">
 
@@ -26,13 +23,11 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
   <p>Skivsamlingen är en plats där du som skivsamlare kan föra register över vilka skivor du har i samlingen. Kanske behövs en omorganisation bland skivorna? Kanske är det så att du snabbt och enkelt vill kunna visa för andra vad du har för musiksmak? Eller vill du bara ha järnkoll på din egen samling? Registrera dig nu och börja lägga in dina skivor!</p>
 
   <h2>Hur använder man Skivsamlingen?</h2>
-  <p>Till att börja med <a href="http://skivsamlingen.se/account">registrerar</a> du dig. Det enda du behöver fylla i är ett <strong>användarnamn</strong> och ett <strong>lösenord</strong> och sen är det bara att sätta igång!</p>
-
-  <p>När du är registrerad och inloggad har du en meny uppe till höger. Där kan du klicka dig in på din egen profil, men just nu kommer du inte åt din skivsamling eftersom det inte finns några skivor. Klicka på <strong>Ny skiva</strong> i menyn under ditt användarnamn och snart har du lagt till din allra första skiva!</p>
-
+  <p>Till att börja med <a href="<?=site_url('account/register')?>">registrerar</a> du dig. Det enda du behöver fylla i är ett <strong>användarnamn</strong> och ett <strong>lösenord</strong> och sen är det bara att sätta igång!</p>
+  <p>När du sedan är inloggad så kommer du åt dina nyvunna alternativ under din profil. Denna sida tillsammans med sidan där du kan lägga till nya skivor kommer du åt i menyn under loggan.</p>
   
   <h2>Kostar det något?</h2>
-  <p><strong>Nej!</strong> Det enda du behöver är en webbläsare - för bästa resultat rekommenderas <a href="http://www.mozilla-europe.org/en/firefox/">Firefox 3+</a> eller Google Chrome - och en internetuppkoppling (vilket du ju verkar ha). Annars är det bara att sätta igång med samlandet och organiserandet.
+  <p><strong>Nej!</strong> Det enda du behöver är en webbläsare - för bästa resultat rekommenderas <a href="http://www.mozilla.com/firefox/">Firefox 3.6</a> eller <a href="http://www.google.com/chrome/">Google Chrome</a> - och en internetuppkoppling (vilket du ju verkar ha). Annars är det bara att sätta igång med samlandet och organiserandet.
   
 <?php else: $user = $this->auth->getUser();?>
 <h2>Hej <?=($user->name) ? $user->name : $user->username?>!</h2>
@@ -46,15 +41,15 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 
 <p><strong>Med vänliga hälsningar,</strong><br />Erik
 
-<?php endif; ?>
+
 
 <h2>Statistik</h2>
 
-<div style="width: 45%; float: left;">
+<div style="width: 48%; float: left;">
 <h3>Medlemmar</h3>
-<table class="statistics" cellspacing="0">
+<table style="width: 100%" class="statistics" cellspacing="0">
 <tr>
-	<th>Totalt</th>
+	<th>Antal medlemmar</th>
     <td><?=$members['total']?></td>
 </tr>
 <tr>
@@ -67,16 +62,16 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 </tr>
 <tr>
 	<th>Män</th>
-    <td><?=$sex['male']?></td>
+    <td><?=$sex['male_percent']?>% (<?=$sex['male']?> st)</td>
 </tr>
 <tr>
 	<th>Kvinnor</th>
-    <td><?=$sex['female']?></td>
+    <td><?=$sex['female_percent']?>% (<?=$sex['female']?> st)</td>
 </tr>
 <tr class="separator">
 	<th>Okänt</th>
-    <td><?=$sex['unknown']?></td>
-</tr><!--
+    <td><?=$sex['unknown_percent']?>% (<?=$sex['unknown']?> st)</td>
+</tr>
 <tr>
 	<th>Antal skivor</th>
     <td><?=$total_recs?></td>
@@ -84,36 +79,57 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 <tr>
 	<th>Skivor / användare</th>
     <td><?=round($total_recs / $members['total'], 1)?></td>
-</tr>-->
+</tr>
 </table>
 </div>
 
-<div style="width: 45%; float: left;">
+<div style="width: 48%; float: right;">
 <h3>Största samlingarna</h3>
-<ol style="list-style-position: inside;">
-<?php foreach($toplist as $user): ?>
-<li><a href="<?=site_url('/users/'.$user->username)?>"><?=$user->username?></a> med <?=$user->recs?></li>
+<table style="width: 100%" class="statistics" cellspacing="0">
+<?php
+$i = 1;
+foreach($toplist as $user): ?>
+    <tr>
+        <td><?=$i++?>.</td>
+        <td><a href="<?=site_url('/users/'.$user->username)?>"><?=$user->username?></a></td>
+        <td><?=$user->recs?> skivor</td>
+    </tr>
 <?php endforeach; ?>
-</ol>
+</table>
 </div>
-
-<div style="width: 45%; float: left;">
+<div style="clear:both"></div>
+<div style="width: 48%; float: left;">
 <h3>Populäraste artisterna</h3>
-<ol style="list-style-position: inside;">
-<? foreach($popular_artists as $row): ?>
-<li><strong><?=$row->name?></strong> med <?=$row->records?> skivor</li>
-<? endforeach; ?>
-</ol>
+<table style="width: 100%" class="statistics" cellspacing="0">
+<?php
+$i = 1;
+foreach($popular_artists as $row): ?>
+    <tr>
+        <td><?=$i++?>.</td>
+        <td><?=$row->name?></td>
+        <td><?=$row->records?> skivor</td>
+    </tr>
+<?php endforeach; ?>
+</table>
 </div>
 
-<div style="width: 45%; float: left;">
+<div style="width: 48%; float: right;">
 <h3>Populäraste albumen</h3>
-<ol style="list-style-position: inside;">
-<? foreach($popular_albums as $row): ?>
-<li><strong><?=$row->name?> - <?=$row->title?></strong> med <?=$row->records?> skivor</li>
-<? endforeach; ?>
-</ol>
+<table style="width: 100%" class="statistics" cellspacing="0">
+<?php
+$i = 1;
+foreach($popular_albums as $row): ?>
+    <tr>
+        <td><?=$i++?>.</td>
+        <td><strong><?=$row->name?></strong><br />
+        <?=$row->title?></td>
+        <td><?=$row->records?> skivor</td>
+    </tr>
+<?php endforeach; ?>
+</table>
 </div>
+
+<?php endif; ?>
 
 </div> <!-- End: Main content -->
 <div id="" class="grid_4 sidebar"> <!-- Start: Sidebar -->

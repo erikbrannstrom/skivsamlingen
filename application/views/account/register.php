@@ -1,3 +1,15 @@
+<script type="text/javascript" src="<?=static_url('scripts/jquery.ui.datepicker-sv.js')?>"></script>
+<script type="text/javascript">
+$(function() {
+    $.datepicker.setDefaults($.datepicker.regional['sv']);
+    $('#datepicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true
+    });
+});
+</script>
+
 <?php echo form_open('account/register'); ?>
 
 <div class="grid_4">
@@ -44,7 +56,7 @@
 
 <label>Födelsedag</label>
 <?=form_error('birth')?>
-<input type="text" name="birth" value="<?=set_value('birth')?>" maxlength="10" class="text small" />
+<input type="text" name="birth" value="<?=set_value('birth')?>" maxlength="10" class="text small" id="datepicker" />
 <span>Fylls i som ÅÅÅÅ-MM-DD.</span>
 
 </div>

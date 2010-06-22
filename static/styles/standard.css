@@ -26,6 +26,7 @@ body {
 
 input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px; -moz-border-radius: 3px; height: 18px; width: 267px; margin: 4px 0px; background: #eedf9e url("../images/icons/search.png") no-repeat; background-position: 3px 50%; display: block }
 input#query:hover, input#query:focus { background: #efefef url("../images/icons/search.png") no-repeat; background-position: 3px 50%; }
+.ui-menu .ui-menu-item a.total { color: #666; border-top: 1px solid #ccc; padding-left: 10px }
 
 #footer .streambur { float: right }
 
@@ -37,7 +38,10 @@ input#query:hover, input#query:focus { background: #efefef url("../images/icons/
 
 img { border: 0 }
 
-p { margin-top: 0.7em;}
+p { margin-top: 0.6em;}
+
+ul.bullets { list-style-type: none; padding: 0; margin: 0; }
+ul.bullets li { background: url("../images/icons/bullet-white-alt.png") no-repeat 0 50%; padding-left: 20px; }
 
 
 
@@ -50,11 +54,12 @@ a {
     font-weight: normal;
 }
 
-td { padding: 0.3em }
+td { padding: 0.1em 0.2em }
 th { text-align: left; padding-right: 0.8em }
 table.search { margin: 0.5em;}
 table.search th { border-bottom: 1px #eaeaea solid; }
 tr.artist td { border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0; }
+tr.separator td, tr.separator th { border-bottom: 1px #ccc solid; }
 
 h1, h2, h3 { font-family: Trebuchet, Tahoma, Arial, sans-serif }
 
@@ -73,7 +78,7 @@ h2 {
 
 h3 {
 	color: #73241d;	
-	margin: 0.2em 0;
+	margin: 0.4em 0;
 	font-size: 1.2em;
 }
 
@@ -81,7 +86,7 @@ h3 {
 
 .box { background-color: #fafafa; padding: 0.6em; margin: 0.6em; border: 1px solid #ccc }
 
-.box h3 { color: #73241d }
+.box h3 { margin: 0.2em 0; color: #73241d }
 
 .box li { list-style-position: inside }
 
@@ -106,6 +111,7 @@ code {
 }
 	
 	.pagination li{
+        background: transparent;
 		display: inline;
 		border:0; 
 		margin:0; 
@@ -151,7 +157,7 @@ code {
 		border:solid 1px #666;
 	}
 
-.order { margin: 2em 0 0 0; float: right }
+.order { margin: 2em 0 3em 0; float: right }
 .order li.active { padding: 0; }
 .order .active a { border-color: #000; font-weight: bold; }
 .direction { margin: 2em 0; float: right }

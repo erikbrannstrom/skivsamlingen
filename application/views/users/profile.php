@@ -1,3 +1,4 @@
+<script type="text/javascript" src="<?=static_url('scripts/jquery.tipTip.minified.js')?>"></script>
 <script type="text/javascript">
 <!--
 var orig = '#000';
@@ -7,8 +8,15 @@ $(function() {
         $(this).css('background-color', '#f0f0f0');
     }, function() {
         $(this).css('background-color', orig);
-    })
-})
+    });
+    $(".comment").tipTip({
+        defaultPosition: 'right',
+        edgeOffset: 8,
+        delay: 350,
+        fadeIn: 150,
+        fadeOut: 150
+    });
+});
 //-->
 </script>
 
@@ -48,10 +56,11 @@ $(function() {
 		<td width="70%"><strong><?php
 		$has_the = stripos($record->name, 'the ');
 		if($has_the !== FALSE && $has_the == 0) {
-			echo rtrim(substr($record->name, 4), ",") . ", " . substr($record->name, 0, 3);
+			$name = rtrim(substr($record->name, 4), ",") . ", " . substr($record->name, 0, 3);
 		} else {
-			echo $record->name;
+			$name = $record->name;
 		}
+                echo htmlspecialchars($name, ENT_COMPAT, 'UTF-8');
 		?></strong></td>
 		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
@@ -59,16 +68,16 @@ $(function() {
 		$i++;
 		endif; ?>
 	<tr style="background-color: <?=$even ? '#fff' : '#fff'?>">
-		<td><?=$record->title?> <?
+            <td><?=htmlspecialchars($record->title, ENT_COMPAT, 'UTF-8')?> <?
         if($user->id == $this->auth->getUserID()):
             if($record->comment): ?>
-            <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_edit.png')?>" title="<?=$record->comment?>" /></a>
+            <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_edit.png')?>" title="<?=$record->comment?>" class="comment" /></a>
             <? else: ?>
             <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_add.png')?>" /></a>
             <? endif; ?>
         <? else:
             if($record->comment): ?>
-            <img src="<?=static_url('images/icons/comment.png')?>" title="<?=$record->comment?>" />
+            <img src="<?=static_url('images/icons/comment.png')?>" title="<?=$record->comment?>" class="comment" />
             <? endif; ?>
         <? endif; ?>
         </td>
@@ -90,7 +99,7 @@ $(function() {
 <? if($user->id == $this->auth->getUserId()): ?>
 <div class="box">
 <h3>Alternativ</h3>
-<ul>
+<ul class="bullets">
     <li><a href="<?=site_url('users/'.$user->username.'/export')?>">Exportera skivsamling (XML)</a></li>
     <li><a href="<?=site_url('users/'.$user->username.'/print')?>">Visa utskriftsvy</a></li>
     <li><a href="<?=site_url('account/edit')?>">Ändra dina uppgifter</a></li>

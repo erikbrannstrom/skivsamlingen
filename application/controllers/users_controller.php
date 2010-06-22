@@ -119,18 +119,39 @@ class Users_Controller extends MY_Controller {
 
     function search($query = NULL)
 	{
-		if($query == NULL) {
-			$query = $this->input->post('query');
-		}
-		if($query === FALSE) {
-			redirect('welcome');
-		}
-		$users = $this->User->search($query);
-        foreach($users as $user) {
-            $user->num_records = $this->User->getNumberOfRecords($user->id);
+        if($query == NULL) {
+            $query = $this->input->post('query');
         }
-		$this->data['query'] = $query;
-		$this->data['users'] = $users;
+        if($this->is_ajax()) {
+            $this->_pass();
+            $users = $this->User->search($query);
+            $result = array();
+            $i = 0;
+            foreach($users as $user) {
+                $i++;
+                $result[] = array('label' => $user->username, 'type' => 'user');
+                if($i == 6)
+                    break;
+            }
+            if(count($users) == 0)
+                $text = "Inga resultat.";
+            else {
+                $text = (count($users) <= 6) ? 'Visar' : 'Visa';
+                $text .= ' alla ' . count($users) . ' resultat..';
+            }
+            $result[] = array('label' => $text, 'type' => 'total');
+            echo json_encode($result);
+        } else {
+            if($query === FALSE) {
+                redirect('welcome');
+            }
+            $users = $this->User->search($query);
+            foreach($users as $user) {
+                $user->num_records = $this->User->getNumberOfRecords($user->id);
+            }
+            $this->data['query'] = $query;
+            $this->data['users'] = $users;
+        }
 	}
 	
 }
