@@ -27,20 +27,4 @@
 
 </div>
 
-<div class="box">
-
-<h3>Senaste skivor</h3>
-
-<a href="http://skivsamlingen.se/users/marmaskt">Desmond Dekker And The Specials - King of Kings</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Lee Perry - Skanking whit the upsetter Rare dubs 1971-1974</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Lee Perry - The Upsetter</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Linval Thompson Meets King Tubbys - In a reggae dub style/Dis a yard dub</a><br />
-
-<a href="http://skivsamlingen.se/users/marmaskt">Louis Armstrong - And his all stars. Rocking Chair</a><br />
-
-</div>
-
 </div> <!-- End: Sidebar -->

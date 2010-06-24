@@ -1,5 +1,13 @@
 @charset "utf-8";
 
+@font-face {
+    font-family: 'BorisBlackBloxx';
+    src: url('borisblackbloxx-webfont.eot');
+    src: local('☺'), url('borisblackbloxx-webfont.woff') format('woff'), url('borisblackbloxx-webfont.ttf') format('truetype'), url('borisblackbloxx-webfont.svg#webfontNW4CPWcX') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 *{ margin: 0; padding: 0; }* 
 
 body { 
@@ -19,10 +27,10 @@ body {
 
 #menu { height: 30px; line-height: 30px; padding: 2px; margin: 0; vertical-align: middle }
 
-#header { height: 90px; background: url('../images/black-opacity35.png'); padding: 5px }
+#header { height: 90px; background: url('../images/black-opacity45.png'); padding: 5px }
 
-#menu a.item { letter-spacing: 0.1em; color: #fff; font-size: 20px; font-family: BorisBlackBloxx; height: 30px; line-height: 28px; border: 0px solid black; display: block; float: left; padding: 0 10px; margin: 0 10px; text-decoration: none;; vertical-align: middle }
-#menu a.item:hover { color: #000; background: url('../images/white.png'); }
+#menu a.item { letter-spacing: 0.1em; color: #fff; font-size: 20px; font-family: BorisBlackBloxx, "Arial Black", sans-serif; height: 30px; line-height: 28px; border: 0px solid black; display: block; float: left; padding: 0 10px; margin: 0 10px; text-decoration: none;; vertical-align: middle }
+#menu a.item:hover { color: #000; background: url('../images/white-50.png'); }
 
 input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px; -moz-border-radius: 3px; height: 18px; width: 267px; margin: 4px 0px; background: #eedf9e url("../images/icons/search.png") no-repeat; background-position: 3px 50%; display: block }
 input#query:hover, input#query:focus { background: #efefef url("../images/icons/search.png") no-repeat; background-position: 3px 50%; }

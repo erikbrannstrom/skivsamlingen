@@ -13,16 +13,23 @@
 <br />
 
 <input type="hidden" name="record" value="<?=set_value('record', $record->id)?>" />
+<input type="hidden" name="action" value="edit" />
 
 <div class="buttons">
-    <button type="submit" class="positive" name="action" value="edit">
+    <button type="submit" class="positive">
         <img src="<?=static_url('/images/icons/tick.png')?>" alt=""/>
         Spara
     </button>
-    <button type="submit" class="positive" name="action" value="delete">
+</form>
+<?php echo form_open('collection/comment'); ?>
+<input type="hidden" name="record" value="<?=set_value('record', $record->id)?>" />
+<input type="hidden" name="action" value="delete" />
+
+    <button type="submit" class="positive">
         <img src="<?=static_url('/images/icons/delete-icon.png')?>" alt=""/>
         Ta bort
     </button>
 </div>
+</form>
 
 </div> <!-- End: Content -->

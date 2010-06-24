@@ -2,36 +2,33 @@
 
 class News_Controller extends MY_Controller {
 
-	function __construct()
-	{
-		parent::MY_Controller();
+    function __construct() {
+        parent::MY_Controller();
         $this->load->model('News');
-	}
+    }
 
-	function index()
-	{
+    function index() {
         $offset = $this->uri->segment(2, 0);
 
-		$this->load->library('pagination');
-		$config['base_url'] = base_url() . 'news';
-		$config['total_rows'] = $this->News->countAll();
-		$config['per_page'] = 5;
-		$config['uri_segment'] = 2;
-		$this->pagination->initialize($config);
+        $this->load->library('pagination');
+        $config['base_url'] = base_url() . 'news';
+        $config['total_rows'] = $this->News->countAll();
+        $config['per_page'] = 5;
+        $config['uri_segment'] = 2;
+        $this->pagination->initialize($config);
 
-		$this->data['pagination'] = $this->pagination->create_links(); 
+        $this->data['page_title'] = 'Skivsamlingen - Nyheter';
+        $this->data['pagination'] = $this->pagination->create_links();
         $this->data['news'] = $this->News->get($config['per_page'], $offset);
         $this->data['titles'] = $this->News->allTitles();
-	}
+    }
 
-    function entry()
-    {
+    function entry() {
         redirect('news');
     }
 
-    function rss()
-    {
-		$this->load->helper('xml');
+    function rss() {
+        $this->load->helper('xml');
         $data['encoding'] = 'utf-8';
         $data['feed_name'] = 'Skivsamlingen';
         $data['feed_url'] = 'http://skivsamlingen.se/';

@@ -7,6 +7,7 @@
 <link href="<?= base_url() ?>static/styles/grid.css" rel="stylesheet" media="screen" type="text/css" />
 <link href="<?= base_url() ?>static/styles/standard.css" rel="stylesheet" media="screen" type="text/css" />
 <link href="<?= base_url() ?>static/styles/tipTip.css" rel="stylesheet" media="screen" type="text/css" />
+<link rel="shortcut icon" href="<?=static_url('favicon2.ico')?>" />
 <link href="<?= base_url() ?>static/styles/custom-theme/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -70,7 +71,7 @@ $(document).ready(function() {
 <div class="clear"></div>
 
 <div id="menu" class="grid_12">
-<a href="<?=site_url('')?>" class="item">hem</a>
+    <a href="<?=site_url('')?>" class="item">hem</a>
 <?php if($this->auth->isUser()): ?>
 <a href="<?=site_url('collection/add')?>" class="item">ny skiva</a>
 <a href="<?=site_url('users/'.$this->auth->getUsername())?>" class="item">min profil</a>

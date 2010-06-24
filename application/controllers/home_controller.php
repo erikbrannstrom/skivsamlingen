@@ -2,58 +2,46 @@
 
 class Home_Controller extends MY_Controller {
 
-	function __construct()
-	{
-		parent::MY_Controller();
-	}
-	
-	function index()
-	{	
-		$this->load->library('mp_cache');
-		$stats = $this->mp_cache->get('statistics');
-		$this->data['page_title'] = 'Skivsamlingen';
-		$this->data['news'] = $this->db->limit(1)->order_by('posted DESC')->get('news');
-		if($stats === FALSE) {
+    function __construct() {
+        parent::MY_Controller();
+    }
+
+    function index() {
+        $this->load->library('mp_cache');
+        $stats = $this->mp_cache->get('statistics');
+        $this->data['page_title'] = 'Skivsamlingen';
+        $this->data['news'] = $this->db->limit(1)->order_by('posted DESC')->get('news');
+        if ($stats === FALSE) {
             $this->load->model('User');
-			$stats['latest_users'] = $this->User->getNewUsers();
-			$stats['toplist'] = $this->User->getTopList();
-			$stats['sex'] = $this->User->getSexes();
-			$stats['members'] = $this->User->getMemberStatistics();
-			$stats['total_recs'] = $this->User->getNumberOfRecords();
-			$stats['popular_artists'] = $this->User->getTopArtists(10);
-			$stats['popular_albums'] = $this->User->getPopularAlbums(10);
-			$this->mp_cache->write($stats, 'statistics', 3600);
-		}
+            $stats['latest_users'] = $this->User->getNewUsers();
+            $stats['toplist'] = $this->User->getTopList();
+            $stats['sex'] = $this->User->getSexes();
+            $stats['members'] = $this->User->getMemberStatistics();
+            $stats['total_recs'] = $this->User->getNumberOfRecords();
+            $stats['popular_artists'] = $this->User->getTopArtists(10);
+            $stats['popular_albums'] = $this->User->getPopularAlbums(10);
+            $this->mp_cache->write($stats, 'statistics', 3600);
+        }
         $this->load->model('Record');
         $stats['latest_records'] = $this->Record->getLatestRecords(5);
-		foreach($stats as $key => $value) {
-			$this->data[$key] = $value;
-		}
-	}
+        foreach ($stats as $key => $value) {
+            $this->data[$key] = $value;
+        }
+    }
 
-    function unregistered()
-    {
-        if($this->session->flashdata('action') == 'unregistered') {
-            $this->data['email'] = 'email';
-            $this->data['name'] = 'name';
-            $this->data['username'] = 'username';
+    function unregistered() {
+        if ($this->session->flashdata('action') == 'unregistered') {
+            $this->data['email'] = $this->session->flashdata('email');
+            $this->data['name'] = $this->session->flashdata('name');
+            $this->data['username'] = $this->session->flashdata('username');
             $this->data['news'] = $this->db->limit(1)->order_by('posted DESC')->get('news');
-            /*$this->data->email = $this->session->flashdata('email');
-            $this->data->name = $this->session->flashdata('name');
-            $this->data->username = $this->session->flashdata('username');*/
             $this->load->library('form_validation');
             $this->form_validation->set_rules('name', 'Namn', 'required|max_length[60]');
             $this->form_validation->set_rules('email', 'E-post', 'required|valid_email');
             $this->form_validation->set_rules('message', 'Meddelande', 'required|max_length[4000]');
-            if($this->form_validation->run() !== false) {
+            if ($this->form_validation->run() !== false) {
                 $this->load->library('email');
-                $config['protocol'] = 'smtp';
-                $config['smtp_host'] = 'smtp.streambur.se';
-                $config['smtp_user'] = 'no-reply@streambur.se';
-                $config['smtp_pass'] = 'IgYuWsxe';
-                //$config['protocol'] = 'sendmail';
-
-                $this->email->initialize($config);
+                
                 $this->email->from($this->input->post('email'), $this->input->post('name'));
                 $this->email->to('erik.brannstrom@skivsamlingen.se');
 
@@ -61,17 +49,15 @@ class Home_Controller extends MY_Controller {
                 $this->email->message($this->input->post('message'));
 
                 $this->email->send();
-                /*echo $this->email->print_debugger();
-                exit;*/
+                redirect();
             } else {
                 $this->session->keep_flashdata('action');
             }
-
         } else {
-            redirect('');
+            redirect();
         }
     }
-	
+
 }
 
 /* End of file welcome.php */

@@ -13,7 +13,7 @@
 <label for="password">Lösenord</label>
 <input type="password" name="password" class="text" size="50" />
 
-<p><input type="checkbox" name="remember_me" value="true" /> Kom ihåg inloggningen i 30 dagar</p>
+<p><input type="checkbox" name="remember_me" value="true" /> Kom ihåg mig nästa gång</p>
 <br />
 <div class="buttons">
     <button type="submit" class="positive">
@@ -21,6 +21,8 @@
         Logga in
     </button>
 </div>
+
+<?=anchor('account/forgot', 'Glömt ditt lösenord?')?>
 
 </form>
 

@@ -3,6 +3,12 @@
 <?=$this->notice->get($key)?>
 <?php endforeach; ?>
 
+    <div class="error">
+<h2>DETTA ÄR EN BETAVERSION</h2>
+<p>Var god notera att detta är endast en betaversion och <strong>alla ändringar och registreringar som görs kommer att försvinna</strong> när den färdiga versionen läggs upp.
+Vid problem, maila gärna <a href="mailto:erik.brannstrom@skivsamlingen.se">erik.brannstrom@skivsamlingen.se</a>.</p>
+</div>
+
 <?php if($this->auth->isGuest()): ?>
 
 <h2>Vad är Skivsamlingen?</h2>
@@ -136,13 +142,14 @@ foreach($popular_albums as $row): ?>
 
 <div class="box">
 
-  <h3>Nyheter</h3>
+  <h3>Senaste nytt</h3>
   <p>
 	<?php foreach ($news->result() as $item): ?>
 	<h4><?= $item->title ?></h4>
 	<?= $item->body ?>
 	<?php endforeach; ?>
   </p>
+  <p><?=anchor('news', 'Alla nyheter')?></p>
 
 </div>
 
