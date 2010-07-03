@@ -5,11 +5,15 @@ if (!defined('BASEPATH'))
 
 class MY_Form_Validation extends CI_Form_Validation {
 
-    function __construct() {
+    private $use_nonce = false;
+
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function set_error($field, $message) {
+    function set_error($field, $message)
+    {
         $this->_field_data[$field]['error'] = $message;
 
         if (!isset($this->_error_array[$field])) {
@@ -22,24 +26,42 @@ class MY_Form_Validation extends CI_Form_Validation {
      *
      * @return string
      */
-    function create_nonce() {
-        $nonce = md5('nonce' . $this->CI->input->ip_address() . microtime());
+    public function create_nonce()
+    {
+        $nonce = md5(rand() . $this->CI->input->ip_address() . microtime());
         $this->CI->session->set_userdata('nonce', $nonce);
         return $nonce;
+    }
+
+    public function has_nonce()
+    {
+        return $this->use_nonce;
+    }
+
+    public function run($group = '')
+    {
+        $result = parent::run($group);
+        if($result === true) {
+            $this->save_nonce();
+        }
+        return $result;
     }
 
     /**
      * Mark the nonce sent from the form as already used.
      */
-    function save_nonce() {
+    private function save_nonce()
+    {
         $this->CI->session->set_userdata('old_nonce', $this->set_value('nonce'));
     }
 
     /**
      * Set form validation rules for the nonce.
      */
-    function nonce() {
-        $this->set_rules('nonce', 'Nonce', 'required|check_nonce');
+    function nonce()
+    {
+        $this->use_nonce = true;
+        $this->set_rules('nonce', 'Nonce', 'required|valid_nonce');
     }
 
     // --------------------------------------------------------------------
@@ -51,7 +73,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	string
      * @return	bool
      */
-    function alpha_dash_dot($str) {
+    function alpha_dash_dot($str)
+    {
         return (!preg_match("/^([-a-z0-9\._-])+$/i", $str)) ? FALSE : TRUE;
     }
 
@@ -63,7 +86,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	date format
      * @return	bool
      */
-    function valid_date($str, $format) {
+    function valid_date($str, $format)
+    {
         $date = date_parse_from_format($format, $str);
         return checkdate($date['month'], $date['day'], $date['year']);
     }
@@ -79,7 +103,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	table and field
      * @return	bool
      */
-    function unique($value, $params) {
+    function unique($value, $params)
+    {
         $CI = & get_instance();
         $CI->load->database();
 
@@ -103,7 +128,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	max value
      * @return	bool
      */
-    function numeric_max($str, $max) {
+    function numeric_max($str, $max)
+    {
         if ($this->numeric($str) && $this->numeric($max))
             return $str <= $max;
         else
@@ -118,7 +144,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	min value
      * @return	bool
      */
-    function numeric_min($str, $min) {
+    function numeric_min($str, $min)
+    {
         if ($this->numeric($str) && $this->numeric($min))
             return $str <= $min;
         else
@@ -133,7 +160,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	set of valid values
      * @return	bool
      */
-    function in_list($str, $list) {
+    function in_list($str, $list)
+    {
         $set = explode(',', $list);
         return in_array($str, $set);
     }
@@ -146,7 +174,8 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	set of valid values
      * @return	bool
      */
-    function equals($str, $comp) {
+    function equals($str, $comp)
+    {
         return ($str == $comp);
     }
 
@@ -158,21 +187,10 @@ class MY_Form_Validation extends CI_Form_Validation {
      * @param	last used nonce
      * @return	bool
      */
-    function check_nonce($str) {
+    function valid_nonce($str)
+    {
         return ($str == $this->CI->session->userdata('nonce') &&
-        $str != $this->CI->session->userdata('old_nonce'));
+                $str != $this->CI->session->userdata('old_nonce'));
     }
 
 }
-
-/**
- * GET form, create and save nonce
- * POST form
- *      IF valid form
- *          save nonce as old_nonce
- *      ELSE
- *
- *
- *
- *
- */

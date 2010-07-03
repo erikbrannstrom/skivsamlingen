@@ -1,4 +1,2 @@
 *.cache
-application/cache/statistics.cache
-*.cache
-application/cache/
+application/logs/*.php

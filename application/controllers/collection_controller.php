@@ -59,7 +59,6 @@ class Collection_Controller extends MY_Controller {
         $this->form_validation->nonce();
 
         if ($this->form_validation->run() !== FALSE) { // If validation has completed
-            $this->form_validation->save_nonce();
             $this->load->model('Record');
             $this->load->model('Artist');
             $this->load->model('Collection');

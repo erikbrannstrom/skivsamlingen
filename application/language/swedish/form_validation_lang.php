@@ -22,7 +22,7 @@ $lang['numeric_min']	= "%s måste vara ett nummer större eller lika med %s.";
 $lang['integer']		= "T%s måste innehålla ett heltal.";
 $lang['matches']		= "%s skiljer sig från fältet %s.";
 $lang['unique']		= "%s måste vara unikt.";
-$lang['nonce']		= "Denna sida är inte längre aktiv.";
+$lang['valid_nonce']		= "Denna sida är inte längre giltig.";
 
 
 /* End of file validation_lang.php */

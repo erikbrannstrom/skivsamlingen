@@ -1,4 +1,4 @@
-<?php echo form_open('collection/add'); ?>
+<?= form_open('collection/add') ?>
 
 <div class="grid_12"> <!-- Start: Content -->
 
@@ -25,7 +25,6 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 <input type="text" class="text" name="format" maxlength="30" value="<?php echo set_value('format');?>" />
 <span>Formatet på skivan, t.ex. CD, 12" eller CD/DVD. Kan lämnas tomt.</span>
 <br />
-<?=form_nonce()?>
 <div class="buttons">
     <button type="submit" class="positive">
         <img src="<?=static_url('/images/icons/tick.png')?>" alt=""/> 
