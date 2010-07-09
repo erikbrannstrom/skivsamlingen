@@ -18,7 +18,7 @@ class Collection extends MY_Model {
     }
 
     public function addItem($user_id, $record_id) {
-        $this->create(array('user_id' => $user_id, 'record_id' => $record_id), false);
+        return $this->create(array('user_id' => $user_id, 'record_id' => $record_id), false);
     }
 
 }

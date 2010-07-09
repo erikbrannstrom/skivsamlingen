@@ -73,7 +73,7 @@ $(document).ready(function() {
 <div id="menu" class="grid_12">
     <a href="<?=site_url('')?>" class="item">hem</a>
 <?php if($this->auth->isUser()): ?>
-<a href="<?=site_url('collection/add')?>" class="item">ny skiva</a>
+<a href="<?=site_url('collection/record')?>" class="item">ny skiva</a>
 <a href="<?=site_url('users/'.$this->auth->getUsername())?>" class="item">min profil</a>
 <a href="<?=site_url('account/logout')?>" class="item">logga ut</a>
 <?php else: ?>

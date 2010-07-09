@@ -24,12 +24,11 @@ function form_open($action = '', $attributes = '', $hidden = array())
     }
 
     $action = ( strpos($action, '://') === FALSE) ? $CI->config->site_url($action) : $action;
-
     $form = '<form action="' . $action . '"';
     $form .= _attributes_to_string($attributes, TRUE);
     $form .= '>';
 
-    if($CI->form_validation->has_nonce()) {
+    if($CI->form_validation->has_nonce() && !(isset($hidden['nonce']) && $hidden['nonce'] === false)) {
         $value = set_value('nonce');
         if($value == '')
             $value = $CI->form_validation->create_nonce();

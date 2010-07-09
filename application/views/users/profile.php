@@ -1,7 +1,7 @@
 <script type="text/javascript" src="<?=static_url('scripts/jquery.tipTip.minified.js')?>"></script>
 <script type="text/javascript">
 <!--
-var orig = '#000';
+var orig = '#f0f0f0';
 $(function() {
     $("tr:not(.artist)").hover(function() {
         orig = $(this).css('background-color');
@@ -34,11 +34,6 @@ $(function() {
 	<?= $link ?>
 <? endforeach; ?>
 </ul>
-<? /*<ul class="pagination direction">
-<? foreach($order_links as $order): ?>
-	<?= $order ?>
-<? endforeach; ?>
-</ul>*/ ?>
 </div>
 <div style="clear: both;"></div>
 
@@ -68,24 +63,19 @@ $(function() {
 		$i++;
 		endif; ?>
 	<tr style="background-color: <?=$even ? '#fff' : '#fff'?>">
-            <td><?=htmlspecialchars($record->title, ENT_COMPAT, 'UTF-8')?> <?
-        if($user->id == $this->auth->getUserID()):
-            if($record->comment): ?>
-            <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_edit.png')?>" title="<?=$record->comment?>" class="comment" /></a>
-            <? else: ?>
-            <a href="<?=site_url('collection/comment/'.$record->id)?>"><img src="<?=static_url('images/icons/comment_add.png')?>" /></a>
-            <? endif; ?>
-        <? else:
-            if($record->comment): ?>
+            <td><?=htmlspecialchars($record->title, ENT_COMPAT, 'UTF-8')?>
+        <?php if($record->comment): ?>
             <img src="<?=static_url('images/icons/comment.png')?>" title="<?=$record->comment?>" class="comment" />
-            <? endif; ?>
-        <? endif; ?>
+        <?php endif; ?>
         </td>
-		<td><?=$record->year?> (<?=$record->format?>)</td>
-		<?php if($user->id == $this->auth->getUserID()): ?>
-		<td width="20" valign="middle" align="center"><a href="<?=site_url('collection/delete/'.$record->id)?>"><img src="<?=static_url('images/icons/delete-icon.png')?>" width="14" /></a></td>
-		<?php endif; ?>
-		</td>
+        <?php if($record->year && $record->format): ?>
+            <td><?=$record->year?> (<?=$record->format?>)</td>
+        <?php else: ?>
+            <td><?=$record->year?> <?=$record->format?></td>
+        <?php endif; ?>
+        <?php if($user->id == $this->auth->getUserID()): ?>
+            <td width="20" valign="middle" align="center"><a href="<?=site_url('collection/record/'.$record->id)?>"><img src="<?=static_url('images/icons/edit.png')?>" width="14" /></a></td>
+        <?php endif; ?>
 	</tr>
 	<?php
 	$even = !$even;
@@ -103,7 +93,7 @@ $(function() {
     <li><a href="<?=site_url('users/'.$user->username.'/export')?>">Exportera skivsamling (XML)</a></li>
     <li><a href="<?=site_url('users/'.$user->username.'/print')?>">Visa utskriftsvy</a></li>
     <li><a href="<?=site_url('account/edit')?>">Ändra dina uppgifter</a></li>
-    <li><a href="<?=site_url('collection/add')?>" class="item">Lägg till skiva</a></li>
+    <li><a href="<?=site_url('collection/record')?>" class="item">Lägg till skiva</a></li>
 </ul>
 </div>
 <? endif; ?>
