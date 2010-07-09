@@ -45,6 +45,7 @@ $(function() {
 	$even = false;
 	$i = 0;
 	foreach ($records as $record):
+                $i++;
 		if($prev_artist == NULL || $prev_artist != $record->artist_id): 
 			$even = false;?>
 	<tr class="artist">
@@ -59,9 +60,7 @@ $(function() {
 		?></strong></td>
 		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
-	<?php
-		$i++;
-		endif; ?>
+	<?php   endif; ?>
 	<tr style="background-color: <?=$even ? '#fff' : '#fff'?>">
             <td><?=htmlspecialchars($record->title, ENT_COMPAT, 'UTF-8')?>
         <?php if($record->comment): ?>
@@ -77,10 +76,30 @@ $(function() {
             <td width="20" valign="middle" align="center"><a href="<?=site_url('collection/record/'.$record->id)?>"><img src="<?=static_url('images/icons/edit.png')?>" width="14" /></a></td>
         <?php endif; ?>
 	</tr>
+        <?php if($i == 10): ?>
+        <tr>
+            <td colspan="<?=($user->id == $this->auth->getUserID()) ? '3' : '2'?>" style="padding: 10px; text-align: center; border: 1px solid #ccc; border-width: 1px 0">
+            <script type="text/javascript">
+var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402756)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
+document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
+</script>
+            </td>
+        </tr>
+        <?php endif; ?>
 	<?php
 	$even = !$even;
 	$prev_artist = $record->artist_id;
 	endforeach; ?>
+        <?php if($i < 10): ?>
+        <tr>
+            <td colspan="<?=($user->id == $this->auth->getUserID()) ? '3' : '2'?>" style="padding: 10px; text-align: center; border: 1px solid #ccc; border-width: 1px 0">
+            <script type="text/javascript">
+var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402756)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
+document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
+</script>
+            </td>
+        </tr>
+        <?php endif; ?>
 </table>
 </div> <!-- End: Main content -->
 
@@ -144,5 +163,12 @@ foreach($latest_records as $record): ?>
 <?php endforeach; ?>
 </ol>
 </div>
+
+    <div style="padding-top: 15px; background-color: #fff">
+<script type="text/javascript">
+var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402779)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
+document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
+</script>
+    </div>
 
 </div> <!-- End: Sidebar -->
