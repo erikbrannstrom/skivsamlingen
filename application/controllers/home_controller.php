@@ -30,6 +30,7 @@ class Home_Controller extends MY_Controller {
     }
 
     function unregistered() {
+        $this->history->exclude();
         if ($this->session->flashdata('action') == 'unregistered') {
             $this->data['email'] = $this->session->flashdata('email');
             $this->data['name'] = $this->session->flashdata('name');
@@ -56,6 +57,11 @@ class Home_Controller extends MY_Controller {
         } else {
             redirect();
         }
+    }
+
+    function about()
+    {
+        
     }
 
 }

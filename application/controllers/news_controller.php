@@ -24,10 +24,12 @@ class News_Controller extends MY_Controller {
     }
 
     function entry() {
+        $this->history->exclude();
         redirect('news');
     }
 
     function rss() {
+        $this->history->exclude();
         $this->load->helper('xml');
         $data['encoding'] = 'utf-8';
         $data['feed_name'] = 'Skivsamlingen';

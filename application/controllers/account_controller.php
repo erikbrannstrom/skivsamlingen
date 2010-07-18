@@ -10,6 +10,7 @@ class Account_Controller extends MY_Controller {
             redirect('account/login');
         }
         $this->load->model('User');
+        $this->history->exclude();
     }
 
     function register() {
@@ -31,14 +32,23 @@ class Account_Controller extends MY_Controller {
         $this->load->model('User');
         $username = $this->input->post('username', true);
         if($username !== false) {
-            $user = $this->User->fetchOne(array('username' => $this->input->post('username', true)));
-            $already_sent = $this->db->where('username', $username)->get('password_recovery')->row();
+            if(strpos($username, '@') === FALSE)
+                $user = $this->User->fetchOne(array('username' => $this->input->post('username', true)));
+            else
+                $user = $this->User->fetchOne(array('email' => $this->input->post('username', true)));
+
+            if(!$user) {
+                $this->notice->error('Användarnamnet eller e-postadressen kunde inte hittas.');
+                redirect('account/forgot');
+            }
+
+            $already_sent = $this->db->where('username', $user->username)->get('password_recovery')->row();
             if($already_sent) {
                 $this->notice->error('Ett mail för återställning har redan skickats.');
                 redirect();
             }
 
-            if ($user && $user->email) {
+            if ($user->email) {
                 $this->load->library('email');
 
                 $random_hash = sha1(uniqid(rand(), true));
@@ -48,21 +58,18 @@ class Account_Controller extends MY_Controller {
                 $this->email->subject('Skivsamlingen: Återställ lösenord');
                 $this->email->message('Hej!
 
-En anmälan om att återställa ditt lösenord har skickats till Skivsamlingen. För att genomföra återställningen går du till följande adress: ' . base_url() . 'account/recover/' . $username . '/' . $random_hash . '. Länken är bara giltig i 48 timmar.
+En anmälan om att återställa ditt lösenord har skickats till Skivsamlingen. För att genomföra återställningen går du till följande adress: ' . site_url('account/recover/' . $username) . '/' . $random_hash . '. Länken är bara giltig i 48 timmar.
 
 Detta mail är skickat automatiskt från http://skivsamlingen.se/. Om du inte begärde återställningen kan du ignorera detta mail.');
 
                 if($this->email->send()) {
-                    $this->db->set('username', $username)->set('hash', $random_hash)->set('created_on', mktime())->insert('password_recovery');
-                    $this->notice->success('Ett mail har skickats till den angivna e-postadressen för ' . $username . '. Använd länken i mailet för att återställa lösenordet.');
+                    $this->db->set('username', $user->username)->set('hash', $random_hash)->set('created_on', mktime())->insert('password_recovery');
+                    $this->notice->success('Ett mail har skickats till din registrerade e-postadress. Använd länken i mailet för att återställa lösenordet.');
                 } else {
                     log_message('error', $this->email->print_debugger());
                     $this->notice->error('Vi ber om ursäkt! Ett problem uppstod när mailet skulle skickas. Var god försök igen senare.');
                 }
                 redirect();
-            } else {
-                $this->notice->error('Användarnamnet eller e-postadressen kunde inte hittas.');
-                redirect('account/forgot');
             }
         }
     }
@@ -70,7 +77,7 @@ Detta mail är skickat automatiskt från http://skivsamlingen.se/. Om du inte be
     function recover($username, $hash)
     {
         $this->db->where('created_on <', mktime() - 60*60*48)->delete('password_recovery');
-        if ($this->db->where('username', $username)->where('hash', $hash)->get('password_recovery')) {
+        if ($this->db->where('username', $username)->where('hash', $hash)->get('password_recovery')->result()) {
             $this->load->model('User');
             $this->form_validation->set_rules('passconf', 'Kontrollfältet', 'matches[password]');
 
@@ -162,7 +169,7 @@ Detta mail är skickat automatiskt från http://skivsamlingen.se/. Om du inte be
 
     function login() {
         if ($this->auth->isUser())
-            redirect('user/profile/' . $this->auth->getUsername());
+            redirect('users/' . $this->auth->getUsername());
         $username = $this->input->post('username', TRUE);
         if ($username !== FALSE) {
             if ($this->auth->login($username, $this->input->post('password'))) {
@@ -170,8 +177,7 @@ Detta mail är skickat automatiskt från http://skivsamlingen.se/. Om du inte be
                     $this->auth->remember();
                 }
                 $this->notice->success('Du är inloggad!', 'login');
-                //redirect('users/' . $this->auth->getUsername());
-                redirect();
+                redirect($this->history->pop());
             } else {
                 $this->notice->error('Felaktiga användaruppgifter.');
                 redirect('account/login');
@@ -181,7 +187,7 @@ Detta mail är skickat automatiskt från http://skivsamlingen.se/. Om du inte be
 
     function logout() {
         $this->auth->logout();
-        redirect('');
+        redirect();
     }
 
 }

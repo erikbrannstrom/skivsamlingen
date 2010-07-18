@@ -10,10 +10,7 @@ class Collection_Controller extends MY_Controller {
         }
         $this->load->model('Collection');
         $this->load->model('Record');
-    }
-
-    function index() {
-        redirect();
+        $this->history->exclude();
     }
 
     function delete($record = NULL) {
@@ -25,7 +22,7 @@ class Collection_Controller extends MY_Controller {
             if ($res == 1) {
                 $this->notice->success($this->data['record']->name . ' - ' . $this->data['record']->title . ' har tagits bort.');
             }
-            redirect('users/' . $this->auth->getUsername());
+            redirect($this->history->pop());
         } else {
             $this->data['record'] = $this->Record->get($record, $this->auth->getUserID());
         }
@@ -40,10 +37,10 @@ class Collection_Controller extends MY_Controller {
         $this->data['record'] = $this->Record->get($record, $this->auth->getUserID());
         if($this->input->post('action') == 'delete') {
             $this->Comment->delete($this->auth->getUserID(), $record);
-            redirect('users/' . $this->auth->getUsername());
+            redirect($this->history->pop());
         } else if ($this->Comment->validateData() !== false) {
             $this->Comment->set($this->auth->getUserID(), $record, $this->input->post('comment'));
-            redirect('users/' . $this->auth->getUsername());
+            redirect($this->history->pop());
         }
     }
 
@@ -55,7 +52,7 @@ class Collection_Controller extends MY_Controller {
         $this->load->library('form_validation');
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
         $this->form_validation->set_rules('id', 'ID', 'required');
-        $this->form_validation->set_rules('artist', 'Artist', 'required|max_length[100]|xss_clean');
+        $this->form_validation->set_rules('artist', 'Artist', 'required|max_length[64]|xss_clean');
         $this->form_validation->set_rules('title', 'Titel', 'required|max_length[150]|xss_clean');
         $this->form_validation->set_rules('year', 'År', 'is_natural_no_zero|exact_length[4]');
         $this->form_validation->set_rules('format', 'Format', 'max_length[30]|xss_clean');
@@ -95,7 +92,7 @@ class Collection_Controller extends MY_Controller {
             if($id == 0) {
                 redirect('collection/record');
             } else {
-                redirect('users/'.$this->auth->getUsername());
+                redirect($this->history->pop());
             }
         }
     }

@@ -43,6 +43,8 @@
 $route['default_controller'] = "home_controller";
 $route['scaffolding_trigger'] = "";
 
+$route['about'] = "home_controller/about";
+
 $route['news/(:num)'] = "news_controller/index/$1";
 
 $route['users/search'] = "users_controller/search";

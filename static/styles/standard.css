@@ -23,7 +23,7 @@ body {
 	margin: 0;
 }
 
-#footer { margin-top: 1em; padding: 10px 5px; border: 1px solid #ccc; background-color: #000; -moz-border-radius: 3px; -webkit-border-radius: 3px; color: #f0f0f0 }
+#footer { margin-top: 1em; padding: 10px 5px; border: 1px solid #ccc; background-color: #000; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; color: #f0f0f0 }
 
 #menu { height: 30px; line-height: 30px; padding: 2px; margin: 0; vertical-align: middle }
 
@@ -32,7 +32,10 @@ body {
 #menu a.item { letter-spacing: 0.1em; color: #fff; font-size: 20px; font-family: BorisBlackBloxx, "Arial Black", sans-serif; height: 30px; line-height: 28px; border: 0px solid black; display: block; float: left; padding: 0 10px; margin: 0 10px; text-decoration: none;; vertical-align: middle }
 #menu a.item:hover { color: #000; background: url('../images/white-50.png'); }
 
-input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px; -moz-border-radius: 3px; height: 18px; width: 267px; margin: 4px 0px; background: #eedf9e url("../images/icons/search.png") no-repeat; background-position: 3px 50%; display: block }
+input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px;
+              -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; height: 18px; width: 267px; margin: 4px 0px;
+              background: #eedf9e url("../images/icons/search.png") no-repeat;
+              background-position: 3px 50%; display: block }
 input#query:hover, input#query:focus { background: #efefef url("../images/icons/search.png") no-repeat; background-position: 3px 50%; }
 .ui-menu .ui-menu-item a.total { color: #666; border-top: 1px solid #ccc; padding-left: 10px }
 
@@ -42,7 +45,7 @@ input#query:hover, input#query:focus { background: #efefef url("../images/icons/
 
 #top { height: 100px; background: url('../images/vinyl-background.jpg') top left repeat-x  }
 
-#content { padding: 10px 5px; border: 1px solid #ccc; background-color: #fff; -moz-border-radius: 3px; -webkit-border-radius: 3px }
+#content { padding: 10px 5px; border: 1px solid #ccc; background-color: #fff; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
 
 img { border: 0 }
 
@@ -80,7 +83,8 @@ h1 {
 
 h2 {
 	font-size: 1.5em;
-	color: #73241d;
+	color: #531a15;
+        border-bottom: 1px solid #cebebe;
 	margin: 0.5em 0;
 }
 

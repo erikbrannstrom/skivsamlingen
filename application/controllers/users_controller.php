@@ -18,7 +18,7 @@ class Users_Controller extends MY_Controller {
         $direction = $this->uri->segment(5, 'asc');
 
         $this->load->library('pagination');
-        $config['base_url'] = base_url() . 'users/' . $username;
+        $config['base_url'] = site_url('users/' . $username);
         $config['total_rows'] = $this->User->getNumberOfRecords($user->id);
         $config['per_page'] = ($this->auth->isUser() ? $this->auth->getUser()->per_page : 20);
         $config['uri_segment'] = 3;
@@ -77,6 +77,7 @@ class Users_Controller extends MY_Controller {
     }
 
     function export($username = NULL) {
+        $this->history->exclude();
         $user = $this->User->fetchOne(array('username' => $username));
         if (!$user) {
             redirect('users/search/' . $username);
@@ -102,6 +103,7 @@ class Users_Controller extends MY_Controller {
     }
 
     function printview($username = NULL) {
+        $this->history->exclude();
         $user = $this->User->fetchOne(array('username' => $username));
         if (!$user) {
             redirect('users/search/' . $username);
@@ -119,6 +121,7 @@ class Users_Controller extends MY_Controller {
             $query = $this->input->post('query');
         }
         if ($this->is_ajax()) {
+            $this->history->exclude();
             $this->_pass();
             $users = $this->User->search($query);
             $result = array();

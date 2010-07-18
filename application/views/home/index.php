@@ -3,29 +3,9 @@
 <?=$this->notice->get($key)?>
 <?php endforeach; ?>
 
-    <div class="error">
-<h2>DETTA ÄR EN BETAVERSION</h2>
-<p>Var god notera att detta är endast en betaversion och <strong>alla ändringar och registreringar som görs kommer att försvinna</strong> när den färdiga versionen läggs upp.
-Vid problem, maila gärna <a href="mailto:erik.brannstrom@skivsamlingen.se">erik.brannstrom@skivsamlingen.se</a>.</p>
-</div>
-
 <?php if($this->auth->isGuest()): ?>
 
 <h2>Vad är Skivsamlingen?</h2>
-  <div style="float:right; padding: 10px; margin: 5px; border: 1px solid #cccccc">
-<strong>Köp dina skivor här</strong><br />
-
-<a href="http://clk.tradedoubler.com/click?p=46&a=1301841&g=16153296" target="_blank">
-CDON</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16153296)a(1301841)">
-<br />
-<a href="http://clk.tradedoubler.com/click?p=19124&a=1301841&g=402088" target="_blank">
-
-Ginza</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(402088)a(1301841)">
-<br />
-<a href="http://clk.tradedoubler.com/click?p=50697&a=1301841&g=16726524" target="_blank">
-Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(1301841)">
-
-</div>
   <p>Skivsamlingen är en plats där du som skivsamlare kan föra register över vilka skivor du har i samlingen. Kanske behövs en omorganisation bland skivorna? Kanske är det så att du snabbt och enkelt vill kunna visa för andra vad du har för musiksmak? Eller vill du bara ha järnkoll på din egen samling? Registrera dig nu och börja lägga in dina skivor!</p>
 
   <h2>Hur använder man Skivsamlingen?</h2>
@@ -47,7 +27,7 @@ Megastore</a> <img src="http://impse.tradedoubler.com/imp?type(inv)g(16726524)a(
 
 <p><strong>Med vänliga hälsningar,</strong><br />Erik
 
-
+<?php endif; ?>
 
 <h2>Statistik</h2>
 
@@ -134,8 +114,6 @@ foreach($popular_albums as $row): ?>
 <?php endforeach; ?>
 </table>
 </div>
-
-<?php endif; ?>
 
 </div> <!-- End: Main content -->
 <div id="" class="grid_4 sidebar"> <!-- Start: Sidebar -->

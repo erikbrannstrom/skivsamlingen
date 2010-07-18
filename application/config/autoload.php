@@ -39,7 +39,7 @@
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database','auth', 'notice', 'firephp', 'notification');
+$autoload['libraries'] = array('database','auth', 'notice', 'firephp', 'notification', 'history');
 
 
 /*

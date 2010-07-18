@@ -19,7 +19,7 @@ $(function() {
 <label>Användarnamn</label>
 <?=form_error('username')?>
 <input type="text" class="text" name="username" maxlength="20" value="<?php echo set_value('username');?>" />
-<span>Minst 3 och max 20 tecken. Får endast innehålla a-z, 0-9, streck, understreck och punkt.</span>
+<span>Minst 3 och max 24 tecken. Får endast innehålla a-z, 0-9, streck, understreck och punkt.</span>
 
 <label>Lösenord</label>
 <?=form_error('password')?>
@@ -47,7 +47,7 @@ $(function() {
 <label>Namn</label>
 <?=form_error('name')?>
 <input type="text" name="name" class="text" maxlength="50" value="<?=set_value('name')?>" />
-<span>Max 60 tecken.</span>
+<span>Max 50 tecken.</span>
 
 <label>Kön</label>
 <?=form_error('sex')?>

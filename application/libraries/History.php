@@ -69,7 +69,7 @@ class History {
         if(!$url) {
             $url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $_SERVER['PHP_SELF'];
         }
-        $url = preg_replace("|".base_url()."|", "/", $url);
+        $url = preg_replace("|".site_url()."|", "", $url);
         
         return $url;
     }
@@ -79,7 +79,7 @@ class History {
      * shifting it off.
      */
     public function end() {
-        return preg_replace("|".base_url()."|", "/", isset($this->history[0]) ? $this->history[0] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $_SERVER['PHP_SELF']));
+        return preg_replace("|".site_url()."|", "", isset($this->history[0]) ? $this->history[0] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $_SERVER['PHP_SELF']));
     } 
     
     /**

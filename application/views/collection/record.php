@@ -1,5 +1,5 @@
 <div class="grid_6"> <!-- Start: Content -->
-
+<?=$this->notice->get()?>
 <h2><?=($id == 0) ? 'Ny' : 'Redigera'?> skiva</h2>
 <?= form_open('collection/record') ?>
 <?= form_hidden('id', set_value('id', $record->id))?>
@@ -8,7 +8,7 @@
 <?=form_error('artist')?>
 <input type="text" class="text" name="artist" maxlength="100" value="<?php echo set_value('artist', $record->name);?>" />
 <span>Artisten eller gruppen som släppt skivan, t.ex. The Beatles, U2 eller Radiohead.
-För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max 100 tecken.</span>
+För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max 64 tecken.</span>
 
 <label>Titel</label>
 <?=form_error('title')?>
@@ -23,7 +23,7 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 <label>Format</label>
 <?=form_error('format')?>
 <input type="text" class="text" name="format" maxlength="30" value="<?php echo set_value('format', $record->format);?>" />
-<span>Formatet på skivan, t.ex. CD, 12" eller CD/DVD. Kan lämnas tomt.</span>
+<span>Formatet på skivan, t.ex. CD, 12" eller CD/DVD. Max 30 tecken. Kan lämnas tomt.</span>
 
 <?php if($id == 0): ?>
 <label>Kommentar</label>

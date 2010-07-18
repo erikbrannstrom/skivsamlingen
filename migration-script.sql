@@ -30,8 +30,8 @@ ALTER TABLE `users` ADD `public_email` TINYINT( 1 ) NOT NULL AFTER `email`;
 # DROP TABLE `friends` ;
 ALTER TABLE `records` CHANGE `format` `format` VARCHAR( 30 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL;
 ALTER TABLE `records` CHANGE `title` `title` VARCHAR( 150 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL ;
-ALTER TABLE `artists` CHANGE `name` `name` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL ;
-ALTER TABLE `users` CHANGE `email` `email` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL ;
+ALTER TABLE `artists` CHANGE `name` `name` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL ;
+ALTER TABLE `users` CHANGE `email` `email` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_swedish_ci NULL DEFAULT NULL ;
 ALTER TABLE `users` DROP INDEX `password` ;
 UPDATE users SET per_page = 100 WHERE per_page > 100 OR per_page = 0;
 ALTER TABLE `records` CHANGE `id` `id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT ;
@@ -70,6 +70,6 @@ session_id varchar(40) DEFAULT '0' NOT NULL,
 ip_address varchar(16) DEFAULT '0' NOT NULL,
 user_agent varchar(50) NOT NULL,
 last_activity int(10) unsigned DEFAULT 0 NOT NULL,
-user_data text NOT NULL,
+user_data text DEFAULT '' NOT NULL,
 PRIMARY KEY (session_id)
 );
