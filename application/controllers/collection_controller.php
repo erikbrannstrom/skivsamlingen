@@ -154,13 +154,10 @@ class Collection_Controller extends MY_Controller {
 					$record_id = $this->Record->getId($artist_id, $data['title'],
                             $data['year'], $data['format']);
 					$this->Collection->addItem($this->auth->getUserId(), $record_id);
-					//echo "{$data['artist']} ($artist_id) - {$data['title']} ($record_id) <br />";
 
 					$active = false;
-					// Check shit
 				}
 			}
-			//die;
 			$this->notice->success('Din XML-fil har importerats!');
 			redirect('users/'.$this->auth->getUser()->username);
 		} else {
