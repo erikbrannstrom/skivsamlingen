@@ -118,6 +118,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
 <? endif; ?>
 
 <div class="box">
+<img alt="Profilbild från Gravatar.com" src="http://www.gravatar.com/avatar/<?=md5(strtolower(trim($user->email)))?>?s=100&d=mm" class="gravatar" />
 <h3>Profil</h3>
 <?php if($user->name): ?>
 <strong>Namn:</strong> <?=$user->name?><br />
@@ -137,12 +138,14 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
 <strong>Medlem sedan:</strong> <?=strtolower(strftime('%e %B %Y', mysql_to_unix($user->registered)))?>
 </div>
 
+<?php if($user->about): ?>
 <div class="box">
 <h3>Om mig</h3>
 <p>
 <?=nl2br($user->about)?>
 </p>
 </div>
+<?php endif; ?>
 
 <div class="box">
 <h3>Populära artister</h3>
