@@ -66,6 +66,36 @@ class MY_Form_Validation extends CI_Form_Validation {
 
     // --------------------------------------------------------------------
 
+	function validate($str, $rules)
+	{
+		if(!is_array($rules))
+			$rules = explode('|', $rules);
+
+		if ( ! in_array('required', $rules) && is_null($str))
+			return TRUE;
+
+		foreach($rules as $rule) {
+			// Strip the parameter (if exists) from the rule
+			// Rules can contain a parameter: max_length[5]
+			$param = FALSE;
+			if (preg_match("/(.*?)\[(.*?)\]/", $rule, $match)) {
+				$rule	= $match[1];
+				$param	= $match[2];
+			}
+
+			if ( ! method_exists($this, $rule)) {
+				// If our own wrapper function doesn't exist we see if a native PHP function does.
+				// Users can use any native PHP function call that has one param.
+				if (function_exists($rule)) {
+					return $rule($str);
+				}
+				continue;
+			} else {
+				return $this->$rule($str, $param);
+			}
+		}
+	}
+
     /**
      * Alpha-numeric with underscores, dashes and dots
      *
@@ -80,6 +110,7 @@ class MY_Form_Validation extends CI_Form_Validation {
 
     /**
      * Validate date according to the specified format.
+	 * PHP 5.3 ONLY!
      *
      * @access	public
      * @param	string

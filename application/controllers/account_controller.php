@@ -58,7 +58,7 @@ class Account_Controller extends MY_Controller {
                 $this->email->subject('Skivsamlingen: Återställ lösenord');
                 $this->email->message('Hej!
 
-En anmälan om att återställa ditt lösenord har skickats till Skivsamlingen. För att genomföra återställningen går du till följande adress: ' . site_url('account/recover/' . $username) . '/' . $random_hash . '. Länken är bara giltig i 48 timmar.
+En anmälan om att återställa ditt lösenord har skickats till Skivsamlingen. För att genomföra återställningen går du till följande adress: ' . site_url('account/recover/' . $user->username) . '/' . $random_hash . '. Länken är bara giltig i 48 timmar.
 
 Detta mail är skickat automatiskt från http://skivsamlingen.se/. Om du inte begärde återställningen kan du ignorera detta mail.');
 

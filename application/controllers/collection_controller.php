@@ -97,6 +97,99 @@ class Collection_Controller extends MY_Controller {
         }
     }
 
+	function import() {
+		if ( isset($_FILES['userfile']) ) {
+			$file = $_FILES['userfile'];
+			if(substr($file['name'], -3) !== 'xml') {
+				$this->notice->error('Endast XML-filer är tillåtna.');
+				redirect('collection/import');
+			}
+			$reader = new XMLReader();
+			$reader->open($file['tmp_name']);
+			$active = false;
+			$this->load->model('Artist');
+            $this->load->model('Comment');
+			$import_type = FALSE;
+			while($reader->read()) {
+				if($reader->nodeType == XMLReader::ELEMENT && $reader->name == 'collection') {
+					$import_type = 'skivsamlingen';
+					break;
+				} else if($reader->nodeType == XMLReader::ELEMENT && $reader->name == 'recordcollection') {
+					$import_type = 'pop.nu';
+					break;
+				}
+			}
+			if($import_type === FALSE) {
+				$this->notice->error('XML-filen var inte korrekt formaterad.');
+				redirect('users/'.$this->auth->getUser()->username);
+			}
+			$this->Collection->deleteAll($this->auth->getUser()->id);
+			while($reader->read()) {
+				if($reader->nodeType == XMLReader::ELEMENT && $reader->name == 'record') {
+					$active = true;
+					$active = new SimpleXMLElement($reader->readOuterXml());
+				} else if($reader->nodeType == XMLReader::END_ELEMENT && $reader->name == 'record') {
+					$data['artist'] = html_entity_decode((string)$active->artist);
+					$data['title'] = html_entity_decode((string)$active->title);
+					if($import_type == 'skivsamlingen') {
+						$data['year'] = (isset($active->year) ? (string)$active->year : NULL);
+						$data['format'] = (isset($active->format) ? (string)$active->format : NULL);
+					} else {
+						$data['year'] = (isset($active->year_release) ? (string)$active->year_release : NULL);
+						$data['format'] = ($active->format == ' obestämt' ? NULL : (string)$active->format);
+					}
+					// VALIDATION
+					if(!$this->form_validation->validate($data['artist'], array('required', 'max_length[64]')))
+						return FALSE; // Should probably store an error message..
+					if(!$this->form_validation->validate($data['title'], array('required', 'max_length[150]')))
+						return FALSE;
+					if(!$this->form_validation->validate($data['year'], array('is_natural_no_zero', 'exact_length[4]')))
+						return FALSE;
+					if(!$this->form_validation->validate($data['format'], 'max_length[30]'))
+						return FALSE;
+					$data['artist'] = $this->form_validation->xss_clean($data['artist']);
+					$data['title'] = $this->form_validation->xss_clean($data['title']);
+					$data['format'] = $this->form_validation->xss_clean($data['format']);
+					$artist_id = $this->Artist->getArtistId($data['artist']);
+					$record_id = $this->Record->getId($artist_id, $data['title'],
+                            $data['year'], $data['format']);
+					$this->Collection->addItem($this->auth->getUserId(), $record_id);
+					//echo "{$data['artist']} ($artist_id) - {$data['title']} ($record_id) <br />";
+
+					$active = false;
+					// Check shit
+				}
+			}
+			//die;
+			$this->notice->success('Din XML-fil har importerats!');
+			redirect('users/'.$this->auth->getUser()->username);
+		} else {
+			
+		}
+	}
+		/*
+		 * Let user upload an XML file
+		 * While more elements exists
+		 *		if element = <record>
+		 *			mark ACTIVE
+		 *		else if element = </record>
+		 *			mark INACTIVE
+		 *			check $data:
+		 *				validate $data['artist']
+		 *				validate $data['title']
+		 *				set $data['format'] to NULL if value is ' obestämt'
+		 *				set $data['year'] to NULL if not set
+		 *				escape html enteties
+		 *			save $data to db
+		 *			clear $data
+		 *		else if active record
+		 *				<artist>: store $data['artist']
+		 *				<title>: store $data['title']
+		 *				<format>: store $data['format']
+		 * 				<year_release>: store $data['year']
+		 *				default: ERROR
+		*/
+
 }
 
 /* End of file user.php */

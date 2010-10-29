@@ -26,6 +26,17 @@
 </div> <!-- End: Main content -->
 <div class="grid_4 sidebar"> <!-- Start: Sidebar -->
 
+<div class="box">
+
+    <h3>Kontakt</h3>
+  <p>
+      <strong>Erik Brännström</strong><br />
+      <em>Administratör</em><br />
+      <a href="mailto:erik.brannstrom@skivsamlingen.se">erik.brannstrom@skivsamlingen.se</a>
+  </p>
+
+</div>
+
 <div style="padding-top: 15px; background-color: #fff">
 <script type="text/javascript">
 var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402779)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
