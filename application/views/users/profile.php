@@ -56,7 +56,7 @@ $(function() {
 		} else {
 			$name = $record->name;
 		}
-        echo anchor('music/artist/'.$record->artist_id, htmlspecialchars($name, ENT_COMPAT, 'UTF-8'));
+        echo htmlspecialchars($name, ENT_COMPAT, 'UTF-8');
 		?></strong></td>
 		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
