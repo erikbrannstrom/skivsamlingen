@@ -56,7 +56,7 @@ $(function() {
 		} else {
 			$name = $record->name;
 		}
-                echo htmlspecialchars($name, ENT_COMPAT, 'UTF-8');
+        echo anchor('music/artist/'.$record->artist_id, htmlspecialchars($name, ENT_COMPAT, 'UTF-8'));
 		?></strong></td>
 		<td<?=($user->id == $this->auth->getUserID()) ? ' colspan="2"' : ''?> width="25%"><em><?=$record->num_records?> <?=($record->num_records == 1) ? 'skiva' : 'skivor'?></em></td>
 	</tr>
@@ -136,6 +136,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
     setlocale(LC_TIME, 'sv_SE');
 ?>
 <strong>Medlem sedan:</strong> <?=strtolower(strftime('%e %B %Y', mysql_to_unix($user->registered)))?>
+<div class="clear"></div>
 </div>
 
 <?php if($user->about): ?>
