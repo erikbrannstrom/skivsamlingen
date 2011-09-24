@@ -99,6 +99,10 @@ class Collection_Controller extends MY_Controller {
 
 	function import() {
 		if ( isset($_FILES['userfile']) ) {
+            if( $this->auth->getUser()->last_import !== null && $this->auth->getUser()->last_import > (time() - 60*60)) {
+                $this->notice->error('Det har inte gått en timme sedan din senaste import.');
+                redirect('collection/import');
+            }
 			$file = $_FILES['userfile'];
 			if(substr($file['name'], -3) !== 'xml') {
 				$this->notice->error('Endast XML-filer är tillåtna.');
@@ -123,6 +127,7 @@ class Collection_Controller extends MY_Controller {
 				$this->notice->error('XML-filen var inte korrekt formaterad.');
 				redirect('users/'.$this->auth->getUser()->username);
 			}
+            $this->User->update($this->auth->getUserId(), array('last_import' => time()), false);
 			$this->Collection->deleteAll($this->auth->getUser()->id);
 			while($reader->read()) {
 				if($reader->nodeType == XMLReader::ELEMENT && $reader->name == 'record') {
@@ -161,7 +166,7 @@ class Collection_Controller extends MY_Controller {
 			$this->notice->success('Din XML-fil har importerats!');
 			redirect('users/'.$this->auth->getUser()->username);
 		} else {
-			
+			$this->data['user'] = $this->auth->getUser();
 		}
 	}
 		/*
