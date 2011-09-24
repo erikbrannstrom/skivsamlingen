@@ -13,7 +13,7 @@
   <p>När du sedan är inloggad så kommer du åt dina nyvunna alternativ under din profil. Denna sida tillsammans med sidan där du kan lägga till nya skivor kommer du åt i menyn under loggan.</p>
   
   <h2>Kostar det något?</h2>
-  <p><strong>Nej!</strong> Det enda du behöver är en webbläsare - för bästa resultat rekommenderas <a href="http://www.mozilla.com/firefox/">Firefox 3.6</a> eller <a href="http://www.google.com/chrome/">Google Chrome</a> - och en internetuppkoppling (vilket du ju verkar ha). Annars är det bara att sätta igång med samlandet och organiserandet.
+  <p><strong>Nej!</strong> Det enda du behöver är en webbläsare - för bästa resultat rekommenderas senaste versionen av <a href="http://www.mozilla.com/firefox/">Mozilla Firefox</a> eller <a href="http://www.google.com/chrome/">Google Chrome</a> - och en internetuppkoppling (vilket du ju verkar ha). Annars är det bara att sätta igång med samlandet och organiserandet.</p>
   
 <?php else: $user = $this->auth->getUser();?>
 <h2>Hej <?=($user->name) ? $user->name : $user->username?>!</h2>
@@ -114,7 +114,15 @@ foreach($popular_albums as $row): ?>
 <?php endforeach; ?>
 </table>
 </div>
-
+<?php if($this->auth->isGuest()): ?>
+<div style="width: 48%; float: left; margin-top: 20px">
+<h3>Vilken fantastisk plats för musiksamlare!</h3>
+<p style="">”Vi på <a href="http://www.pokerlistings.se/">pokerlistings.se – en 
+guide till poker</a> vill tacka teamet bakom Skivsamlingen.se för er 
+fantastiska produkt som verkligen hjälper skivsamlare som vi är!”<br />
+– Johan, medarbetare hos Pokerlistings.</p>
+</div>
+<?php endif; ?>
 </div> <!-- End: Main content -->
 <div id="" class="grid_4 sidebar"> <!-- Start: Sidebar -->
 
