@@ -28,7 +28,7 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 <?php if($id == 0): ?>
 <label>Kommentar</label>
 <?=form_error('comment')?>
-<input type="text" class="text" name="comment" maxlength="30" value="<?php echo set_value('comment');?>" />
+<input type="text" class="text" name="comment" maxlength="255" value="<?php echo set_value('comment');?>" />
 <span>Max 255 tecken.</span>
 <?php endif; ?>
 
@@ -62,7 +62,7 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 <?= form_open('collection/comment', '', array('nonce' => false)); ?>
 <label>Kommentar</label>
 <?=form_error('comment')?>
-<input type="text" class="text" name="comment" maxlength="30" value="<?php echo set_value('comment', $record->comment);?>" />
+<input type="text" class="text" name="comment" maxlength="255" value="<?php echo set_value('comment', $record->comment);?>" />
 <span>Max 255 tecken.</span>
 <br />
 
