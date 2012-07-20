@@ -74,6 +74,10 @@ class User extends MY_Model {
                 ->join('records r', 'r.id = ru.record_id', 'left')
                 ->join('artists a', 'r.artist_id = a.id', 'left')
                 ->where('ru.user_id', $uid);
+
+        if (strtolower($dir) != "asc") {
+            $dir = "DESC";
+        }
         switch ($order) {
             case 'format':
                 $this->db->order_by("r.format $dir, TRIM(LEADING 'The ' FROM a.name) $dir, r.title $dir, r.year $dir");

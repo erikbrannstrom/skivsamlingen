@@ -56,11 +56,5 @@ $route['users'] = "users_controller/search";
 
 $route['([^/]*)(.*)'] = "$1_controller$2";
 
-/*
-$route['user/(:any)/(:any)'] = "usercontroller/$1/$2";
-$route['user/(:any)'] = "usercontroller/$1";
-$route['user'] = "usercontroller";
-*/
-
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */

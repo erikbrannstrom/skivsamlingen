@@ -169,28 +169,6 @@ class Collection_Controller extends MY_Controller {
 			$this->data['user'] = $this->auth->getUser();
 		}
 	}
-		/*
-		 * Let user upload an XML file
-		 * While more elements exists
-		 *		if element = <record>
-		 *			mark ACTIVE
-		 *		else if element = </record>
-		 *			mark INACTIVE
-		 *			check $data:
-		 *				validate $data['artist']
-		 *				validate $data['title']
-		 *				set $data['format'] to NULL if value is ' obestämt'
-		 *				set $data['year'] to NULL if not set
-		 *				escape html enteties
-		 *			save $data to db
-		 *			clear $data
-		 *		else if active record
-		 *				<artist>: store $data['artist']
-		 *				<title>: store $data['title']
-		 *				<format>: store $data['format']
-		 * 				<year_release>: store $data['year']
-		 *				default: ERROR
-		*/
 
 }
 
