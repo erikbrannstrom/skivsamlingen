@@ -1,2 +1,3 @@
 *.cache
 application/logs/*.php
+application/config/config.php
