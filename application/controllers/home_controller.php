@@ -3,7 +3,7 @@
 class Home_Controller extends MY_Controller {
 
     function __construct() {
-        parent::MY_Controller();
+        parent::__construct();
     }
 
     function index() {
@@ -42,7 +42,7 @@ class Home_Controller extends MY_Controller {
             $this->form_validation->set_rules('message', 'Meddelande', 'required|max_length[4000]');
             if ($this->form_validation->run() !== false) {
                 $this->load->library('email');
-                
+
                 $this->email->from($this->input->post('email'), $this->input->post('name'));
                 $this->email->to('erik.brannstrom@skivsamlingen.se');
 
@@ -61,7 +61,7 @@ class Home_Controller extends MY_Controller {
 
     function about()
     {
-        
+
     }
 
 }

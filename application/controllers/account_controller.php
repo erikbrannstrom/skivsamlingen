@@ -3,7 +3,7 @@
 class Account_Controller extends MY_Controller {
 
     function __construct() {
-        parent::MY_Controller();
+        parent::__construct();
         $guests_allowed = array('login', 'register', 'forgot', 'recover');
         if ($this->auth->isGuest() && !in_array($this->uri->segment(2), $guests_allowed)) {
             // Guests need to login first

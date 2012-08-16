@@ -61,7 +61,7 @@ class MY_Pagination extends CI_Pagination {
      * @param	array	initialization parameters
      */
     function __construct($params = array()) {
-        parent::CI_Pagination($params);
+        parent::__construct($params);
         log_message('debug', "MY Pagination Class Initialized");
     }
 

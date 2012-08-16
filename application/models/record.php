@@ -19,7 +19,7 @@ class Record extends MY_Model {
     }
 
     public function getLatestRecords($limit = 10) {
-        $records = $this->db->select('u.username, r.title, a.name')->from('records_users ru, records r, artists a, users u')->where('ru.record_id = r.id')->where('r.artist_id = a.id')->where('ru.user_id = u.id')->orderBy('r.id DESC')->limit($limit)->get();
+        $records = $this->db->select('u.username, r.title, a.name')->from('records_users ru, records r, artists a, users u')->where('ru.record_id = r.id')->where('r.artist_id = a.id')->where('ru.user_id = u.id')->order_by('r.id DESC')->limit($limit)->get();
         return $records->result();
     }
 

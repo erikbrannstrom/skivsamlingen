@@ -3,7 +3,7 @@
 class Collection_Controller extends MY_Controller {
 
     function __construct() {
-        parent::MY_Controller();
+        parent::__construct();
         if ($this->auth->isGuest()) {
             $this->notice->error('Du måste vara inloggad för att kunna göra detta.');
             redirect();

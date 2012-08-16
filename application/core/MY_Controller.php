@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A base controller that provides clever model 
+ * A base controller that provides clever model
  * loading, view loading and layout support.
  *
  * Edit has removed the model loading and made a slight change to the view rendering.
@@ -14,7 +14,7 @@
  * @author Jamie Rumbelow <http://jamierumbelow.net>
  * @copyright Copyright (c) 2009, Jamie Rumbelow <http://jamierumbelow.net>
  */
-class MY_Controller extends Controller {
+class MY_Controller extends CI_Controller {
 
     /**
      * The view to load, only set if you want
@@ -76,8 +76,8 @@ class MY_Controller extends Controller {
      *
      * @author Jamie Rumbelow
      */
-    public function MY_Controller() {
-        parent::Controller();
+    public function __construct() {
+        parent::__construct();
         $this->output->enable_profiler(false);
     }
 
@@ -172,7 +172,7 @@ class MY_Controller extends Controller {
     }
 
     /**
-     * Renders the current view and adds it to the 
+     * Renders the current view and adds it to the
      * output buffer. Useful for rendering more than one
      * view at once.
      *

@@ -18,12 +18,6 @@ $(function() {
 <div style="width: 47%; float: left; padding: 0 1em;">
 <h2>Inställningar</h2>
 
-<?php if($this->form_validation->error_string): ?>
-<div class="error">
-<?=$this->form_validation->error_string?>
-</div>
-<? endif; ?>
-
 <?=form_open('account/edit')?>
 <?=form_error('name')?>
 <label>Namn</label> <input type="text" name="name" class="text" maxlength="50" value="<?=set_value('name', $user->name)?>" />

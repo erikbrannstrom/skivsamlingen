@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
  * @category	Libraries
  * @author		Erik Brännström
  */
-class MY_Model extends Model {
+class MY_Model extends CI_Model {
 
     /**
      * Name of primary key field(s) in table.
@@ -35,17 +35,10 @@ class MY_Model extends Model {
     private $_validated = false;
 
     /**
-     * PHP4 constructor, see __construct.
-     */
-    public function MY_Model() {
-        $this->__construct();
-    }
-
-    /**
      * Loads parent constructor and validation library.
      */
     public function __construct() {
-        parent::Model();
+        parent::__construct();
         if (!isset($this->form_validation))
             $this->load->library('form_validation');
     }
