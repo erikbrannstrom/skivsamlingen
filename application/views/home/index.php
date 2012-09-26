@@ -11,10 +11,10 @@
   <h2>Hur använder man Skivsamlingen?</h2>
   <p>Till att börja med <a href="<?=site_url('account/register')?>">registrerar</a> du dig. Det enda du behöver fylla i är ett <strong>användarnamn</strong> och ett <strong>lösenord</strong> och sen är det bara att sätta igång!</p>
   <p>När du sedan är inloggad så kommer du åt dina nyvunna alternativ under din profil. Denna sida tillsammans med sidan där du kan lägga till nya skivor kommer du åt i menyn under loggan.</p>
-  
+
   <h2>Kostar det något?</h2>
   <p><strong>Nej!</strong> Det enda du behöver är en webbläsare - för bästa resultat rekommenderas senaste versionen av <a href="http://www.mozilla.com/firefox/">Mozilla Firefox</a> eller <a href="http://www.google.com/chrome/">Google Chrome</a> - och en internetuppkoppling (vilket du ju verkar ha). Annars är det bara att sätta igång med samlandet och organiserandet.</p>
-  
+
 <?php else: $user = $this->auth->getUser();?>
 <h2>Hej <?=($user->name) ? $user->name : $user->username?>!</h2>
 <p>Du har nu loggat in på nya Skivsamlingen. Oavsett om du har varit medlem sedan starten eller precis registrerade dig så följer här en introduktion till hur man använder sidan.</p>
@@ -114,15 +114,6 @@ foreach($popular_albums as $row): ?>
 <?php endforeach; ?>
 </table>
 </div>
-<?php if($this->auth->isGuest()): ?>
-<div style="width: 48%; float: left; margin-top: 20px">
-<h3>Vilken fantastisk plats för musiksamlare!</h3>
-<p style="">”Vi på <a href="http://www.pokerlistings.se/">pokerlistings.se – en 
-guide till poker</a> vill tacka teamet bakom Skivsamlingen.se för er 
-fantastiska produkt som verkligen hjälper skivsamlare som vi är!”<br />
-– Johan, medarbetare hos Pokerlistings.</p>
-</div>
-<?php endif; ?>
 </div> <!-- End: Main content -->
 <div id="" class="grid_4 sidebar"> <!-- Start: Sidebar -->
 
