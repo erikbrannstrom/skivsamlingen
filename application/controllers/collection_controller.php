@@ -127,7 +127,6 @@ class Collection_Controller extends MY_Controller {
 				$this->notice->error('XML-filen var inte korrekt formaterad.');
 				redirect('users/'.$this->auth->getUser()->username);
 			}
-            $this->User->update($this->auth->getUserId(), array('last_import' => time()), false);
 			$this->Collection->deleteAll($this->auth->getUser()->id);
 			while($reader->read()) {
 				if($reader->nodeType == XMLReader::ELEMENT && $reader->name == 'record') {
@@ -144,14 +143,29 @@ class Collection_Controller extends MY_Controller {
 						$data['format'] = ($active->format == ' obestämt' ? NULL : (string)$active->format);
 					}
 					// VALIDATION
-					if(!$this->form_validation->validate($data['artist'], array('required', 'max_length[64]')))
-						return FALSE; // Should probably store an error message..
-					if(!$this->form_validation->validate($data['title'], array('required', 'max_length[150]')))
-						return FALSE;
-					if(!$this->form_validation->validate($data['year'], array('is_natural_no_zero', 'exact_length[4]')))
-						return FALSE;
-					if(!$this->form_validation->validate($data['format'], 'max_length[30]'))
-						return FALSE;
+					if(!$this->form_validation->validate($data['artist'], array('required', 'max_length[64]'))) {
+                        if ($data['artist'] && strlen($data['artist']) >= 64) {
+                            $data['artist'] = mb_substr($data['artist'], 0, 64);
+                        }
+                    }
+					if(!$this->form_validation->validate($data['title'], array('required', 'max_length[150]'))) {
+                        if ($data['title'] && strlen($data['title']) >= 150) {
+                            $data['title'] = mb_substr($data['title'], 0, 150);
+                        }
+                    }
+					if( ! $this->form_validation->validate($data['year'],
+                        array('is_natural_no_zero', 'exact_length[4]'))) {
+                            $data['year'] = (int) $data['year'];
+                            if(!$this->form_validation->validate($data['year'],
+                                array('is_natural_no_zero', 'exact_length[4]'))) {
+                                    $data['year'] = null;
+                            }
+                    }
+					if(!$this->form_validation->validate($data['format'], 'max_length[30]')) {
+                        if ($data['title'] && strlen($data['title']) >= 30) {
+                            $data['title'] = mb_substr($data['title'], 0, 30);
+                        }
+                    }
 					$data['artist'] = $this->form_validation->xss_clean($data['artist']);
 					$data['title'] = $this->form_validation->xss_clean($data['title']);
 					$data['format'] = $this->form_validation->xss_clean($data['format']);
@@ -163,6 +177,7 @@ class Collection_Controller extends MY_Controller {
 					$active = false;
 				}
 			}
+            $this->User->update($this->auth->getUserId(), array('last_import' => time()), false);
 			$this->notice->success('Din XML-fil har importerats!');
 			redirect('users/'.$this->auth->getUser()->username);
 		} else {
