@@ -31,6 +31,13 @@ $(function() {
 <input type="password" class="text" name="passconf" maxlength="20" />
 <span>Måste vara exakt samma som lösenordet.</span>
 
+<label>Robotfilter</label>
+<?=form_error('captcha')?>
+<span class="text">Vad är <?= $captcha_a ?> plus <?= $captcha_b ?>? Skriv svaret med siffror.</span>
+<input type="hidden" name="captcha_a" value="<?= $captcha_a ?>" />
+<input type="hidden" name="captcha_b" value="<?= $captcha_b ?>" />
+<input type="text" class="text" name="captcha" maxlength="10" />
+
 </div>
 
 <div class="grid_4">
@@ -68,7 +75,7 @@ $(function() {
 
 <div class="buttons">
     <button type="submit" class="positive">
-        <img src="<?=static_url('/images/icons/tick.png')?>" alt=""/> 
+        <img src="<?=static_url('/images/icons/tick.png')?>" alt=""/>
         Bli medlem
     </button>
 </div>

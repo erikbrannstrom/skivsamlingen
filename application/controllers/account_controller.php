@@ -1,6 +1,7 @@
 <?php
 
 class Account_Controller extends MY_Controller {
+    private $CAPTCHAS = ['noll', 'ett', 'två', 'tre', 'fyra', 'fem', 'sex', 'sju', 'åtta', 'nio', 'tio', 'elva'];
 
     function __construct() {
         parent::__construct();
@@ -16,6 +17,7 @@ class Account_Controller extends MY_Controller {
     function register() {
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
         $this->form_validation->set_rules('passconf', 'Lösenordskontroll', 'required|matches[password]');
+        $this->form_validation->set_rules('captcha', 'Robotfilter', 'required|callback_captcha_check');
         if ($this->User->validate() === true) { // If validation has completed
             $username = $this->input->post('username');
             $password = $this->input->post('password');
@@ -24,7 +26,24 @@ class Account_Controller extends MY_Controller {
             $this->auth->login($username, $password);
             $this->notice->success('Välkommen till Skivsamlingen ' . $username . '!');
             redirect();
+            return;
         }
+
+        $this->data['captcha_a'] = $this->CAPTCHAS[rand(0, count($this->CAPTCHAS) - 1)];
+        $this->data['captcha_b'] = $this->CAPTCHAS[rand(0, count($this->CAPTCHAS) - 1)];
+    }
+
+    function captcha_check($answer) {
+        $a = $this->input->post('captcha_a');
+        $b = $this->input->post('captcha_b');
+        $correct_answer = array_search($a, $this->CAPTCHAS) + array_search($b, $this->CAPTCHAS);
+
+        if (intval($answer) !== $correct_answer) {
+            $this->form_validation->set_message('captcha_check', 'Fel svar. Är du verkligen en människa?');
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     function forgot()

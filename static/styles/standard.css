@@ -194,6 +194,10 @@ form span {
 	font-size: 10px;
 }
 
+form span.text {
+	font-size: 12px;
+}
+
 input.text, input.title,
 textarea, select {
   margin:0.5em 0;
