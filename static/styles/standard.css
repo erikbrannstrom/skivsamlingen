@@ -8,9 +8,9 @@
     font-style: normal;
 }
 
-*{ margin: 0; padding: 0; }* 
+*{ margin: 0; padding: 0; }*
 
-body { 
+body {
 	vertical-align: middle;
 	/*background: #e3f2f6 url('../images/header-bg.png') repeat-x top left;
 	background-attachment:fixed;*/
@@ -91,7 +91,7 @@ h2 {
 }
 
 h3 {
-	color: #73241d;	
+	color: #73241d;
 	margin: 0.4em 0;
 	font-size: 1.2em;
 }
@@ -103,6 +103,14 @@ h3 {
 .box h3 { margin: 0.2em 0; color: #73241d }
 
 .box li { list-style-position: inside }
+
+ul.donate {
+	list-style: none;
+}
+
+ul.donate li {
+	display: inline-block;
+}
 
 code {
  font-family: Monaco, Verdana, Sans-serif;
@@ -123,12 +131,12 @@ code {
 	border: 0;
 	margin: 2em 0 3em 0;
 }
-	
+
 	.pagination li{
         background: transparent;
 		display: inline;
-		border:0; 
-		margin:0; 
+		border:0;
+		margin:0;
 		padding:0;
 		font-size:11px;
 		list-style:none;
@@ -197,7 +205,7 @@ textarea:focus, select:focus {
   border:1px solid #666;
 }
 
-input.text, 
+input.text,
 input.title   { width: 290px; padding:5px; }
 input.title   { font-size:1.5em; }
 textarea      { width: 390px; height: 250px; padding:5px; font-family: 'Lucida Grande', Verdana, sans-serif; font-size: 11px; }
@@ -251,7 +259,7 @@ input.x-small { width: 50px }
 -------------------------------------------------------------- */
 
 .error,
-.notice, 
+.notice,
 .success    { padding: .8em; margin: 1em 0; border: 2px solid #ddd; }
 
 .error      { background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
