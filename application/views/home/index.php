@@ -149,9 +149,9 @@ foreach($popular_albums as $row): ?>
 <div class="box">
 
 <h3>Senaste skivor</h3>
-<? foreach($latest_records as $record): ?>
+<?php foreach($latest_records as $record): ?>
     <a href="<?=site_url('users/'.$record->username)?>"><?=$record->name?> - <?=$record->title?></a><br />
-<? endforeach; ?>
+<?php endforeach; ?>
 </div>
 
 <div style="padding-top: 15px; background-color: #fff">

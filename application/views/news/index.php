@@ -5,11 +5,11 @@
 <?=$pagination?>
 <div style="clear: both"></div>
 
-<? foreach($news as $item): ?>
+<?php foreach($news as $item): ?>
 <h2><?=$item->title?></h2>
 <div style="font-size: 0.8em"><?=$item->posted?></div>
 <?=$item->body?>
-<?endforeach; ?>
+<?php endforeach; ?>
 
 </div> <!-- End: Main content -->
 

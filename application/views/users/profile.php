@@ -30,9 +30,9 @@ $(function() {
 
 <div style="float: right">
 <ul class="pagination order">
-<? foreach($sort_links as $link): ?>
+<?php foreach($sort_links as $link): ?>
 	<?= $link ?>
-<? endforeach; ?>
+<?php endforeach; ?>
 </ul>
 </div>
 <div style="clear: both;"></div>
@@ -45,8 +45,8 @@ $(function() {
 	$even = false;
 	$i = 0;
 	foreach ($records as $record):
-                $i++;
-		if($prev_artist == NULL || $prev_artist != $record->artist_id): 
+		$i++;
+		if($prev_artist == NULL || $prev_artist != $record->artist_id):
 			$even = false;?>
 	<tr class="artist">
 		<td width="70%"><strong><?php
@@ -105,7 +105,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
 
 <div class="grid_4 sidebar"> <!-- Start: Sidebar -->
 
-<? if($user->id == $this->auth->getUserId()): ?>
+<?php if($user->id == $this->auth->getUserId()): ?>
 <div class="box">
 <h3>Alternativ</h3>
 <ul class="bullets">
@@ -116,7 +116,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
     <li><a href="<?=site_url('collection/record')?>" class="item">Lägg till skiva</a></li>
 </ul>
 </div>
-<? endif; ?>
+<?php endif; ?>
 
 <div class="box">
 <img alt="Profilbild från Gravatar.com" src="http://www.gravatar.com/avatar/<?=md5(strtolower(trim($user->email)))?>?s=100&d=mm" class="gravatar" />
