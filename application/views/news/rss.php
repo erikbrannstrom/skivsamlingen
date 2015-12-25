@@ -21,7 +21,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "
     <dc:rights>Copyright <?php echo gmdate("Y", time()); ?></dc:rights>
     <admin:generatorAgent rdf:resource="http://www.codeigniter.com/" />
 
-    <?php foreach($posts->result() as $entry): ?>
+    <?php foreach($posts as $entry): ?>
 
         <item>
 
@@ -32,7 +32,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "
           <description><![CDATA[
       <?=$entry->body?>
       ]]></description>
-      <pubDate><?php echo date ('r', $entry->posted);?></pubDate>
+      <pubDate><?php echo date('r', strtotime($entry->posted));?></pubDate>
         </item>
 
 

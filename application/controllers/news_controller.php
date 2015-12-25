@@ -31,6 +31,7 @@ class News_Controller extends MY_Controller {
     function rss() {
         $this->history->exclude();
         $this->load->helper('xml');
+        $this->_pass();
         $data['encoding'] = 'utf-8';
         $data['feed_name'] = 'Skivsamlingen';
         $data['feed_url'] = 'http://skivsamlingen.se/';
@@ -39,6 +40,7 @@ class News_Controller extends MY_Controller {
         $data['creator_email'] = 'erik.brannstrom@skivsamlingen.se';
         $data['posts'] = $this->News->get(5);
         header("Content-Type: application/rss+xml");
+        $this->load->view('news/rss', $data);
     }
 
 }
