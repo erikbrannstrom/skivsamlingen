@@ -129,10 +129,6 @@ foreach($popular_albums as $row): ?>
     <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
     </form>
   </li>
-
-  <li>
-    <script id='fbbvyns'>(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=erik.brannstrom&url='+encodeURIComponent(document.URL);f.title='Flattr';f.height=62;f.width=55;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('fbbvyns');</script>
-  </li>
 </ul>
 
   <h3>Senaste nytt</h3>
