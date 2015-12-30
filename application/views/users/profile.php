@@ -80,7 +80,7 @@ $(function() {
         <tr>
             <td colspan="<?=($user->id == $this->auth->getUserID()) ? '3' : '2'?>" style="padding: 10px; text-align: center; border: 1px solid #ccc; border-width: 1px 0">
             <script type="text/javascript">
-var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402756)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
+var uri = 'https://impse.tradedoubler.com/imp?type(js)pool(402756)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
 document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
 </script>
             </td>
@@ -94,7 +94,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
         <tr>
             <td colspan="<?=($user->id == $this->auth->getUserID()) ? '3' : '2'?>" style="padding: 10px; text-align: center; border: 1px solid #ccc; border-width: 1px 0">
             <script type="text/javascript">
-var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402756)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
+var uri = 'https://impse.tradedoubler.com/imp?type(js)pool(402756)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
 document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
 </script>
             </td>
@@ -119,7 +119,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
 <?php endif; ?>
 
 <div class="box">
-<img alt="Profilbild från Gravatar.com" src="http://www.gravatar.com/avatar/<?=md5(strtolower(trim($user->email)))?>?s=100&d=mm" class="gravatar" />
+<img alt="Profilbild från Gravatar.com" src="https://www.gravatar.com/avatar/<?=md5(strtolower(trim($user->email)))?>?s=100&d=mm" class="gravatar" />
 <h3>Profil</h3>
 <?php if($user->name): ?>
 <strong>Namn:</strong> <?=$user->name?><br />
@@ -171,7 +171,7 @@ foreach($latest_records as $record): ?>
 
     <div style="padding-top: 15px; background-color: #fff">
 <script type="text/javascript">
-var uri = 'http://impse.tradedoubler.com/imp?type(js)pool(402779)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
+var uri = 'https://impse.tradedoubler.com/imp?type(js)pool(402779)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
 document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
 </script>
     </div>

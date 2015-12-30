@@ -34,7 +34,7 @@ class News_Controller extends MY_Controller {
         $this->_pass();
         $data['encoding'] = 'utf-8';
         $data['feed_name'] = 'Skivsamlingen';
-        $data['feed_url'] = 'http://skivsamlingen.se/';
+        $data['feed_url'] = 'https://skivsamlingen.se/';
         $data['page_description'] = 'Skivsamlingen - musik är en livsstil.';
         $data['page_language'] = 'sv-se';
         $data['creator_email'] = 'erik.brannstrom@skivsamlingen.se';

@@ -9,8 +9,8 @@
 <link href="<?= base_url() ?>static/styles/tipTip.css" rel="stylesheet" media="screen" type="text/css" />
 <link rel="shortcut icon" href="<?=static_url('favicon.ico')?>" />
 <link href="<?= base_url() ?>static/styles/custom-theme/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
 <script type="text/javascript">
 
@@ -145,7 +145,7 @@ $(document).ready(function() {
 
 </head>
 <body>
-                
+
 <div id="top">
 
 <div id="header" class="container_12"> <!-- Start: header -->
