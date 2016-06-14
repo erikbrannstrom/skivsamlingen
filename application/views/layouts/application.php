@@ -189,7 +189,6 @@ $(document).ready(function() {
 
 <div class="grid_12 ">
 <a href="<?=site_url('about')?>">Om Skivsamlingen</a> | Denna webbsida använder <a href="<?=site_url('about')?>">cookies</a>.
-<span class="streambur"><a href="http://streambur.se/"><img src="<?=static_url('images/streambur-logo.png')?>" /></a></span>
 </div>
 <div class="clear"></div>
 </div> <!-- End: footer -->

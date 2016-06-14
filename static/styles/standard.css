@@ -39,8 +39,6 @@ input#query { float: right; border: 1px solid #333; padding: 3px 3px 3px 20px;
 input#query:hover, input#query:focus { background: #efefef url("../images/icons/search.png") no-repeat; background-position: 3px 50%; }
 .ui-menu .ui-menu-item a.total { color: #666; border-top: 1px solid #ccc; padding-left: 10px }
 
-#footer .streambur { float: right }
-
 #page { background-color: #eaeaea; padding: 15px; background: url('../images/line-gradient.png') top left repeat-x }
 
 #top { height: 100px; background: url('../images/vinyl-background.jpg') top left repeat-x  }
