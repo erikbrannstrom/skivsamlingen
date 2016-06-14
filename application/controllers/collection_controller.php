@@ -61,6 +61,7 @@ class Collection_Controller extends MY_Controller {
         if($id > 0) {
             $this->data['record'] = $this->Record->get($id, $this->auth->getUserID());
         } else {
+            $rec = new stdClass();
             $rec->id = 0;
             $rec->name = '';
             $rec->title = '';
