@@ -1,5 +1,5 @@
 # Skivsamlingen
-Skivsamlingen.se skapades för att fylla det upplevda hål som efterlämnades när skivsamling.nu helt plötsligt gick i graven. Det var troligtvis mitt första större projekt i PHP och mycket av grunden kodades för cirka fem år sedan. Så här i efterhand så kan jag bara konstatera att det i alla fall fungerade.
+Skivsamlingen.se skapades för att fylla det upplevda hål som efterlämnades när skivsamling.nu helt plötsligt gick i graven. Det var troligtvis mitt första större projekt i PHP och mycket av grunden kodades runt år 2007 och lämnar därmed en del att önska gällande kvalitet och organisation. Så här i efterhand så kan jag bara konstatera att det i alla fall fungerade.
 
 Jag har insett att jag inte har den tid eller det engagemang som krävs för att Skivsamlingen ska kunna blomma ut, så jag ber helt enkelt om hjälp. Här kan förslag lämnas, problem uppdagas och kod utvecklas.
 
