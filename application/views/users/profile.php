@@ -76,7 +76,7 @@ $(function() {
             <td width="20" valign="middle" align="center"><a href="<?=site_url('collection/record/'.$record->id)?>"><img src="<?=static_url('images/icons/edit.png')?>" width="14" /></a></td>
         <?php endif; ?>
 	</tr>
-        <?php if($i == 10): ?>
+        <?php if(!$this->auth->isPremiumUser() && $i == 10): ?>
         <tr>
             <td colspan="<?=($user->id == $this->auth->getUserID()) ? '3' : '2'?>" style="padding: 10px; text-align: center; border: 1px solid #ccc; border-width: 1px 0">
             <script type="text/javascript">
@@ -90,7 +90,7 @@ document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-885
 	$even = !$even;
 	$prev_artist = $record->artist_id;
 	endforeach; ?>
-        <?php if($i < 10): ?>
+        <?php if(!$this->auth->isPremiumUser() && $i < 10): ?>
         <tr>
             <td colspan="<?=($user->id == $this->auth->getUserID()) ? '3' : '2'?>" style="padding: 10px; text-align: center; border: 1px solid #ccc; border-width: 1px 0">
             <script type="text/javascript">
@@ -169,11 +169,13 @@ foreach($latest_records as $record): ?>
 </ol>
 </div>
 
+<?php if(!$this->auth->isPremiumUser()): ?>
     <div style="padding-top: 15px; background-color: #fff">
 <script type="text/javascript">
 var uri = 'https://impse.tradedoubler.com/imp?type(js)pool(402779)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);
 document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
 </script>
     </div>
+<?php endif; ?>
 
 </div> <!-- End: Sidebar -->

@@ -132,7 +132,22 @@ class Auth {
     }
 
     public function isGuest() {
-        return!$this->is_user;
+        return !$this->is_user;
+    }
+
+    public function isPremiumUser() {
+        $user = $this->getUser();
+        if ($user === NULL) {
+            return false;
+        }
+
+        $one_year_ago = time() - 365 * 24 * 60 * 60;
+        $donations = $this->db->where('user_id', $user->id)
+                ->where('donated_at >=', date('Y-m-d', $oneYearAgo))
+                ->where('amount >=', 100)
+                ->from('donations')
+                ->count_all_results();
+        return $donations > 0;
     }
 
 }
