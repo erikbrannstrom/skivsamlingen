@@ -143,7 +143,7 @@ class Auth {
 
         $one_year_ago = time() - 365 * 24 * 60 * 60;
         $donations = $this->db->where('user_id', $user->id)
-                ->where('donated_at >=', date('Y-m-d', $oneYearAgo))
+                ->where('donated_at >=', date('Y-m-d', $one_year_ago))
                 ->where('amount >=', 100)
                 ->from('donations')
                 ->count_all_results();
