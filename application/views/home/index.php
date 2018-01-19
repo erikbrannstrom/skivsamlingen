@@ -150,7 +150,7 @@ foreach($popular_albums as $row): ?>
 <?php endforeach; ?>
 </div>
 
-<?php if(!$this->auth->isPremiumUser()): ?>
+<?php if(!$this->auth->isSupporter()): ?>
 <div style="padding-top: 15px; background-color: #fff">
 <script type="text/javascript">
 var uri = 'https://impse.tradedoubler.com/imp?type(js)pool(402779)a(1301841)epi(<?=($this->auth->isUser()) ? $this->auth->getUserID() : '0'?>)' + new String (Math.random()).substring (2, 11);

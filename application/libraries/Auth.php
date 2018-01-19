@@ -135,19 +135,13 @@ class Auth {
         return !$this->is_user;
     }
 
-    public function isPremiumUser() {
+    public function isSupporter() {
         $user = $this->getUser();
         if ($user === NULL) {
             return false;
         }
 
-        $one_year_ago = time() - 365 * 24 * 60 * 60;
-        $donations = $this->db->where('user_id', $user->id)
-                ->where('donated_at >=', date('Y-m-d', $one_year_ago))
-                ->where('amount >=', 100)
-                ->from('donations')
-                ->count_all_results();
-        return $donations > 0;
+        return $this->User->isSupporter($user->id)
     }
 
 }

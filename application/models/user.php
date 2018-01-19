@@ -18,6 +18,17 @@ class User extends MY_Model {
         );
     }
 
+    function isSupporter($uid) {
+        $ONE_YEAR_AGO = time() - 365 * 24 * 60 * 60;
+        $DONATION_LIMIT = 100;
+        $donations = $this->db->where('user_id', $uid)
+                ->where('donated_at >=', date('Y-m-d', $ONE_YEAR_AGO))
+                ->where('amount >=', $DONATION_LIMIT)
+                ->from('donations')
+                ->count_all_results();
+        return $donations > 0;
+    }
+
     function getNewUsers($num = 5) {
         $this->db->order_by('registered', 'desc')->limit($num);
         return $this->db->get('users')->result();
