@@ -141,7 +141,7 @@ class Auth {
             return false;
         }
 
-        return $this->User->isSupporter($user->id)
+        return $this->User->isSupporter($user->id);
     }
 
 }
