@@ -67,6 +67,8 @@ class Users_Controller extends MY_Controller {
                 break;
         }
 
+        $user->is_supporter = $this->User->isSupporter($user->id);
+
         $this->data['user'] = $user;
         $this->data['num_records'] = $config['total_rows'];
         $this->data['pagination'] = $this->pagination->create_links();

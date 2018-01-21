@@ -121,6 +121,9 @@ $(function() {
 <div class="box">
 <img alt="Profilbild från Gravatar.com" src="https://www.gravatar.com/avatar/<?=md5(strtolower(trim($user->email)))?>?s=100&d=mm" class="gravatar" />
 <h3>Profil</h3>
+<?php if($user->is_supporter): ?>
+<em style="margin-top: -5px;display: block;">Supporter</em>
+<?php endif; ?>
 <?php if($user->name): ?>
 <strong>Namn:</strong> <?=$user->name?><br />
 <?php endif; ?>
