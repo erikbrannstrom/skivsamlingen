@@ -126,23 +126,6 @@ class User extends MY_Model {
         return $data;
     }
 
-    function getSexes() {
-        $male = $this->db->where('sex', 'm')->get('users')->num_rows();
-        $female = $this->db->where('sex', 'f')->get('users')->num_rows();
-        $unknown = $this->db->where('sex', 'x')->get('users')->num_rows();
-        $total = $male + $female + $unknown;
-        if ($total == 0)
-            $total = 1;
-        return array(
-            'male' => $male,
-            'male_percent' => round(($male / $total) * 100),
-            'female' => $female,
-            'female_percent' => round(($female / $total) * 100),
-            'unknown' => $unknown,
-            'unknown_percent' => round(($unknown / $total) * 100)
-        );
-    }
-
     function getPopularAlbums($num = 5) {
         $this->db->select('r.title, a.name, COUNT(*) AS records')
                 ->from('records_users ru')

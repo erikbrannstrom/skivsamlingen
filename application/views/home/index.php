@@ -47,18 +47,6 @@
     <td><?=$members['last_week']?></td>
 </tr>
 <tr>
-	<th>Män</th>
-    <td><?=$sex['male_percent']?>% (<?=$sex['male']?> st)</td>
-</tr>
-<tr>
-	<th>Kvinnor</th>
-    <td><?=$sex['female_percent']?>% (<?=$sex['female']?> st)</td>
-</tr>
-<tr class="separator">
-	<th>Okänt</th>
-    <td><?=$sex['unknown_percent']?>% (<?=$sex['unknown']?> st)</td>
-</tr>
-<tr>
 	<th>Antal skivor</th>
     <td><?=$total_recs?></td>
 </tr>
