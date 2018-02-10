@@ -15,7 +15,6 @@ class Home_Controller extends MY_Controller {
             $this->load->model('User');
             $stats['latest_users'] = $this->User->getNewUsers();
             $stats['toplist'] = $this->User->getTopList();
-            $stats['sex'] = $this->User->getSexes();
             $stats['members'] = $this->User->getMemberStatistics();
             $stats['total_recs'] = $this->User->getNumberOfRecords();
             $stats['popular_artists'] = $this->User->getTopArtists(10);
