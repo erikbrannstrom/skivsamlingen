@@ -110,7 +110,6 @@ $(function() {
 <h3>Alternativ</h3>
 <ul class="bullets">
     <li><a href="<?=site_url('users/'.$user->username.'/export')?>">Exportera skivsamling (XML)</a></li>
-    <li><a href="<?=site_url('collection/import')?>">Importa skivsamling</a></li>
     <li><a href="<?=site_url('users/'.$user->username.'/print')?>">Visa utskriftsvy</a></li>
     <li><a href="<?=site_url('account/edit')?>">Ändra dina uppgifter</a></li>
     <li><a href="<?=site_url('collection/record')?>" class="item">Lägg till skiva</a></li>
