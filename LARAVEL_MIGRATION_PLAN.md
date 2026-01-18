@@ -59,21 +59,18 @@ Set up Laravel alongside CodeIgniter with shared database and session handling.
 
 ### 0.1 Directory Structure
 ```
-/var/www/skivsamlingen/
-├── codeigniter/          # Existing CodeIgniter app
-│   ├── application/
-│   ├── system/
-│   └── index.php
-├── laravel/              # New Laravel app
-│   ├── app/
-│   ├── public/
-│   └── ...
-└── public_html/          # Web root
-    ├── index.php         # CodeIgniter entry point
-    └── static/           # Shared static assets
+/var/www/skivsamlingen.se/
+├── application/          # Existing CodeIgniter app
+├── system/
+├── static/
+├── index.php             # CodeIgniter entry point
+└── laravel/              # New Laravel app (added)
+    ├── app/
+    ├── public/
+    └── ...
 ```
 
-**Note**: nginx handles routing via location blocks in the server config, not via `.htaccess` files.
+**Note**: Laravel is installed as a subdirectory within the existing CodeIgniter structure. No existing files are moved or modified. nginx handles routing via location blocks in the server config.
 
 ### 0.2 Install PHP 8.1 (Dual PHP Setup)
 
@@ -99,7 +96,7 @@ sudo systemctl status php8.1-fpm
 
 ### 0.3 Create Laravel App
 ```bash
-cd /var/www/skivsamlingen
+cd /var/www/skivsamlingen.se
 composer create-project laravel/laravel laravel "10.*"
 ```
 
@@ -111,12 +108,11 @@ Route specific URLs to Laravel (PHP 8.1) while keeping others on CodeIgniter (PH
 server {
     listen 80;
     server_name skivsamlingen.se;
-    root /var/www/skivsamlingen/public_html;
+    root /var/www/skivsamlingen.se;
     index index.php;
 
     # Static assets - serve directly
     location /static/ {
-        alias /var/www/skivsamlingen/public_html/static/;
         expires 30d;
     }
 
@@ -133,13 +129,13 @@ server {
     # Laravel PHP processing (PHP 8.1)
     location ~ ^/laravel/public/index\.php$ {
         fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME /var/www/skivsamlingen/laravel/public/index.php;
+        fastcgi_param SCRIPT_FILENAME /var/www/skivsamlingen.se/laravel/public/index.php;
         include fastcgi_params;
     }
 
     # Default: CodeIgniter handles everything else
     location / {
-        try_files $uri $uri/ /codeigniter/index.php?$uri&$args;
+        try_files $uri $uri/ /index.php?$uri&$args;
     }
 
     # CodeIgniter PHP processing (PHP 5.6)
@@ -155,22 +151,7 @@ server {
 
 ### 0.5 Shared Session Authentication
 
-Both apps must share authentication state. Options:
-
-**Option A: Database Sessions (Recommended)**
-1. Configure CodeIgniter to use database sessions
-2. Configure Laravel to read the same session table
-3. Share the session cookie name
-
-**File**: Laravel `/config/session.php`
-```php
-'driver' => 'database',
-'table' => 'ci_sessions',  // CodeIgniter session table
-'cookie' => 'skiv_session',
-```
-
-**Option B: Shared Cookie Reading**
-Laravel middleware reads CodeIgniter's session cookie directly:
+Both apps must share authentication state by allowing Laravel middleware to read CodeIgniter's session cookie directly:
 
 **File**: `/app/Http/Middleware/SharedAuth.php`
 ```php
@@ -853,12 +834,12 @@ Once all controllers are migrated and stable:
    server {
        listen 80;
        server_name skivsamlingen.se;
-       root /var/www/skivsamlingen/laravel/public;
+       root /var/www/skivsamlingen.se/laravel/public;
        index index.php;
 
-       # Static assets
+       # Static assets (still served from original location)
        location /static/ {
-           alias /var/www/skivsamlingen/public_html/static/;
+           alias /var/www/skivsamlingen.se/static/;
            expires 30d;
        }
 
@@ -878,15 +859,20 @@ Once all controllers are migrated and stable:
 
 2. Reload nginx: `sudo nginx -s reload`
 
-3. Once stable, move Laravel to web root:
-   ```bash
-   mv /var/www/skivsamlingen/laravel/* /var/www/skivsamlingen/
-   rm -rf /var/www/skivsamlingen/codeigniter
-   ```
-
-4. Update nginx root and Laravel `.env`:
+3. Update Laravel `.env`:
    ```env
    APP_URL=https://skivsamlingen.se
+   ```
+
+4. **(Optional)** Clean up old CodeIgniter files once stable:
+   ```bash
+   # Back up first!
+   tar -czf ~/codeigniter-backup.tar.gz /var/www/skivsamlingen.se/application /var/www/skivsamlingen.se/system
+
+   # Remove CodeIgniter directories
+   rm -rf /var/www/skivsamlingen.se/application
+   rm -rf /var/www/skivsamlingen.se/system
+   rm /var/www/skivsamlingen.se/index.php
    ```
 
 5. **(Optional)** Remove PHP 5.6 if no longer needed:
