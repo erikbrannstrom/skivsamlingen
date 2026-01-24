@@ -3,3 +3,19 @@ application/logs/*.php
 application/config/config.php
 application/config/database.php
 application/config/email.php
+
+# Laravel
+laravel/vendor/
+laravel/.env
+laravel/.env.backup
+laravel/.env.production
+laravel/storage/*.key
+laravel/node_modules/
+laravel/.phpunit.result.cache
+laravel/Homestead.json
+laravel/Homestead.yaml
+laravel/auth.json
+laravel/npm-debug.log
+laravel/yarn-error.log
+laravel/.idea
+laravel/.vscode
