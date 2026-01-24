@@ -31,9 +31,37 @@ class SharedAuth
             'cookies_available' => array_keys($_COOKIE),
         ]);
 
-        // Skip if user is already authenticated in Laravel
+        // Get the user ID from CodeIgniter session (if any)
+        // Returns: int (user_id), null (no CI session), false (CI session but logged out)
+        $ciUserId = $this->getUserIdFromCodeIgniterSession($request);
+
+        // If Laravel has a user logged in, verify CI still agrees
         if (Auth::check()) {
-            Log::debug('SharedAuth: Already authenticated');
+            // No CI session at all - don't interfere with Laravel auth (e.g., during tests)
+            if ($ciUserId === null) {
+                Log::debug('SharedAuth: Already authenticated, no CI session to verify');
+                return $next($request);
+            }
+
+            // CI session exists and matches Laravel
+            if ($ciUserId === Auth::id()) {
+                Log::debug('SharedAuth: Already authenticated, CI session matches');
+                return $next($request);
+            }
+
+            // CI session exists but user logged out (false) or switched accounts (different int)
+            Log::debug('SharedAuth: CI session mismatch, logging out Laravel', [
+                'laravel_user_id' => Auth::id(),
+                'ci_user_id' => $ciUserId,
+            ]);
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            // If CI has a different user logged in, log them in
+            if (is_int($ciUserId)) {
+                $this->loginUser($ciUserId);
+            }
             return $next($request);
         }
 
@@ -51,6 +79,89 @@ class SharedAuth
 
         Log::debug('SharedAuth: No authentication found');
         return $next($request);
+    }
+
+    /**
+     * Get the user ID from CodeIgniter session without logging in.
+     *
+     * Returns:
+     * - int: User ID if logged in via CI session
+     * - null: No CI session exists (cookie missing)
+     * - false: CI session exists but user is not logged in (logged out)
+     */
+    protected function getUserIdFromCodeIgniterSession(Request $request): int|null|false
+    {
+        $sessionCookie = $request->cookie('ci_session');
+        $rawCookie = $_COOKIE['ci_session'] ?? null;
+
+        if (!$sessionCookie && $rawCookie) {
+            $sessionCookie = $rawCookie;
+        }
+
+        // No CI session cookie at all - return null to indicate absence
+        if (!$sessionCookie) {
+            return null;
+        }
+
+        try {
+            $sessionData = $this->decodeCodeIgniterSession($sessionCookie);
+
+            if (!$sessionData) {
+                // Cookie exists but can't be decoded - treat as logged out
+                return false;
+            }
+
+            // If user_id is directly in the cookie (cookie-only sessions)
+            if (isset($sessionData['user_id'])) {
+                return (int) $sessionData['user_id'];
+            }
+
+            // If using database sessions, look up user_data from the database
+            if (isset($sessionData['session_id'])) {
+                $userId = $this->getUserIdFromDatabaseSession($sessionData['session_id']);
+                // Return false (not null) when session exists but has no user
+                return $userId ?? false;
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to get user ID from CodeIgniter session', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        // CI session exists but no user_id found - user is logged out
+        return false;
+    }
+
+    /**
+     * Get user ID from database session without logging in.
+     */
+    protected function getUserIdFromDatabaseSession(string $sessionId): ?int
+    {
+        $session = DB::table('ci_sessions')
+            ->where('session_id', $sessionId)
+            ->first();
+
+        if (!$session) {
+            return null;
+        }
+
+        // Check session expiration
+        $sessionExpiration = 7200; // 2 hours
+        if (($session->last_activity + $sessionExpiration) < time()) {
+            return null;
+        }
+
+        if (empty($session->user_data)) {
+            return null;
+        }
+
+        $userData = $this->unserializeSessionData($session->user_data);
+
+        if (!$userData || !is_array($userData) || !isset($userData['user_id'])) {
+            return null;
+        }
+
+        return (int) $userData['user_id'];
     }
 
     /**
@@ -294,6 +405,12 @@ class SharedAuth
     protected function authenticateFromPersistentLogin(Request $request): bool
     {
         $rememberCookie = $request->cookie('skiv_remember');
+        $rawCookie = $_COOKIE['skiv_remember'] ?? null;
+
+        // Prefer raw cookie if request cookie is empty (Laravel encryption issue)
+        if (!$rememberCookie && $rawCookie) {
+            $rememberCookie = $rawCookie;
+        }
 
         if (!$rememberCookie) {
             return false;
