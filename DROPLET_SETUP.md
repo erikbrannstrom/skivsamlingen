@@ -1,6 +1,6 @@
 # Digital Ocean Droplet Setup (1GB Memory)
 
-This guide sets up an Ubuntu server to run CodeIgniter (PHP 5.6) and Laravel (PHP 8.1) simultaneously with Nginx, as required by the incremental migration strategy.
+This guide sets up an Ubuntu server to run CodeIgniter (PHP 5.6) and Laravel (PHP 8.3) simultaneously with Nginx, as required by the incremental migration strategy.
 
 ## 1. Create the Droplet
 
@@ -59,9 +59,9 @@ apt install software-properties-common -y
 add-apt-repository ppa:ondrej/php
 apt update
 
-# PHP 8.1 for Laravel
-apt install php8.1-fpm php8.1-mysql php8.1-xml php8.1-mbstring \
-    php8.1-curl php8.1-zip php8.1-gd php8.1-bcmath -y
+# PHP 8.3 for Laravel
+apt install php8.3-fpm php8.3-mysql php8.3-xml php8.3-mbstring \
+    php8.3-curl php8.3-zip php8.3-gd php8.3-bcmath -y
 
 # PHP 5.6 for CodeIgniter
 apt install php5.6-fpm php5.6-mysql php5.6-xml php5.6-mbstring \
@@ -72,7 +72,7 @@ apt install php5.6-fpm php5.6-mysql php5.6-xml php5.6-mbstring \
 
 ```bash
 systemctl status php5.6-fpm
-systemctl status php8.1-fpm
+systemctl status php8.3-fpm
 ls -la /var/run/php/
 ```
 
@@ -281,8 +281,8 @@ nginx -t
 systemctl reload nginx
 
 # Edit PHP config
-nano /etc/php/8.1/fpm/pool.d/www.conf
-systemctl restart php8.1-fpm
+nano /etc/php/8.3/fpm/pool.d/www.conf
+systemctl restart php8.3-fpm
 
 # View system logs
 journalctl -u nginx

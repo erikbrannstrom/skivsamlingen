@@ -28,7 +28,7 @@ The incremental approach offers significant advantages over a single cutover:
 - Features: User registration, record collection CRUD, XML export, search, news/RSS
 
 **Key Technical Challenges**:
-- **Dual PHP versions**: CodeIgniter runs on PHP 5.6, Laravel 10 requires PHP 8.1+
+- **Dual PHP versions**: CodeIgniter runs on PHP 5.6, Laravel 12 requires PHP 8.3+
 - Custom password hashing: `sha256(md5(username)[0:12] + password + global_salt)` with SHA1 legacy support
 - Persistent login with token rotation and replay attack detection
 - Case-sensitive record matching (COLLATE utf8_bin)
@@ -72,32 +72,32 @@ Set up Laravel alongside CodeIgniter with shared database and session handling.
 
 **Note**: Laravel is installed as a subdirectory within the existing CodeIgniter structure. No existing files are moved or modified. nginx handles routing via location blocks in the server config.
 
-### 0.2 Install PHP 8.1 (Dual PHP Setup)
+### 0.2 Install PHP 8.3 (Dual PHP Setup)
 
-CodeIgniter requires PHP 5.6, but Laravel 10 requires PHP 8.1+. Both versions must run simultaneously during migration.
+CodeIgniter requires PHP 5.6, but Laravel 12 requires PHP 8.3+. Both versions must run simultaneously during migration.
 
-**Install PHP 8.1 alongside PHP 5.6:**
+**Install PHP 8.3 alongside PHP 5.6:**
 ```bash
 # Add PHP repository (Ubuntu/Debian)
 sudo add-apt-repository ppa:ondrej/php
 sudo apt update
 
-# Install PHP 8.1 with required extensions
-sudo apt install php8.1-fpm php8.1-mysql php8.1-xml php8.1-mbstring php8.1-curl php8.1-zip
+# Install PHP 8.3 with required extensions
+sudo apt install php8.3-fpm php8.3-mysql php8.3-xml php8.3-mbstring php8.3-curl php8.3-zip
 
 # Verify both PHP-FPM services are running
 sudo systemctl status php5.6-fpm
-sudo systemctl status php8.1-fpm
+sudo systemctl status php8.3-fpm
 ```
 
 **PHP-FPM sockets:**
 - PHP 5.6: `/var/run/php/php5.6-fpm.sock` (CodeIgniter)
-- PHP 8.1: `/var/run/php/php8.1-fpm.sock` (Laravel)
+- PHP 8.3: `/var/run/php/php8.3-fpm.sock` (Laravel)
 
 ### 0.3 Create Laravel App
 ```bash
 cd /var/www/skivsamlingen.se
-composer create-project laravel/laravel laravel "10.*"
+composer create-project laravel/laravel laravel "12.*"
 ```
 
 ### 0.4 Smart Router (nginx)
@@ -121,14 +121,14 @@ server {
     #     try_files $uri $uri/ @laravel;
     # }
 
-    # Laravel handler - uses PHP 8.1
+    # Laravel handler - uses PHP 8.3
     location @laravel {
         rewrite ^(.*)$ /laravel/public/index.php?$query_string last;
     }
 
-    # Laravel PHP processing (PHP 8.1)
+    # Laravel PHP processing (PHP 8.3)
     location ~ ^/laravel/public/index\.php$ {
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
         fastcgi_param SCRIPT_FILENAME /var/www/skivsamlingen.se/laravel/public/index.php;
         include fastcgi_params;
     }
@@ -147,7 +147,7 @@ server {
 }
 ```
 
-**Important**: The order of location blocks matters. The Laravel-specific PHP location must come before the general `.php` location to ensure Laravel uses PHP 8.1 while CodeIgniter uses PHP 5.6.
+**Important**: The order of location blocks matters. The Laravel-specific PHP location must come before the general `.php` location to ensure Laravel uses PHP 8.3 while CodeIgniter uses PHP 5.6.
 
 ### 0.5 Shared Session Authentication
 
@@ -199,8 +199,8 @@ abstract class BaseModel extends Model {
 ```
 
 ### Verification
-- [ ] PHP 5.6-FPM and PHP 8.1-FPM both running
-- [ ] Laravel app loads at test URL (verify PHP 8.1 via `phpinfo()`)
+- [ ] PHP 5.6-FPM and PHP 8.3-FPM both running
+- [ ] Laravel app loads at test URL (verify PHP 8.3 via `phpinfo()`)
 - [ ] CodeIgniter continues to work (verify PHP 5.6 via `phpinfo()`)
 - [ ] Both apps can read the database
 - [ ] Session/auth state shared between apps
@@ -848,9 +848,9 @@ Once all controllers are migrated and stable:
            try_files $uri $uri/ /index.php?$query_string;
        }
 
-       # PHP 8.1 only (CodeIgniter removed)
+       # PHP 8.3 only (CodeIgniter removed)
        location ~ \.php$ {
-           fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+           fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
            include fastcgi_params;
        }
@@ -951,7 +951,7 @@ Use this for each controller deployment:
 ## High-Risk Areas
 
 ### 1. Dual PHP Version Setup (Phase 0)
-- PHP 5.6 (CodeIgniter) and PHP 8.1 (Laravel) must run simultaneously
+- PHP 5.6 (CodeIgniter) and PHP 8.3 (Laravel) must run simultaneously
 - nginx must route to correct PHP-FPM socket based on request path
 - **Risk**: Wrong PHP version causes 500 errors or silent failures
 
@@ -982,5 +982,6 @@ Migration is complete when:
 
 ---
 
-*This plan was updated on 2026-01-18*
+*This plan was updated on 2026-01-24*
 *Strategy: Incremental controller-by-controller migration*
+*Laravel version: 12.x (PHP 8.3+)*
