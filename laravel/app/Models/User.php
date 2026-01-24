@@ -64,36 +64,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the records in this user's collection.
-     */
-    public function records()
-    {
-        return $this->belongsToMany(Record::class, 'records_users')
-            ->withPivot('id', 'comment');
-    }
-
-    /**
-     * Get the user's donations.
-     */
-    public function donations()
-    {
-        return $this->hasMany(Donation::class);
-    }
-
-    /**
-     * Check if user is a supporter (donated >= 100 SEK in the past year).
-     */
-    public function isSupporter(): bool
-    {
-        $oneYearAgo = now()->subYear();
-
-        return $this->donations()
-            ->where('donated_at', '>=', $oneYearAgo)
-            ->where('amount', '>=', 100)
-            ->exists();
-    }
-
-    /**
      * Encrypt password using CodeIgniter's legacy algorithm.
      *
      * Format: sha256(md5(username)[0:12] + password + global_salt)
