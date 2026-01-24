@@ -37,6 +37,9 @@ class User extends Authenticatable
         'sex',
         'per_page',
         'registered',
+        // Unused fields (exist in schema for backwards compatibility)
+        'level',       // User permission level (1=normal, higher=admin)
+        'last_import', // Timestamp of last Discogs import
     ];
 
     /**
@@ -60,6 +63,9 @@ class User extends Authenticatable
             'registered' => 'datetime',
             'public_email' => 'boolean',
             'per_page' => 'integer',
+            // Unused fields
+            'level' => 'integer',
+            'last_import' => 'integer',
         ];
     }
 
