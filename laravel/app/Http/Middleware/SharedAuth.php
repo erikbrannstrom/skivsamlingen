@@ -24,21 +24,30 @@ class SharedAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+        Log::debug('SharedAuth: Starting', [
+            'already_authenticated' => Auth::check(),
+            'cookies_available' => array_keys($_COOKIE),
+        ]);
+
         // Skip if user is already authenticated in Laravel
         if (Auth::check()) {
+            Log::debug('SharedAuth: Already authenticated');
             return $next($request);
         }
 
         // Try to authenticate from CodeIgniter session cookie
         if ($this->authenticateFromSession($request)) {
+            Log::debug('SharedAuth: Authenticated via CI session');
             return $next($request);
         }
 
         // Try to authenticate from persistent login cookie
         if ($this->authenticateFromPersistentLogin($request)) {
+            Log::debug('SharedAuth: Authenticated via persistent login');
             return $next($request);
         }
 
+        Log::debug('SharedAuth: No authentication found');
         return $next($request);
     }
 
@@ -47,9 +56,25 @@ class SharedAuth
      */
     protected function authenticateFromSession(Request $request): bool
     {
+        // Check both request->cookie and $_COOKIE
         $sessionCookie = $request->cookie('ci_session');
+        $rawCookie = $_COOKIE['ci_session'] ?? null;
+
+        Log::debug('SharedAuth: Session cookie check', [
+            'request_cookie_exists' => !empty($sessionCookie),
+            'request_cookie_length' => strlen($sessionCookie ?? ''),
+            'raw_cookie_exists' => !empty($rawCookie),
+            'raw_cookie_length' => strlen($rawCookie ?? ''),
+        ]);
+
+        // Prefer raw cookie if request cookie is empty (Laravel encryption issue)
+        if (!$sessionCookie && $rawCookie) {
+            Log::debug('SharedAuth: Using raw $_COOKIE instead of request->cookie');
+            $sessionCookie = $rawCookie;
+        }
 
         if (!$sessionCookie) {
+            Log::debug('SharedAuth: No ci_session cookie found');
             return false;
         }
 
@@ -57,15 +82,24 @@ class SharedAuth
             $sessionData = $this->decodeCodeIgniterSession($sessionCookie);
 
             if (!$sessionData) {
+                Log::debug('SharedAuth: Failed to decode session');
                 return false;
             }
+
+            Log::debug('SharedAuth: Session decoded', [
+                'keys' => array_keys($sessionData),
+                'has_user_id' => isset($sessionData['user_id']),
+            ]);
 
             if (isset($sessionData['user_id'])) {
                 $user = User::find($sessionData['user_id']);
 
                 if ($user) {
+                    Log::debug('SharedAuth: User found', ['username' => $user->username]);
                     Auth::login($user);
                     return true;
+                } else {
+                    Log::debug('SharedAuth: User not found in DB', ['user_id' => $sessionData['user_id']]);
                 }
             }
         } catch (\Exception $e) {
@@ -89,8 +123,11 @@ class SharedAuth
      */
     protected function decodeCodeIgniterSession(string $cookie): ?array
     {
+        Log::debug('SharedAuth: Decoding CI session', ['cookie_length' => strlen($cookie)]);
+
         // Cookie must have at least 32 chars (for the hash) + some data
         if (strlen($cookie) <= 32) {
+            Log::debug('SharedAuth: Cookie too short');
             return null;
         }
 
@@ -102,17 +139,32 @@ class SharedAuth
         $encryptionKey = config('auth.ci_encryption_key');
         $hashMatches = ($hash === md5($serializedData . $encryptionKey));
 
+        Log::debug('SharedAuth: Hash check (raw)', [
+            'hash' => $hash,
+            'expected' => md5($serializedData . $encryptionKey),
+            'match' => $hashMatches,
+            'key_length' => strlen($encryptionKey),
+        ]);
+
         // If hash doesn't match, try with URL-decoded version
         // (cookies may be URL-encoded in transit)
         if (!$hashMatches) {
             $decodedData = urldecode($serializedData);
-            if ($hash === md5($decodedData . $encryptionKey)) {
+            $decodedHashMatches = ($hash === md5($decodedData . $encryptionKey));
+
+            Log::debug('SharedAuth: Hash check (url-decoded)', [
+                'expected' => md5($decodedData . $encryptionKey),
+                'match' => $decodedHashMatches,
+            ]);
+
+            if ($decodedHashMatches) {
                 $hashMatches = true;
                 $serializedData = $decodedData;
             }
         }
 
         if (!$hashMatches) {
+            Log::debug('SharedAuth: Hash mismatch - rejecting');
             return null;
         }
 
@@ -120,6 +172,7 @@ class SharedAuth
         $data = @unserialize(stripslashes($serializedData));
 
         if (!is_array($data)) {
+            Log::debug('SharedAuth: Unserialize failed');
             return null;
         }
 
@@ -132,15 +185,22 @@ class SharedAuth
 
         // Validate required session fields
         if (!isset($data['session_id'], $data['last_activity'])) {
+            Log::debug('SharedAuth: Missing required fields');
             return null;
         }
 
         // Check session expiration (default 2 hours = 7200 seconds)
         $sessionExpiration = 7200;
         if (($data['last_activity'] + $sessionExpiration) < time()) {
+            Log::debug('SharedAuth: Session expired', [
+                'last_activity' => $data['last_activity'],
+                'now' => time(),
+                'age' => time() - $data['last_activity'],
+            ]);
             return null;
         }
 
+        Log::debug('SharedAuth: Session valid');
         return $data;
     }
 
