@@ -131,7 +131,7 @@ class User extends MY_Model {
                 ->from('records_users ru')
                 ->join('records r', 'r.id = ru.record_id')
                 ->join('artists a', 'a.id = r.artist_id')
-                ->group_by('r.title, a.name')
+                ->group_by('r.id, a.id')
                 ->order_by('records', 'desc')
                 ->order_by('a.name', 'asc')
                 ->order_by('r.title', 'asc')
