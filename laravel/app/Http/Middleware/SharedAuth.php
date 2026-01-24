@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
  * This middleware reads CodeIgniter's session cookie and persistent login
  * cookie to authenticate users in Laravel, enabling both applications to
  * share the same authentication state during the migration period.
+ *
+ * Supports both cookie-based sessions and database sessions.
  */
 class SharedAuth
 {
@@ -89,18 +91,17 @@ class SharedAuth
             Log::debug('SharedAuth: Session decoded', [
                 'keys' => array_keys($sessionData),
                 'has_user_id' => isset($sessionData['user_id']),
+                'has_session_id' => isset($sessionData['session_id']),
             ]);
 
+            // If user_id is directly in the cookie (cookie-only sessions)
             if (isset($sessionData['user_id'])) {
-                $user = User::find($sessionData['user_id']);
+                return $this->loginUser($sessionData['user_id']);
+            }
 
-                if ($user) {
-                    Log::debug('SharedAuth: User found', ['username' => $user->username]);
-                    Auth::login($user);
-                    return true;
-                } else {
-                    Log::debug('SharedAuth: User not found in DB', ['user_id' => $sessionData['user_id']]);
-                }
+            // If using database sessions, look up user_data from the database
+            if (isset($sessionData['session_id'])) {
+                return $this->authenticateFromDatabaseSession($sessionData['session_id']);
             }
         } catch (\Exception $e) {
             Log::warning('Failed to decode CodeIgniter session', [
@@ -108,6 +109,75 @@ class SharedAuth
             ]);
         }
 
+        return false;
+    }
+
+    /**
+     * Authenticate from database session by looking up the session_id.
+     */
+    protected function authenticateFromDatabaseSession(string $sessionId): bool
+    {
+        Log::debug('SharedAuth: Looking up database session', ['session_id' => $sessionId]);
+
+        $session = DB::table('ci_sessions')
+            ->where('session_id', $sessionId)
+            ->first();
+
+        if (!$session) {
+            Log::debug('SharedAuth: Session not found in database');
+            return false;
+        }
+
+        // Check session expiration
+        $sessionExpiration = 7200; // 2 hours
+        if (($session->last_activity + $sessionExpiration) < time()) {
+            Log::debug('SharedAuth: Database session expired', [
+                'last_activity' => $session->last_activity,
+                'now' => time(),
+            ]);
+            return false;
+        }
+
+        // Unserialize the user_data
+        if (empty($session->user_data)) {
+            Log::debug('SharedAuth: No user_data in database session');
+            return false;
+        }
+
+        $userData = $this->unserializeSessionData($session->user_data);
+
+        if (!$userData || !is_array($userData)) {
+            Log::debug('SharedAuth: Failed to unserialize user_data');
+            return false;
+        }
+
+        Log::debug('SharedAuth: Database session user_data', [
+            'keys' => array_keys($userData),
+            'has_user_id' => isset($userData['user_id']),
+        ]);
+
+        if (isset($userData['user_id'])) {
+            return $this->loginUser($userData['user_id']);
+        }
+
+        Log::debug('SharedAuth: No user_id in database session user_data');
+        return false;
+    }
+
+    /**
+     * Login a user by their ID.
+     */
+    protected function loginUser(int $userId): bool
+    {
+        $user = User::find($userId);
+
+        if ($user) {
+            Log::debug('SharedAuth: User found, logging in', ['username' => $user->username]);
+            Auth::login($user);
+            return true;
+        }
+
+        Log::debug('SharedAuth: User not found in DB', ['user_id' => $userId]);
         return false;
     }
 
@@ -169,18 +239,11 @@ class SharedAuth
         }
 
         // Unserialize the data
-        $data = @unserialize(stripslashes($serializedData));
+        $data = $this->unserializeSessionData($serializedData);
 
         if (!is_array($data)) {
             Log::debug('SharedAuth: Unserialize failed');
             return null;
-        }
-
-        // Convert {{slash}} markers back to actual slashes (CI convention)
-        foreach ($data as $key => $val) {
-            if (is_string($val)) {
-                $data[$key] = str_replace('{{slash}}', '\\', $val);
-            }
         }
 
         // Validate required session fields
@@ -202,6 +265,25 @@ class SharedAuth
 
         Log::debug('SharedAuth: Session valid');
         return $data;
+    }
+
+    /**
+     * Unserialize CodeIgniter session data.
+     */
+    protected function unserializeSessionData(string $data): mixed
+    {
+        $unserialized = @unserialize(stripslashes($data));
+
+        if (is_array($unserialized)) {
+            // Convert {{slash}} markers back to actual slashes (CI convention)
+            foreach ($unserialized as $key => $val) {
+                if (is_string($val)) {
+                    $unserialized[$key] = str_replace('{{slash}}', '\\', $val);
+                }
+            }
+        }
+
+        return $unserialized;
     }
 
     /**
@@ -244,15 +326,6 @@ class SharedAuth
             return false;
         }
 
-        // Valid persistent login - authenticate the user
-        $user = User::find($userId);
-
-        if (!$user) {
-            return false;
-        }
-
-        Auth::login($user);
-
-        return true;
+        return $this->loginUser((int) $userId);
     }
 }
