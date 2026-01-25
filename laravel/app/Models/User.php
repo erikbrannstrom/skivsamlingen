@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 /**
  * User model for Skivsamlingen.
@@ -115,5 +118,155 @@ class User extends Authenticatable
     {
         $this->password = self::encryptPassword($this->username, $password);
         $this->save();
+    }
+
+    /**
+     * Get the user's record collection.
+     */
+    public function records(): BelongsToMany
+    {
+        return $this->belongsToMany(Record::class, 'records_users')
+            ->withPivot('id', 'comment');
+    }
+
+    /**
+     * Get the user's records with sorting and optional pagination.
+     *
+     * @param string $order Sort field: 'artist', 'format', or 'year'
+     * @param string $direction Sort direction: 'asc' or 'desc'
+     * @param int $limit Number of records to return (0 for all)
+     * @param int $offset Starting offset for pagination
+     */
+    public function getRecordsSorted(string $order = 'artist', string $direction = 'asc', int $limit = 0, int $offset = 0): \Illuminate\Database\Eloquent\Collection
+    {
+        $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
+
+        $query = $this->records()
+            ->with('artist')
+            ->join('artists', 'records.artist_id', '=', 'artists.id')
+            ->select([
+                'records.*',
+                'artists.name as artist_name',
+                'artists.id as artist_id',
+            ])
+            ->selectSub(
+                fn ($q) => $q->from('records_users as ru2')
+                    ->join('records as r2', 'ru2.record_id', '=', 'r2.id')
+                    ->whereColumn('ru2.user_id', 'records_users.user_id')
+                    ->whereColumn('r2.artist_id', 'artists.id')
+                    ->selectRaw('COUNT(*)'),
+                'num_records'
+            );
+
+        // Apply sorting with "The " prefix handling
+        $artistSort = "TRIM(LEADING 'The ' FROM artists.name)";
+
+        switch ($order) {
+            case 'format':
+                $query->orderByRaw("records.format {$direction}, {$artistSort} {$direction}, records.title {$direction}, records.year {$direction}");
+                break;
+            case 'year':
+                $query->orderByRaw("records.year {$direction}, {$artistSort} {$direction}, records.title {$direction}");
+                break;
+            default: // artist
+                $query->orderByRaw("{$artistSort} {$direction}, records.year ASC, records.title {$direction}");
+        }
+
+        if ($limit > 0) {
+            $query->offset($offset)->limit($limit);
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * Get the user's donations.
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(Donation::class);
+    }
+
+    /**
+     * Check if the user is a supporter (donated >= 100 SEK within the last year).
+     */
+    public function isSupporter(): bool
+    {
+        return $this->donations()
+            ->where('donated_at', '>=', now()->subYear())
+            ->where('amount', '>=', 100)
+            ->exists();
+    }
+
+    /**
+     * Get the count of records in the user's collection.
+     */
+    public function getRecordsCount(): int
+    {
+        return $this->records()->count();
+    }
+
+    /**
+     * Get the user's top artists by record count using the user's records relation.
+     */
+    public function getTopArtists(int $limit = 10): \Illuminate\Support\Collection
+    {
+        return $this->records()
+            ->join('artists', 'records.artist_id', '=', 'artists.id')
+            ->whereNotIn('artists.name', ['Various', 'V/A'])
+            ->groupBy('artists.id')
+            ->selectRaw('artists.name, COUNT(records.id) as records_count')
+            ->orderByDesc('records_count')
+            ->orderBy('artists.name')
+            ->limit($limit)
+            ->get()
+            ->map(function ($row) {
+                return (object)[
+                    'name' => $row->name,
+                    'records' => $row->records_count,
+                ];
+            });
+    }
+
+    /**
+     * Get the user's most recently added records.
+     */
+    public function getLatestRecords(int $limit = 10): \Illuminate\Support\Collection
+    {
+        return $this->records()
+            ->with('artist')
+            ->orderByDesc('records_users.id')
+            ->limit($limit)
+            ->get()
+            ->map(function ($record) {
+                return (object)[
+                    'title' => $record->title,
+                    'name' => $record->artist->name ?? null,
+                ];
+            });
+    }
+
+    /**
+     * Get the display label for the user's sex/gender.
+     */
+    public function getSexDisplayAttribute(): ?string
+    {
+        return match ($this->sex) {
+            'f' => 'Kvinna',
+            'm' => 'Man',
+            default => null,
+        };
+    }
+
+    /**
+     * Search users by username or name.
+     */
+    public static function search(string $query, int $limit = 20): \Illuminate\Database\Eloquent\Collection
+    {
+        return static::where('username', 'LIKE', "%{$query}%")
+            ->orWhere('name', 'LIKE', "%{$query}%")
+            ->orderBy('username')
+            ->limit($limit)
+            ->get();
     }
 }
