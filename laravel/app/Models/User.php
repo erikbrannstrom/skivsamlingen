@@ -141,22 +141,23 @@ class User extends Authenticatable
     {
         $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
 
+        // Pre-compute artist counts for this user in a single grouped query
+        $artistCounts = $this->records()
+            ->select('records.artist_id', DB::raw('COUNT(*) as num_records'))
+            ->groupBy('records.artist_id');
+
         $query = $this->records()
             ->with('artist')
             ->join('artists', 'records.artist_id', '=', 'artists.id')
+            ->joinSub($artistCounts, 'artist_counts', function ($join) {
+                $join->on('records.artist_id', '=', 'artist_counts.artist_id');
+            })
             ->select([
                 'records.*',
                 'artists.name as artist_name',
                 'artists.id as artist_id',
-            ])
-            ->selectSub(
-                fn ($q) => $q->from('records_users as ru2')
-                    ->join('records as r2', 'ru2.record_id', '=', 'r2.id')
-                    ->whereColumn('ru2.user_id', 'records_users.user_id')
-                    ->whereColumn('r2.artist_id', 'artists.id')
-                    ->selectRaw('COUNT(*)'),
-                'num_records'
-            );
+                'artist_counts.num_records',
+            ]);
 
         // Apply sorting with "The " prefix handling
         $artistSort = "TRIM(LEADING 'The ' FROM artists.name)";
