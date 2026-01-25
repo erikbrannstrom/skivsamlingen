@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('persistent_logins')) {
+        if (Schema::hasTable("password_recovery")) {
             return;
         }
 
-        Schema::create('persistent_logins', function (Blueprint $table) {
-            $table->smallInteger('user_id');
-            $table->char('series', 40);
-            $table->unsignedInteger('token');
-            $table->primary(['user_id', 'series', 'token']);
+        Schema::create('password_recovery', function (Blueprint $table) {
+            $table->string('username', 24)->primary();
+            $table->string('hash', 40);
+            $table->integer('created_on');
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('persistent_logins');
+        Schema::dropIfExists('password_recovery');
     }
 };

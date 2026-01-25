@@ -17,6 +17,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('records')) {
+            return;
+        }
+
         Schema::create('records', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->unsignedMediumInteger('artist_id');

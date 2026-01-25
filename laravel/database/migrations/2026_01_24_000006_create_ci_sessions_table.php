@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('ci_sessions')) {
+            return;
+        }
+
         Schema::create('ci_sessions', function (Blueprint $table) {
             $table->string('session_id', 40)->primary();
             $table->string('ip_address', 45)->default('0');

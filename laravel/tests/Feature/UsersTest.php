@@ -375,7 +375,7 @@ class UsersTest extends TestCase
         $response = $this->get('/users/testuser/20/artist/asc');
 
         $response->assertRedirect('/users/testuser?offset=20&order=artist&dir=asc');
-        $response->assertStatus(301);
+        $response->assertStatus(302);
     }
 
     /**
@@ -386,7 +386,7 @@ class UsersTest extends TestCase
         $response = $this->get('/users/testuser/40');
 
         $response->assertRedirect('/users/testuser?offset=40');
-        $response->assertStatus(301);
+        $response->assertStatus(302);
     }
 
     /**
@@ -397,7 +397,7 @@ class UsersTest extends TestCase
         $response = $this->get('/users/testuser/20/year');
 
         $response->assertRedirect('/users/testuser?offset=20&order=year');
-        $response->assertStatus(301);
+        $response->assertStatus(302);
     }
 
     /**

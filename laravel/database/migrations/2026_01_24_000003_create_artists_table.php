@@ -17,6 +17,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('artists')) {
+            return;
+        }
+
         Schema::create('artists', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->string('name', 64);

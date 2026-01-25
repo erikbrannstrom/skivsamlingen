@@ -17,6 +17,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('records_users')) {
+            return;
+        }
+
         Schema::create('records_users', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedSmallInteger('user_id')->nullable();
