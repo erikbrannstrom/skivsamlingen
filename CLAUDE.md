@@ -226,14 +226,36 @@ During migration, both apps share authentication via the `SharedAuth` middleware
 5. Write tests in `laravel/tests/Feature/`
 
 **Querying the database:**
-```php
-// Via Eloquent
-News::newest()->paginate(5);
-User::where('username', $username)->firstOrFail();
 
-// Via Query Builder
-DB::table('records_users')->where('user_id', $id)->get();
+**Always prefer Eloquent models and relationships over `DB::table()` or raw SQL.** Eloquent provides better maintainability, type safety, and consistency across the codebase.
+
+```php
+// PREFERRED: Eloquent with relationships
+$user = User::where('username', $username)->firstOrFail();
+$records = $user->records()->with('artist')->paginate(25);
+News::newest()->paginate(5);
+
+// PREFERRED: Eloquent query builder for complex queries
+User::select('username', User::raw('COUNT(*) as record_count'))
+    ->join('records_users', 'users.id', '=', 'records_users.user_id')
+    ->groupBy('users.id', 'users.username')
+    ->orderByDesc('record_count')
+    ->limit(10)
+    ->get();
+
+// AVOID: DB::table() - only use when Eloquent is genuinely impractical
+// DB::table('records_users')->where('user_id', $id)->get();
+
+// AVOID: Raw SQL - only use for complex queries that cannot be expressed otherwise
+// DB::select('SELECT * FROM users WHERE ...');
 ```
+
+**Why prefer Eloquent:**
+- Relationships are defined once in models and reused everywhere
+- Eager loading prevents N+1 query problems
+- Model events, accessors, and mutators work automatically
+- Better IDE support and type hinting
+- Consistent patterns across the codebase
 
 ---
 

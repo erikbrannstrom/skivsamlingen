@@ -3,6 +3,7 @@
 ## Migration Approach
 - **Strategy**: Incremental controller-by-controller migration with parallel deployment
 - **Database**: Preserve existing schema (no renaming, no timestamps)
+- **Query Style**: Prefer Eloquent models and relationships over `DB::table()` or raw SQL
 - **Authentication**: Shared session/cookie authentication between CodeIgniter and Laravel
 - **Testing**: Add tests during migration for each feature
 - **Deployment**: Deploy each controller independently, route traffic progressively
@@ -291,12 +292,15 @@ Migrate the homepage and statistics, which are read-only but involve complex que
 ### 2.1 Create Laravel Components
 
 **Service**: `/app/Services/StatisticsService.php`
+
+Note: Always prefer Eloquent models with relationships over `DB::table()`. Use Eloquent's query builder on models for complex aggregations.
+
 ```php
 class StatisticsService {
     public function getTopUsers(int $limit = 10): Collection {
-        return DB::table('records_users')
-            ->select('users.username', DB::raw('COUNT(*) as count'))
-            ->join('users', 'users.id', '=', 'records_users.user_id')
+        // Use Eloquent query builder on User model
+        return User::select('users.username', User::raw('COUNT(*) as count'))
+            ->join('records_users', 'users.id', '=', 'records_users.user_id')
             ->groupBy('users.id', 'users.username')
             ->orderByDesc('count')
             ->limit($limit)
@@ -304,9 +308,9 @@ class StatisticsService {
     }
 
     public function getTopArtists(int $limit = 10): Collection {
-        return DB::table('records')
-            ->select('artists.name', DB::raw('COUNT(*) as count'))
-            ->join('artists', 'artists.id', '=', 'records.artist_id')
+        // Use Eloquent query builder on Artist model
+        return Artist::select('artists.name', Artist::raw('COUNT(*) as count'))
+            ->join('records', 'artists.id', '=', 'records.artist_id')
             ->join('records_users', 'records.id', '=', 'records_users.record_id')
             ->whereNotIn('artists.name', ['Various', 'V/A', 'Div.'])
             ->groupBy('artists.id', 'artists.name')
@@ -725,6 +729,9 @@ Migrate record collection CRUD operations.
 ### 5.1 Create Laravel Components
 
 **Controller**: `/app/Http/Controllers/CollectionController.php`
+
+Note: Use Eloquent models (RecordUser pivot model) and relationships instead of `DB::table()`.
+
 ```php
 class CollectionController extends Controller {
     public function __construct() {
@@ -741,25 +748,25 @@ class CollectionController extends Controller {
                 'comment' => 'nullable|max:255',
             ]);
 
-            $artistId = Artist::getOrCreateId($request->artist);
-            $recordId = Record::getOrCreateId(
-                $artistId,
-                $request->title,
-                $request->year,
-                $request->format
-            );
+            $artist = Artist::firstOrCreate(['name' => $request->artist]);
+            $record = Record::firstOrCreate([
+                'artist_id' => $artist->id,
+                'title' => $request->title,
+                'year' => $request->year,
+                'format' => $request->format,
+            ]);
 
-            // If editing, delete old entry
+            // If editing, delete old entry via Eloquent
             if ($id > 0) {
-                DB::table('records_users')
-                    ->where('id', $id)
+                RecordUser::where('id', $id)
                     ->where('user_id', Auth::id())
                     ->delete();
             }
 
-            DB::table('records_users')->insert([
+            // Create new collection entry via Eloquent
+            RecordUser::create([
                 'user_id' => Auth::id(),
-                'record_id' => $recordId,
+                'record_id' => $record->id,
                 'comment' => $request->comment,
             ]);
 
@@ -767,12 +774,11 @@ class CollectionController extends Controller {
                    ->with('success', 'Skivan har sparats.');
         }
 
+        // Use Eloquent with eager loading for edit form
         $record = $id > 0
-            ? DB::table('records_users')
-                ->join('records', 'records.id', '=', 'records_users.record_id')
-                ->join('artists', 'artists.id', '=', 'records.artist_id')
-                ->where('records_users.id', $id)
-                ->where('records_users.user_id', Auth::id())
+            ? RecordUser::with(['record.artist'])
+                ->where('id', $id)
+                ->where('user_id', Auth::id())
                 ->first()
             : null;
 
@@ -780,7 +786,8 @@ class CollectionController extends Controller {
     }
 
     public function delete(int $id) {
-        $entry = DB::table('records_users')
+        // Use Eloquent model
+        $entry = RecordUser::with(['record.artist'])
             ->where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
@@ -788,7 +795,7 @@ class CollectionController extends Controller {
         if (!$entry) abort(404);
 
         if (request()->isMethod('post')) {
-            DB::table('records_users')->where('id', $id)->delete();
+            $entry->delete();
             return redirect('/users/' . Auth::user()->username)
                    ->with('success', 'Skivan har tagits bort.');
         }
@@ -971,6 +978,62 @@ Use this for each controller deployment:
 
 ---
 
+## Database Query Guidelines
+
+### Prefer Eloquent Over DB::table() and Raw SQL
+
+**Always use Eloquent models and relationships** as the primary method for database queries. This ensures consistency, maintainability, and leverages Laravel's built-in features.
+
+**Priority order:**
+1. **Eloquent relationships** - Define relationships in models and use them
+2. **Eloquent query builder** - Use `Model::where()`, `Model::select()`, etc.
+3. **DB::table()** - Only when Eloquent is genuinely impractical (very rare)
+4. **Raw SQL** - Only for complex queries that cannot be expressed otherwise (avoid)
+
+### Examples
+
+**Good - Eloquent with relationships:**
+```php
+// Define relationship in User model
+public function records() {
+    return $this->belongsToMany(Record::class, 'records_users')
+                ->withPivot('id', 'comment');
+}
+
+// Use the relationship
+$user->records()->with('artist')->paginate(25);
+$user->records()->count();
+```
+
+**Good - Eloquent query builder for aggregations:**
+```php
+User::select('username', User::raw('COUNT(*) as record_count'))
+    ->join('records_users', 'users.id', '=', 'records_users.user_id')
+    ->groupBy('users.id', 'users.username')
+    ->orderByDesc('record_count')
+    ->get();
+```
+
+**Avoid - DB::table():**
+```php
+// Don't do this
+DB::table('records_users')->where('user_id', $id)->get();
+
+// Instead, create and use a RecordUser model
+RecordUser::where('user_id', $id)->get();
+```
+
+### Why This Matters
+
+1. **Relationships are reusable** - Define once in the model, use everywhere
+2. **Eager loading** - Prevents N+1 query problems with `->with()`
+3. **Model features work** - Events, accessors, mutators, casts
+4. **Type safety** - Better IDE support and error detection
+5. **Consistency** - Same patterns across the entire codebase
+6. **Testability** - Easier to mock and test
+
+---
+
 ## Success Criteria
 
 Migration is complete when:
@@ -982,6 +1045,7 @@ Migration is complete when:
 
 ---
 
-*This plan was updated on 2026-01-24*
+*This plan was updated on 2026-01-25*
 *Strategy: Incremental controller-by-controller migration*
+*Query style: Eloquent models and relationships preferred over DB::table()*
 *Laravel version: 12.x (PHP 8.3+)*
