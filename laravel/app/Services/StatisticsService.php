@@ -133,8 +133,7 @@ class StatisticsService
      */
     public function getStatistics(): array
     {
-        DB::enableQueryLog(); // For debugging purposes
-        $res = [
+        return [
             'toplist' => $this->getTopUsers(),
             'popular_artists' => $this->getTopArtists(),
             'popular_albums' => $this->getPopularAlbums(),
@@ -142,9 +141,5 @@ class StatisticsService
             'total_recs' => $this->getTotalRecords(),
             'latest_users' => $this->getNewUsers(),
         ];
-        $log = DB::getQueryLog();
-        // Uncomment the line below to see the executed queries in the log
-        info('Executed queries: ' . print_r($log, true));
-        return $res;
     }
 }
