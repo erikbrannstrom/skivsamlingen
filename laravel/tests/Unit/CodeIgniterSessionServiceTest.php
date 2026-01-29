@@ -2,10 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Models\CodeIgniterSession;
+use App\Models\PersistentLogin;
 use App\Models\User;
 use App\Services\CodeIgniterSessionService;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class CodeIgniterSessionServiceTest extends TestCase
@@ -165,7 +166,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $sessionId = 'dbsession123';
         $userData = serialize(['user_id' => 99, 'username' => 'testuser']);
 
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -190,7 +191,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $sessionId = 'expiredsession';
         $userData = serialize(['user_id' => 50]);
 
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -207,7 +208,7 @@ class CodeIgniterSessionServiceTest extends TestCase
     {
         $sessionId = 'emptydata';
 
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -225,7 +226,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $sessionId = 'nouserid';
         $userData = serialize(['some_other_key' => 'value']);
 
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -281,7 +282,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $sessionId = 'dbtest456';
         $userData = serialize(['user_id' => 77, 'username' => 'dbuser']);
 
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -330,7 +331,7 @@ class CodeIgniterSessionServiceTest extends TestCase
     {
         // Create existing session
         $sessionId = 'existingsession';
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -349,9 +350,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $this->service->loginUser($user);
 
         // Should have updated database session
-        $session = DB::table('ci_sessions')
-            ->where('session_id', $sessionId)
-            ->first();
+        $session = CodeIgniterSession::find($sessionId);
 
         $userData = unserialize($session->user_data);
         $this->assertEquals($user->id, $userData['user_id']);
@@ -364,7 +363,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $sessionId = 'logoutsession';
         $user = User::factory()->create(['username' => 'logoutuser']);
 
-        DB::table('ci_sessions')->insert([
+        CodeIgniterSession::create([
             'session_id' => $sessionId,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
@@ -386,9 +385,7 @@ class CodeIgniterSessionServiceTest extends TestCase
         $this->service->logoutUser();
 
         // Database session should have no user
-        $session = DB::table('ci_sessions')
-            ->where('session_id', $sessionId)
-            ->first();
+        $session = CodeIgniterSession::find($sessionId);
 
         $userData = unserialize($session->user_data);
         $this->assertArrayNotHasKey('user_id', $userData);
@@ -432,7 +429,7 @@ class CodeIgniterSessionServiceTest extends TestCase
 
     public function test_get_persistent_login_returns_null_for_wrong_token(): void
     {
-        DB::table('persistent_logins')->insert([
+        PersistentLogin::create([
             'user_id' => 5,
             'series' => 'testseries',
             'token' => 12345,
@@ -447,7 +444,7 @@ class CodeIgniterSessionServiceTest extends TestCase
 
     public function test_get_persistent_login_returns_data_for_valid_cookie(): void
     {
-        DB::table('persistent_logins')->insert([
+        PersistentLogin::create([
             'user_id' => 8,
             'series' => 'validseries',
             'token' => 54321,
@@ -465,7 +462,7 @@ class CodeIgniterSessionServiceTest extends TestCase
 
     public function test_clear_persistent_login_removes_cookie_and_record(): void
     {
-        DB::table('persistent_logins')->insert([
+        PersistentLogin::create([
             'user_id' => 10,
             'series' => 'clearseries',
             'token' => 11111,

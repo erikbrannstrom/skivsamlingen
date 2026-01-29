@@ -3,11 +3,12 @@
 namespace Tests\Feature;
 
 use App\Mail\PasswordResetMail;
+use App\Models\Artist;
 use App\Models\PasswordRecovery;
+use App\Models\Record;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -842,20 +843,15 @@ class AccountTest extends TestCase
             'password' => User::encryptPassword('recorduser', 'mypassword'),
         ]);
 
-        // Create an artist and record first
-        $artistId = DB::table('artists')->insertGetId(['name' => 'Test Artist']);
-        $recordId = DB::table('records')->insertGetId([
-            'artist_id' => $artistId,
+        // Create an artist and record, then add to user's collection
+        $artist = Artist::create(['name' => 'Test Artist']);
+        $record = Record::create([
+            'artist_id' => $artist->id,
             'title' => 'Test Album',
             'year' => 2020,
             'format' => 'LP',
         ]);
-
-        // Add a record to the user's collection
-        DB::table('records_users')->insert([
-            'user_id' => $user->id,
-            'record_id' => $recordId,
-        ]);
+        $user->records()->attach($record->id);
 
         $response = $this->actingAs($user)->post('/account/unregister', [
             'password' => 'mypassword',
