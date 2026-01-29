@@ -3,11 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Services\CodeIgniterSessionService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -16,263 +15,52 @@ use Symfony\Component\HttpFoundation\Response;
  * This middleware reads CodeIgniter's session cookie and persistent login
  * cookie to authenticate users in Laravel, enabling both applications to
  * share the same authentication state during the migration period.
- *
- * Supports both cookie-based sessions and database sessions.
  */
 class SharedAuth
 {
+    public function __construct(
+        protected CodeIgniterSessionService $ciSession
+    ) {}
+
     /**
      * Handle an incoming request.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::debug('SharedAuth: Starting', [
-            'already_authenticated' => Auth::check(),
-            'cookies_available' => array_keys($_COOKIE),
-        ]);
+        $ciUserId = $this->ciSession->getUserId();
 
-        // Get the user ID from CodeIgniter session (if any)
-        // Returns: int (user_id), null (no CI session), false (CI session but logged out)
-        $ciUserId = $this->getUserIdFromCodeIgniterSession($request);
-
-        // If Laravel has a user logged in, verify CI still agrees
         if (Auth::check()) {
-            // No CI session at all - don't interfere with Laravel auth (e.g., during tests)
+            // No CI session - don't interfere with Laravel auth (e.g., during tests)
             if ($ciUserId === null) {
-                Log::debug('SharedAuth: Already authenticated, no CI session to verify');
                 return $next($request);
             }
 
-            // CI session exists and matches Laravel
+            // CI session matches Laravel
             if ($ciUserId === Auth::id()) {
-                Log::debug('SharedAuth: Already authenticated, CI session matches');
                 return $next($request);
             }
 
-            // CI session exists but user logged out (false) or switched accounts (different int)
-            Log::debug('SharedAuth: CI session mismatch, logging out Laravel', [
-                'laravel_user_id' => Auth::id(),
-                'ci_user_id' => $ciUserId,
-            ]);
+            // CI session mismatch - sync Laravel to CI state
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            // If CI has a different user logged in, log them in
             if (is_int($ciUserId)) {
                 $this->loginUser($ciUserId);
             }
             return $next($request);
         }
 
-        // Try to authenticate from CodeIgniter session cookie
-        if ($this->authenticateFromSession($request)) {
-            Log::debug('SharedAuth: Authenticated via CI session');
+        // Try CI session authentication
+        if (is_int($ciUserId)) {
+            $this->loginUser($ciUserId);
             return $next($request);
         }
 
-        // Try to authenticate from persistent login cookie
-        if ($this->authenticateFromPersistentLogin($request)) {
-            Log::debug('SharedAuth: Authenticated via persistent login');
-            return $next($request);
-        }
+        // Try persistent login cookie
+        $this->authenticateFromPersistentLogin();
 
-        Log::debug('SharedAuth: No authentication found');
         return $next($request);
-    }
-
-    /**
-     * Get the user ID from CodeIgniter session without logging in.
-     *
-     * Returns:
-     * - int: User ID if logged in via CI session
-     * - null: No CI session exists (cookie missing)
-     * - false: CI session exists but user is not logged in (logged out)
-     */
-    protected function getUserIdFromCodeIgniterSession(Request $request): int|null|false
-    {
-        $sessionCookie = $request->cookie('ci_session');
-        $rawCookie = $_COOKIE['ci_session'] ?? null;
-
-        if (!$sessionCookie && $rawCookie) {
-            $sessionCookie = $rawCookie;
-        }
-
-        // No CI session cookie at all - return null to indicate absence
-        if (!$sessionCookie) {
-            return null;
-        }
-
-        try {
-            $sessionData = $this->decodeCodeIgniterSession($sessionCookie);
-
-            if (!$sessionData) {
-                // Cookie exists but can't be decoded - treat as logged out
-                return false;
-            }
-
-            // If user_id is directly in the cookie (cookie-only sessions)
-            if (isset($sessionData['user_id'])) {
-                return (int) $sessionData['user_id'];
-            }
-
-            // If using database sessions, look up user_data from the database
-            if (isset($sessionData['session_id'])) {
-                $userId = $this->getUserIdFromDatabaseSession($sessionData['session_id']);
-                // Return false (not null) when session exists but has no user
-                return $userId ?? false;
-            }
-        } catch (\Exception $e) {
-            Log::warning('Failed to get user ID from CodeIgniter session', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-
-        // CI session exists but no user_id found - user is logged out
-        return false;
-    }
-
-    /**
-     * Get user ID from database session without logging in.
-     */
-    protected function getUserIdFromDatabaseSession(string $sessionId): ?int
-    {
-        $session = DB::table('ci_sessions')
-            ->where('session_id', $sessionId)
-            ->first();
-
-        if (!$session) {
-            return null;
-        }
-
-        // Check session expiration
-        $sessionExpiration = 7200; // 2 hours
-        if (($session->last_activity + $sessionExpiration) < time()) {
-            return null;
-        }
-
-        if (empty($session->user_data)) {
-            return null;
-        }
-
-        $userData = $this->unserializeSessionData($session->user_data);
-
-        if (!$userData || !is_array($userData) || !isset($userData['user_id'])) {
-            return null;
-        }
-
-        return (int) $userData['user_id'];
-    }
-
-    /**
-     * Attempt to authenticate from CodeIgniter's session cookie.
-     */
-    protected function authenticateFromSession(Request $request): bool
-    {
-        // Check both request->cookie and $_COOKIE
-        $sessionCookie = $request->cookie('ci_session');
-        $rawCookie = $_COOKIE['ci_session'] ?? null;
-
-        Log::debug('SharedAuth: Session cookie check', [
-            'request_cookie_exists' => !empty($sessionCookie),
-            'request_cookie_length' => strlen($sessionCookie ?? ''),
-            'raw_cookie_exists' => !empty($rawCookie),
-            'raw_cookie_length' => strlen($rawCookie ?? ''),
-        ]);
-
-        // Prefer raw cookie if request cookie is empty (Laravel encryption issue)
-        if (!$sessionCookie && $rawCookie) {
-            Log::debug('SharedAuth: Using raw $_COOKIE instead of request->cookie');
-            $sessionCookie = $rawCookie;
-        }
-
-        if (!$sessionCookie) {
-            Log::debug('SharedAuth: No ci_session cookie found');
-            return false;
-        }
-
-        try {
-            $sessionData = $this->decodeCodeIgniterSession($sessionCookie);
-
-            if (!$sessionData) {
-                Log::debug('SharedAuth: Failed to decode session');
-                return false;
-            }
-
-            Log::debug('SharedAuth: Session decoded', [
-                'keys' => array_keys($sessionData),
-                'has_user_id' => isset($sessionData['user_id']),
-                'has_session_id' => isset($sessionData['session_id']),
-            ]);
-
-            // If user_id is directly in the cookie (cookie-only sessions)
-            if (isset($sessionData['user_id'])) {
-                return $this->loginUser($sessionData['user_id']);
-            }
-
-            // If using database sessions, look up user_data from the database
-            if (isset($sessionData['session_id'])) {
-                return $this->authenticateFromDatabaseSession($sessionData['session_id']);
-            }
-        } catch (\Exception $e) {
-            Log::warning('Failed to decode CodeIgniter session', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-
-        return false;
-    }
-
-    /**
-     * Authenticate from database session by looking up the session_id.
-     */
-    protected function authenticateFromDatabaseSession(string $sessionId): bool
-    {
-        Log::debug('SharedAuth: Looking up database session', ['session_id' => $sessionId]);
-
-        $session = DB::table('ci_sessions')
-            ->where('session_id', $sessionId)
-            ->first();
-
-        if (!$session) {
-            Log::debug('SharedAuth: Session not found in database');
-            return false;
-        }
-
-        // Check session expiration
-        $sessionExpiration = 7200; // 2 hours
-        if (($session->last_activity + $sessionExpiration) < time()) {
-            Log::debug('SharedAuth: Database session expired', [
-                'last_activity' => $session->last_activity,
-                'now' => time(),
-            ]);
-            return false;
-        }
-
-        // Unserialize the user_data
-        if (empty($session->user_data)) {
-            Log::debug('SharedAuth: No user_data in database session');
-            return false;
-        }
-
-        $userData = $this->unserializeSessionData($session->user_data);
-
-        if (!$userData || !is_array($userData)) {
-            Log::debug('SharedAuth: Failed to unserialize user_data');
-            return false;
-        }
-
-        Log::debug('SharedAuth: Database session user_data', [
-            'keys' => array_keys($userData),
-            'has_user_id' => isset($userData['user_id']),
-        ]);
-
-        if (isset($userData['user_id'])) {
-            return $this->loginUser($userData['user_id']);
-        }
-
-        Log::debug('SharedAuth: No user_id in database session user_data');
-        return false;
     }
 
     /**
@@ -283,166 +71,49 @@ class SharedAuth
         $user = User::find($userId);
 
         if ($user) {
-            Log::debug('SharedAuth: User found, logging in', ['username' => $user->username]);
             Auth::login($user);
             return true;
         }
 
-        Log::debug('SharedAuth: User not found in DB', ['user_id' => $userId]);
         return false;
     }
 
     /**
-     * Decode CodeIgniter's session cookie format.
-     *
-     * Format (when sess_encrypt_cookie is FALSE):
-     * - serialized_data + md5(serialized_data + encryption_key)
-     * - Last 32 characters are the MD5 hash
-     *
-     * @param string $cookie The raw cookie value
-     * @return array|null The session data array, or null if invalid
-     */
-    protected function decodeCodeIgniterSession(string $cookie): ?array
-    {
-        Log::debug('SharedAuth: Decoding CI session', ['cookie_length' => strlen($cookie)]);
-
-        // Cookie must have at least 32 chars (for the hash) + some data
-        if (strlen($cookie) <= 32) {
-            Log::debug('SharedAuth: Cookie too short');
-            return null;
-        }
-
-        // Extract the hash (last 32 characters) and serialized data
-        $hash = substr($cookie, -32);
-        $serializedData = substr($cookie, 0, -32);
-
-        // Verify the hash
-        $encryptionKey = config('auth.ci_encryption_key');
-        $hashMatches = ($hash === md5($serializedData . $encryptionKey));
-
-        Log::debug('SharedAuth: Hash check (raw)', [
-            'hash' => $hash,
-            'expected' => md5($serializedData . $encryptionKey),
-            'match' => $hashMatches,
-            'key_length' => strlen($encryptionKey),
-        ]);
-
-        // If hash doesn't match, try with URL-decoded version
-        // (cookies may be URL-encoded in transit)
-        if (!$hashMatches) {
-            $decodedData = urldecode($serializedData);
-            $decodedHashMatches = ($hash === md5($decodedData . $encryptionKey));
-
-            Log::debug('SharedAuth: Hash check (url-decoded)', [
-                'expected' => md5($decodedData . $encryptionKey),
-                'match' => $decodedHashMatches,
-            ]);
-
-            if ($decodedHashMatches) {
-                $hashMatches = true;
-                $serializedData = $decodedData;
-            }
-        }
-
-        if (!$hashMatches) {
-            Log::debug('SharedAuth: Hash mismatch - rejecting');
-            return null;
-        }
-
-        // Unserialize the data
-        $data = $this->unserializeSessionData($serializedData);
-
-        if (!is_array($data)) {
-            Log::debug('SharedAuth: Unserialize failed');
-            return null;
-        }
-
-        // Validate required session fields
-        if (!isset($data['session_id'], $data['last_activity'])) {
-            Log::debug('SharedAuth: Missing required fields');
-            return null;
-        }
-
-        // Check session expiration (default 2 hours = 7200 seconds)
-        $sessionExpiration = 7200;
-        if (($data['last_activity'] + $sessionExpiration) < time()) {
-            Log::debug('SharedAuth: Session expired', [
-                'last_activity' => $data['last_activity'],
-                'now' => time(),
-                'age' => time() - $data['last_activity'],
-            ]);
-            return null;
-        }
-
-        Log::debug('SharedAuth: Session valid');
-        return $data;
-    }
-
-    /**
-     * Unserialize CodeIgniter session data.
-     */
-    protected function unserializeSessionData(string $data): mixed
-    {
-        $unserialized = @unserialize(stripslashes($data));
-
-        if (is_array($unserialized)) {
-            // Convert {{slash}} markers back to actual slashes (CI convention)
-            foreach ($unserialized as $key => $val) {
-                if (is_string($val)) {
-                    $unserialized[$key] = str_replace('{{slash}}', '\\', $val);
-                }
-            }
-        }
-
-        return $unserialized;
-    }
-
-    /**
      * Attempt to authenticate from the persistent login cookie.
-     *
-     * Cookie format: user_id;series;token
      */
-    protected function authenticateFromPersistentLogin(Request $request): bool
+    protected function authenticateFromPersistentLogin(): bool
     {
-        $rememberCookie = $request->cookie('skiv_remember');
-        $rawCookie = $_COOKIE['skiv_remember'] ?? null;
+        $result = $this->ciSession->checkPersistentLogin();
 
-        // Prefer raw cookie if request cookie is empty (Laravel encryption issue)
-        if (!$rememberCookie && $rawCookie) {
-            $rememberCookie = $rawCookie;
-        }
-
-        if (!$rememberCookie) {
+        // Check for suspected cookie theft
+        if ($result['theft_suspected'] && $result['user_id']) {
+            $this->handleSuspectedTheft($result['user_id']);
             return false;
         }
 
-        $parts = explode(';', $rememberCookie);
-
-        if (count($parts) !== 3) {
+        if (!$result['valid']) {
             return false;
         }
 
-        [$userId, $series, $token] = $parts;
+        $loggedIn = $this->loginUser($result['user_id']);
 
-        // Look up the persistent login record
-        $persistentLogin = DB::table('persistent_logins')
-            ->where('user_id', $userId)
-            ->where('series', $series)
-            ->first();
-
-        if (!$persistentLogin) {
-            return false;
+        if ($loggedIn) {
+            // Rotate the token to prevent replay attacks
+            $this->ciSession->rotatePersistentLoginToken($result['user_id'], $result['series']);
         }
 
-        // Check token match
-        if ($persistentLogin->token != $token) {
-            // Token mismatch = potential replay attack
-            Log::warning('Persistent login token mismatch - potential replay attack', [
-                'user_id' => $userId,
-            ]);
-            return false;
-        }
+        return $loggedIn;
+    }
 
-        return $this->loginUser((int) $userId);
+    /**
+     * Handle suspected cookie theft by invalidating all user sessions.
+     */
+    protected function handleSuspectedTheft(int $userId): void
+    {
+        // Invalidate all sessions for this user
+        $this->ciSession->invalidateAllUserSessions($userId);
+
+        // Show warning to the user
+        session()->flash('error', 'Av säkerhetsskäl har alla dina sessioner avslutats. Om du inte själv har försökt logga in från en annan enhet, bör du byta lösenord omedelbart.');
     }
 }

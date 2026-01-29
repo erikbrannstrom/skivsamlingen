@@ -18,13 +18,14 @@ The project uses an incremental controller-by-controller migration approach with
 | 1 | NewsController | Complete |
 | 2 | HomeController | Complete |
 | 3 | UsersController | Complete |
-| 4 | AccountController | Not started |
+| 4 | AccountController | Complete |
 | 5 | CollectionController | Not started |
 
 **Active Routes:**
 - `/`, `/about` - Served by Laravel (HomeController)
 - `/news`, `/news/rss` - Served by Laravel (NewsController)
 - `/users/*` - Served by Laravel (UsersController)
+- `/account/*` - Served by Laravel (AccountController)
 - All other routes - Served by CodeIgniter
 
 ## Directory Structure

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UsersController;
@@ -45,3 +46,18 @@ Route::get('/users/{username}/{offset}', function (string $username, int $offset
 })->where('offset', '[0-9]+');
 
 Route::get('/users/{username}', [UsersController::class, 'profile']);
+
+// Account routes
+Route::get('/account/login', [AccountController::class, 'showLogin']);
+Route::post('/account/login', [AccountController::class, 'login']);
+Route::get('/account/logout', [AccountController::class, 'logout']);
+Route::get('/account/register', [AccountController::class, 'showRegister']);
+Route::post('/account/register', [AccountController::class, 'register']);
+Route::get('/account/forgot', [AccountController::class, 'showForgot']);
+Route::post('/account/forgot', [AccountController::class, 'forgot']);
+Route::get('/account/recover/{username}/{hash}', [AccountController::class, 'showRecover']);
+Route::post('/account/recover/{username}/{hash}', [AccountController::class, 'recover']);
+Route::get('/account/edit', [AccountController::class, 'edit']);
+Route::post('/account/edit', [AccountController::class, 'update']);
+Route::post('/account/password', [AccountController::class, 'password']);
+Route::post('/account/unregister', [AccountController::class, 'unregister']);

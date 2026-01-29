@@ -12,6 +12,16 @@ class SharedAuthTest extends TestCase
 {
     use DatabaseTruncation;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Clear any stale auth state between tests
+        Auth::logout();
+        unset($_COOKIE['ci_session']);
+        unset($_COOKIE['skiv_remember']);
+    }
+
     /**
      * Create a valid CodeIgniter session cookie value.
      */
@@ -300,6 +310,148 @@ class SharedAuthTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertFalse(Auth::check());
+
+        unset($_COOKIE['skiv_remember']);
+    }
+
+    /**
+     * Test that token mismatch invalidates ALL sessions for the user.
+     *
+     * This is a security measure against cookie theft - if an attacker uses a stolen
+     * cookie after the legitimate user has already used it (rotating the token),
+     * the mismatch indicates compromise and all sessions should be invalidated.
+     *
+     * This includes:
+     * - All persistent logins (remember me) for the user
+     * - All CI sessions for the user
+     * - A warning message shown to the user about the potential attack
+     */
+    public function test_persistent_login_token_mismatch_invalidates_all_user_sessions(): void
+    {
+        $user = User::factory()->create(['username' => 'compromised_user']);
+        $series1 = sha1(uniqid() . '1');
+        $series2 = sha1(uniqid() . '2');
+        $series3 = sha1(uniqid() . '3');
+
+        // Create multiple persistent login records for this user (e.g., different devices)
+        DB::table('persistent_logins')->insert([
+            ['user_id' => $user->id, 'series' => $series1, 'token' => 'token1'],
+            ['user_id' => $user->id, 'series' => $series2, 'token' => 'token2'],
+            ['user_id' => $user->id, 'series' => $series3, 'token' => 'token3'],
+        ]);
+
+        // Create CI sessions for this user (active sessions on different devices)
+        $userSessionData = serialize(['user_id' => $user->id, 'username' => $user->username]);
+        DB::table('ci_sessions')->insert([
+            [
+                'session_id' => 'user_session_1',
+                'ip_address' => '192.168.1.1',
+                'user_agent' => 'Device 1',
+                'last_activity' => time(),
+                'user_data' => $userSessionData,
+            ],
+            [
+                'session_id' => 'user_session_2',
+                'ip_address' => '192.168.1.2',
+                'user_agent' => 'Device 2',
+                'last_activity' => time(),
+                'user_data' => $userSessionData,
+            ],
+        ]);
+
+        // Also create a persistent login and CI session for another user (should not be affected)
+        $otherUser = User::factory()->create(['username' => 'other_user']);
+        $otherSeries = sha1(uniqid() . 'other');
+        DB::table('persistent_logins')->insert([
+            'user_id' => $otherUser->id,
+            'series' => $otherSeries,
+            'token' => 'other_token',
+        ]);
+        DB::table('ci_sessions')->insert([
+            'session_id' => 'other_user_session',
+            'ip_address' => '10.0.0.1',
+            'user_agent' => 'Other Device',
+            'last_activity' => time(),
+            'user_data' => serialize(['user_id' => $otherUser->id, 'username' => $otherUser->username]),
+        ]);
+
+        // Attempt authentication with correct series but wrong token (simulates stolen cookie)
+        $_COOKIE['skiv_remember'] = "{$user->id};{$series1};wrong_token";
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $this->assertFalse(Auth::check());
+
+        // ALL persistent logins for the compromised user should be deleted
+        $this->assertDatabaseMissing('persistent_logins', ['user_id' => $user->id, 'series' => $series1]);
+        $this->assertDatabaseMissing('persistent_logins', ['user_id' => $user->id, 'series' => $series2]);
+        $this->assertDatabaseMissing('persistent_logins', ['user_id' => $user->id, 'series' => $series3]);
+
+        // ALL CI sessions for the compromised user should be deleted
+        $this->assertDatabaseMissing('ci_sessions', ['session_id' => 'user_session_1']);
+        $this->assertDatabaseMissing('ci_sessions', ['session_id' => 'user_session_2']);
+
+        // Other user's persistent login and CI session should NOT be affected
+        $this->assertDatabaseHas('persistent_logins', ['user_id' => $otherUser->id, 'series' => $otherSeries]);
+        $this->assertDatabaseHas('ci_sessions', ['session_id' => 'other_user_session']);
+
+        // User should see a warning about the potential security breach
+        $response->assertSessionHas('error');
+        $this->assertStringContainsString(
+            'säkerhet',
+            strtolower(session('error')),
+            'Warning message should mention security concern'
+        );
+
+        unset($_COOKIE['skiv_remember']);
+    }
+
+    /**
+     * Test that successful persistent login rotates the token.
+     *
+     * After successful authentication via persistent login, the token should be
+     * regenerated and updated both in the database and in the cookie. This ensures
+     * that each token can only be used once, limiting the window for replay attacks.
+     */
+    public function test_persistent_login_success_rotates_token(): void
+    {
+        $user = User::factory()->create();
+        $series = sha1(uniqid());
+        $originalToken = '12345';
+
+        // Create persistent login record
+        DB::table('persistent_logins')->insert([
+            'user_id' => $user->id,
+            'series' => $series,
+            'token' => $originalToken,
+        ]);
+
+        $_COOKIE['skiv_remember'] = "{$user->id};{$series};{$originalToken}";
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $this->assertTrue(Auth::check());
+        $this->assertEquals($user->id, Auth::id());
+
+        // The series should still exist but with a NEW token
+        $record = DB::table('persistent_logins')
+            ->where('user_id', $user->id)
+            ->where('series', $series)
+            ->first();
+
+        $this->assertNotNull($record, 'Persistent login record should still exist');
+        $this->assertNotEquals($originalToken, $record->token, 'Token should have been rotated');
+
+        // The cookie should also be updated with the new token
+        $this->assertArrayHasKey('skiv_remember', $_COOKIE);
+        $cookieParts = explode(';', $_COOKIE['skiv_remember']);
+        $this->assertCount(3, $cookieParts);
+        $this->assertEquals($user->id, $cookieParts[0]);
+        $this->assertEquals($series, $cookieParts[1]);
+        $this->assertEquals($record->token, $cookieParts[2], 'Cookie token should match new database token');
+        $this->assertNotEquals($originalToken, $cookieParts[2], 'Cookie token should not be the original');
 
         unset($_COOKIE['skiv_remember']);
     }
