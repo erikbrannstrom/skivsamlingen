@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/skivsamlingen.se
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php83
+    networks:
+      - skivsamlingen
+
+  php83:
+    build:
+      context: ./docker/php83
+    volumes:
+      - .:/var/www/skivsamlingen.se
+      - ./docker/php83/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+    networks:
+      - skivsamlingen
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: skivsamlingen_s
+      MYSQL_USER: skivsamlingen
+      MYSQL_PASSWORD: skivsamlingen
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --sql-mode=NO_ENGINE_SUBSTITUTION
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+    networks:
+      - skivsamlingen
+
+networks:
+  skivsamlingen:
+
+volumes:
+  mysql_data:
