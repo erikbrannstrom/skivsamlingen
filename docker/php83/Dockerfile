@@ -28,4 +28,4 @@ COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]
 
-WORKDIR /var/www/skivsamlingen.se/laravel
+WORKDIR /var/www/skivsamlingen.se
