@@ -66,12 +66,11 @@ The project uses Docker for local development with dual PHP versions:
 2. Configure database credentials:
    - CodeIgniter: `application/config/database.php` (not tracked)
    - Laravel: `laravel/.env` (not tracked)
-3. Install Laravel dependencies: `docker compose exec php83 composer install -d /var/www/skivsamlingen.se/laravel`
+3. Install Laravel dependencies: `docker compose exec php83 composer install -d /var/www/skivsamlingen.se`
 4. Access the site at `http://localhost:8080`
 
 **Docker Services:**
 - `nginx` - Web server (port 8080)
-- `php56` - PHP 5.6 for CodeIgniter
 - `php83` - PHP 8.3 for Laravel
 - `mysql` - MySQL 8.0 database (port 3306)
 
@@ -89,106 +88,39 @@ docker compose ps         # List running containers
 
 **Running Tests:**
 ```bash
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan test
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan test --filter=NewsTest
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan test --filter=test_news_index_displays_articles
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan test
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan test --filter=NewsTest
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan test --filter=test_news_index_displays_articles
 ```
 
 **Dependencies:**
 ```bash
-docker compose exec php83 composer install -d /var/www/skivsamlingen.se/laravel
-docker compose exec php83 composer update -d /var/www/skivsamlingen.se/laravel
+docker compose exec php83 composer install -d /var/www/skivsamlingen.se
+docker compose exec php83 composer update -d /var/www/skivsamlingen.se
 ```
 
 **Cache Management:**
 ```bash
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan cache:clear
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan config:clear
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan view:clear
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan optimize:clear
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan cache:clear
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan config:clear
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan view:clear
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan optimize:clear
 ```
 
 **Development Helpers:**
 ```bash
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan route:list
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan tinker
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan route:list
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan tinker
 ```
 
 **Database:**
 ```bash
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan migrate
-docker compose exec php83 php /var/www/skivsamlingen.se/laravel/artisan migrate:status
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan migrate
+docker compose exec php83 php /var/www/skivsamlingen.se/artisan migrate:status
 docker compose exec mysql mysql -uskivsamlingen -pskivsamlingen skivsamlingen_s
 ```
 
----
-
-## CodeIgniter Architecture (Legacy)
-
-### Framework: CodeIgniter 2.x MVC Pattern
-
-**Controllers** (`application/controllers/`)
-- All controllers extend `MY_Controller` (defined in `application/core/`)
-- Controller naming convention: `{name}_controller.php` with class name `{Name}_Controller`
-- Automatic view loading via `MY_Controller::_remap()` - views are loaded automatically based on controller/method names
-- Main controllers:
-  - `home_controller.php` - Front page, statistics, about page
-  - `users_controller.php` - User profiles, search, collection display
-  - `collection_controller.php` - Add/edit/delete records (requires authentication)
-  - `account_controller.php` - Registration, login, account settings
-  - `news_controller.php` - News/announcements (migrated to Laravel)
-
-**Models** (`application/models/`)
-- All models extend `MY_Model` (defined in `application/core/`)
-- `MY_Model` provides CRUD operations and validation helpers
-- Models define `$table`, `$primary_key`, and `$fields` (with validation rules)
-- Key models:
-  - `user.php` - User management, collection statistics, top lists
-  - `record.php` - Record lookup and creation
-  - `collection.php` - User's record collection (junction table `records_users`)
-  - `artist.php` - Artist records
-  - `Comment.php`, `Message.php`, `News.php` - Social features
-
-**Views** (`application/views/`)
-- Organized by controller: `{controller}/{method}.php`
-- Layout system via `MY_Controller` with `application/views/layouts/`
-- Layouts use `$yield` variable for view content
-
-**Custom Libraries** (`application/libraries/`)
-- `Auth.php` - Authentication with session and persistent login
-- `MP_Cache.php` - Caching layer
-- `History.php` - Navigation history tracking
-- `Notice.php` / `Notification.php` - Flash messages
-
-### CodeIgniter Routing
-
-Routes defined in `application/config/routes.php`:
-- Default controller: `home_controller`
-- Pattern `$route['([^/]*)(.*)'] = "$1_controller$2"` automatically maps URLs to controllers
-- nginx rewrite rules remove `index.php` from URLs
-
-### CodeIgniter Common Patterns
-
-**Adding a new feature to user collection:**
-1. Add route in `application/config/routes.php` if needed
-2. Create method in appropriate controller (e.g., `collection_controller.php`)
-3. Check authentication: `if ($this->auth->isGuest()) redirect();`
-4. Load models: `$this->load->model('ModelName');`
-5. View auto-loads from `application/views/{controller}/{method}.php`
-
-**Querying the database:**
-```php
-// Via model
-$this->User->fetchOne(array('username' => $username));
-$this->User->read(array('id' => 123));
-
-// Direct query builder
-$this->db->select('*')->from('users')->where('id', $uid)->get()->result();
-```
-
----
-
-## Laravel Architecture (New)
+## Laravel Architecture
 
 ### Structure
 
