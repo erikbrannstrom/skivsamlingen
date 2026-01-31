@@ -331,9 +331,6 @@ class AccountController extends Controller
         // Delete user's password recovery tokens
         PasswordRecovery::where('username', $username)->delete();
 
-        // Delete user's persistent logins
-        DB::table('persistent_logins')->where('user_id', $user->id)->delete();
-
         // Delete the user
         $user->delete();
 

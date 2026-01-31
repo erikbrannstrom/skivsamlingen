@@ -126,15 +126,4 @@ return [
 
     'global_salt' => env('AUTH_GLOBAL_SALT', ''),
 
-    /*
-    |--------------------------------------------------------------------------
-    | CodeIgniter Encryption Key
-    |--------------------------------------------------------------------------
-    |
-    | Used to decode CodeIgniter session cookies for shared authentication.
-    |
-    */
-
-    'ci_encryption_key' => env('CI_ENCRYPTION_KEY', ''),
-
 ];

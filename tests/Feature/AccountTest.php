@@ -20,10 +20,6 @@ class AccountTest extends TestCase
 
         // Clear any stale auth state from previous tests
         Auth::logout();
-
-        // Clear CI session cookies
-        unset($_COOKIE['ci_session']);
-        unset($_COOKIE['skiv_remember']);
     }
 
     // ===================
@@ -84,7 +80,6 @@ class AccountTest extends TestCase
             'password' => User::encryptPassword('wrongpassuser', 'correctpass'),
         ]);
 
-        // Make request without any SharedAuth middleware interference
         $response = $this->post('/account/login', [
             'username' => 'wrongpassuser',
             'password' => 'wrongpass',
@@ -136,7 +131,7 @@ class AccountTest extends TestCase
         $response->assertSessionHasErrors(['password']);
     }
 
-    public function test_login_with_remember_me_creates_persistent_login(): void
+    public function test_login_with_remember_me_sets_remember_token(): void
     {
         $user = User::factory()->create([
             'username' => 'rememberuser',
@@ -152,16 +147,12 @@ class AccountTest extends TestCase
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($user);
 
-        // Should have created a persistent login record
-        $this->assertDatabaseHas('persistent_logins', [
-            'user_id' => $user->id,
-        ]);
-
-        // Should have set the cookie
-        $this->assertArrayHasKey('skiv_remember', $_COOKIE);
+        // Should have set a remember token on the user
+        $user->refresh();
+        $this->assertNotNull($user->remember_token);
     }
 
-    public function test_login_without_remember_me_does_not_create_persistent_login(): void
+    public function test_login_without_remember_me_does_not_set_remember_token(): void
     {
         $user = User::factory()->create([
             'username' => 'norememberuser',
@@ -176,12 +167,9 @@ class AccountTest extends TestCase
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($user);
 
-        // Should NOT have created a persistent login record
-        $this->assertDatabaseMissing('persistent_logins', [
-            'user_id' => $user->id,
-        ]);
-        // Should not have set cookie
-        $this->assertArrayNotHasKey('skiv_remember', $_COOKIE);
+        // Should NOT have set a remember token
+        $user->refresh();
+        $this->assertNull($user->remember_token);
     }
 
     // ===================
