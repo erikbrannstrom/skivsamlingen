@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * PasswordRecovery model for password reset tokens.
  *
- * Maps to the existing 'password_recovery' table used by CodeIgniter.
+ * Maps to the existing 'password_recovery' table.
  */
 class PasswordRecovery extends Model
 {

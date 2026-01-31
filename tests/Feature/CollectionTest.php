@@ -16,8 +16,6 @@ class CollectionTest extends TestCase
     {
         parent::setUp();
         Auth::logout();
-        unset($_COOKIE['ci_session']);
-        unset($_COOKIE['skiv_remember']);
     }
 
     // ===================

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * User model for Skivsamlingen.
  *
- * Maps to the existing 'users' table from the CodeIgniter application.
+ * Maps to the existing 'users' table.
  */
 class User extends Authenticatable
 {
@@ -73,7 +73,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Encrypt password using CodeIgniter's legacy algorithm.
+     * Encrypt password using the legacy algorithm.
      *
      * Format: sha256(md5(username)[0:12] + password + global_salt)
      */

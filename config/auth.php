@@ -114,11 +114,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | CodeIgniter Compatibility - Global Salt
+    | Global Salt
     |--------------------------------------------------------------------------
     |
-    | The global salt used by the legacy CodeIgniter application for password
-    | hashing. This MUST match the CodeIgniter config value exactly.
+    | The global salt used for legacy password hashing.
     |
     | Password format: sha256(md5(username)[0:12] + password + global_salt)
     |

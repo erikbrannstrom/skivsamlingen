@@ -6,77 +6,41 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Skivsamlingen.se is a Swedish record collection management website created around 2007. It's a community-driven platform where users can catalog their vinyl records, browse other users' collections, and discover music statistics.
 
-**The codebase is currently being migrated from CodeIgniter 2.x to Laravel 12.x.** See `LARAVEL_MIGRATION_PLAN.md` for the complete migration strategy and timeline.
-
-### Current Migration Status
-
-The project uses an incremental controller-by-controller migration approach with parallel deployment:
-
-| Phase | Controller | Status |
-|-------|-----------|--------|
-| 0 | Foundation & Parallel Architecture | Complete |
-| 1 | NewsController | Complete |
-| 2 | HomeController | Complete |
-| 3 | UsersController | Complete |
-| 4 | AccountController | Complete |
-| 5 | CollectionController | Not started |
-
-**Active Routes:**
-- `/`, `/about` - Served by Laravel (HomeController)
-- `/news`, `/news/rss` - Served by Laravel (NewsController)
-- `/users/*` - Served by Laravel (UsersController)
-- `/account/*` - Served by Laravel (AccountController)
-- All other routes - Served by CodeIgniter
+The application is built with **Laravel 12.x** and **PHP 8.3+**.
 
 ## Directory Structure
 
 ```
 /skivsamlingen.se/
-├── application/          # CodeIgniter app (legacy)
-├── system/               # CodeIgniter framework
-├── static/               # Static assets (shared)
-├── index.php             # CodeIgniter entry point
-└── laravel/              # Laravel app (new)
-    ├── app/
-    ├── public/
-    ├── resources/
-    ├── routes/
-    └── tests/
+├── app/                  # Application code
+├── config/               # Configuration
+├── database/             # Migrations and schema
+├── public/               # Web root
+├── resources/            # Views and assets
+├── routes/               # Route definitions
+├── static/               # Static assets
+└── tests/                # Feature and unit tests
 ```
 
 ## Development Environment
 
-This is a dual-framework setup during migration:
-
-**CodeIgniter (Legacy):**
-- PHP 5.6 compatible
-- MySQL database
-- nginx with rewrite rules
-
-**Laravel (New):**
-- PHP 8.3+ required
-- Same MySQL database (shared)
-- Composer for dependencies
+The project uses Docker for local development.
 
 ### Local Development Setup
 
-The project uses Docker for local development with dual PHP versions:
-
 1. Start the containers: `docker compose up -d`
-2. Configure database credentials:
-   - CodeIgniter: `application/config/database.php` (not tracked)
-   - Laravel: `laravel/.env` (not tracked)
-3. Install Laravel dependencies: `docker compose exec php83 composer install -d /var/www/skivsamlingen.se`
+2. Configure database credentials in `.env` (not tracked)
+3. Install dependencies: `docker compose exec php83 composer install -d /var/www/skivsamlingen.se`
 4. Access the site at `http://localhost:8080`
 
 **Docker Services:**
 - `nginx` - Web server (port 8080)
-- `php83` - PHP 8.3 for Laravel
+- `php83` - PHP 8.3
 - `mysql` - MySQL 8.0 database (port 3306)
 
 ### Common Commands
 
-All commands run through Docker. Laravel commands use the `php83` service.
+All commands run through Docker.
 
 **Docker:**
 ```bash
@@ -120,43 +84,37 @@ docker compose exec php83 php /var/www/skivsamlingen.se/artisan migrate:status
 docker compose exec mysql mysql -uskivsamlingen -pskivsamlingen skivsamlingen_s
 ```
 
-## Laravel Architecture
+## Architecture
 
 ### Structure
 
-**Controllers** (`laravel/app/Http/Controllers/`)
-- `NewsController.php` - Migrated news functionality
+**Controllers** (`app/Http/Controllers/`)
+- `NewsController.php` - News/announcements
+- `HomeController.php` - Home and about pages
+- `UsersController.php` - User profiles
+- `AccountController.php` - Login, registration, settings
+- `CollectionController.php` - Record collection management
 
-**Models** (`laravel/app/Models/`)
+**Models** (`app/Models/`)
 - `BaseModel.php` - Base model with `$timestamps = false` for existing schema
 - `User.php` - User model (extends Authenticatable)
 - `News.php` - News model
+- `Record.php`, `Artist.php`, `RecordUser.php` - Collection models
 
-**Middleware** (`laravel/app/Http/Middleware/`)
-- `SharedAuth.php` - Reads CodeIgniter session/cookie to share authentication state
-
-**Views** (`laravel/resources/views/`)
+**Views** (`resources/views/`)
 - Blade templates organized by controller
 - `layouts/application.blade.php` - Main layout
 
-**Routes** (`laravel/routes/web.php`)
-- `/news` and `/news/rss` - News routes
+**Routes** (`routes/web.php`)
 
-### Shared Authentication
+### Common Patterns
 
-During migration, both apps share authentication via the `SharedAuth` middleware:
-- Reads CodeIgniter's `ci_session` cookie (supports both cookie and database sessions)
-- Reads persistent login cookie `skiv_remember`
-- Logs users into Laravel based on CodeIgniter session state
-
-### Laravel Common Patterns
-
-**Creating a new migrated controller:**
-1. Create model in `laravel/app/Models/` extending `BaseModel`
-2. Create controller in `laravel/app/Http/Controllers/`
-3. Add routes in `laravel/routes/web.php`
-4. Create Blade views in `laravel/resources/views/{controller}/`
-5. Write tests in `laravel/tests/Feature/`
+**Creating a new controller:**
+1. Create model in `app/Models/` extending `BaseModel`
+2. Create controller in `app/Http/Controllers/`
+3. Add routes in `routes/web.php`
+4. Create Blade views in `resources/views/{controller}/`
+5. Write tests in `tests/Feature/`
 
 **Querying the database:**
 
@@ -194,16 +152,13 @@ User::select('username', User::raw('COUNT(*) as record_count'))
 
 ## Database Schema
 
-The database is shared between both frameworks. Key tables:
+Key tables:
 - `users` - User accounts (username, password, email, birth, sex, about, etc.)
 - `artists` - Artist names
 - `records` - Records (title, year, format, artist_id)
 - `records_users` - Junction table linking users to their record collections
-- `persistent_logins` - "Remember me" authentication tokens
-- `ci_sessions` - CodeIgniter database sessions
 - `donations` - Tracks supporter status
 - `news` - Site announcements
-- `comments`, `messages` - Social features
 
 **Important:** The existing schema is preserved. Laravel models use `$timestamps = false`.
 
@@ -211,15 +166,14 @@ The database is shared between both frameworks. Key tables:
 
 ## Authentication & Authorization
 
-Custom password hashing (shared between both apps):
+Custom password hashing:
 - Algorithm: `sha256(md5(username)[0:12] + password + global_salt)`
 - Old passwords use `sha1()` and are automatically upgraded on login
-- `AUTH_GLOBAL_SALT` must match in both `application/config/config.php` and `laravel/.env`
+- `AUTH_GLOBAL_SALT` configured in `.env`
 
 Session and cookies:
-- Session: `ci_session` cookie (CodeIgniter manages sessions)
-- Persistent login: `skiv_remember` cookie (30-day expiry)
-- Both stored in database tables: `ci_sessions`, `persistent_logins`
+- Laravel session-based authentication
+- Persistent login available
 
 ---
 
@@ -241,22 +195,5 @@ Session and cookies:
 
 ## Important Notes
 
-- **Legacy codebase**: Code quality varies (written ~2007, mixed with newer code)
-- **No dependency management in CI**: Libraries (jQuery 1.4, jQuery UI 1.8) committed directly
-- **Security**: Uses custom password hashing (not bcrypt). Will be upgraded post-migration.
-- **Database credentials**: Not tracked in git - create locally for both apps
-- **Dual PHP versions**: Docker handles this locally; production uses nginx with different PHP-FPM sockets
-
----
-
-## Migration Reference
-
-For detailed migration instructions, phases, and deployment checklists, see:
-**`LARAVEL_MIGRATION_PLAN.md`**
-
-Key migration principles:
-- One controller at a time
-- Preserve existing database schema
-- Share authentication between apps
-- Add tests for each migrated feature
-- Easy rollback via nginx routing
+- **Security**: Uses custom password hashing (not bcrypt)
+- **Database credentials**: Not tracked in git - configure in `.env`
