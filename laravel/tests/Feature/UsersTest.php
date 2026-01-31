@@ -5,13 +5,11 @@ namespace Tests\Feature;
 use App\Models\Artist;
 use App\Models\Record;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class UsersTest extends TestCase
 {
-    use DatabaseTruncation;
 
     /**
      * Test that a user profile page loads successfully.

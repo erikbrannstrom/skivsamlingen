@@ -3,14 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class SharedAuthTest extends TestCase
 {
-    use DatabaseTruncation;
 
     protected function setUp(): void
     {

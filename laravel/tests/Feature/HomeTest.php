@@ -4,13 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\News;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class HomeTest extends TestCase
 {
-    use DatabaseTruncation;
 
     /**
      * Test that the homepage loads successfully.

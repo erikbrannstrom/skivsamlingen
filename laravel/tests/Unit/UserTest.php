@@ -5,13 +5,11 @@ namespace Tests\Unit;
 use App\Models\Artist;
 use App\Models\Record;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
-    use DatabaseTruncation;
     public function test_timestamps_are_disabled(): void
     {
         $user = new User();

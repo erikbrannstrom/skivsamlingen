@@ -6,12 +6,10 @@ use App\Models\CodeIgniterSession;
 use App\Models\PersistentLogin;
 use App\Models\User;
 use App\Services\CodeIgniterSessionService;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Tests\TestCase;
 
 class CodeIgniterSessionServiceTest extends TestCase
 {
-    use DatabaseTruncation;
 
     protected CodeIgniterSessionService $service;
 

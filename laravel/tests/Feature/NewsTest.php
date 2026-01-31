@@ -3,12 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\News;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Tests\TestCase;
 
 class NewsTest extends TestCase
 {
-    use DatabaseTruncation;
 
     /**
      * Test that the news index page loads successfully.

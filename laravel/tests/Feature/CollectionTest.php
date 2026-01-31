@@ -6,13 +6,11 @@ use App\Models\Artist;
 use App\Models\Record;
 use App\Models\RecordUser;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class CollectionTest extends TestCase
 {
-    use DatabaseTruncation;
 
     protected function setUp(): void
     {

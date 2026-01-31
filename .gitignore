@@ -19,3 +19,5 @@ laravel/npm-debug.log
 laravel/yarn-error.log
 laravel/.idea
 laravel/.vscode
+
+docker-compose.override.yml

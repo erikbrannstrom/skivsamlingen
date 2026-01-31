@@ -4,13 +4,11 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Services\StatisticsService;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class StatisticsServiceTest extends TestCase
 {
-    use DatabaseTruncation;
 
     private StatisticsService $service;
 

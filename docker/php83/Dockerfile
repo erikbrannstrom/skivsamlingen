@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libzip-dev \
     libonig-dev \
+    default-mysql-client \
     unzip \
     git \
     && docker-php-ext-install \
@@ -22,5 +23,9 @@ RUN apt-get update && apt-get install -y \
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["php-fpm"]
 
 WORKDIR /var/www/skivsamlingen.se/laravel

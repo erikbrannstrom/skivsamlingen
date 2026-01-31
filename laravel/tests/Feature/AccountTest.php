@@ -7,14 +7,12 @@ use App\Models\Artist;
 use App\Models\PasswordRecovery;
 use App\Models\Record;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AccountTest extends TestCase
 {
-    use DatabaseTruncation;
 
     protected function setUp(): void
     {
