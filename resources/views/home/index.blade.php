@@ -75,7 +75,7 @@
 @foreach($popular_artists as $row)
     <tr>
         <td>{{ $i++ }}.</td>
-        <td>{{ $row->name }}</td>
+        <td><a href="/artists/{{ $row->id }}">{{ $row->name }}</a></td>
         <td>{{ $row->records }} skivor</td>
     </tr>
 @endforeach

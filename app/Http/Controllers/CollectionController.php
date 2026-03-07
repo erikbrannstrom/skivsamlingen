@@ -192,6 +192,35 @@ class CollectionController extends Controller
     }
 
     /**
+     * Add an existing record to the authenticated user's collection.
+     */
+    public function addExisting(Request $request): RedirectResponse
+    {
+        if (!Auth::check()) {
+            return redirect('/account/login')->with('error', 'Du måste vara inloggad.');
+        }
+
+        $request->validate(['record_id' => 'required|integer|exists:records,id']);
+        $recordId = $request->input('record_id');
+
+        $alreadyOwned = RecordUser::where('user_id', Auth::id())
+            ->where('record_id', $recordId)
+            ->exists();
+
+        if (!$alreadyOwned) {
+            RecordUser::create([
+                'user_id' => Auth::id(),
+                'record_id' => $recordId,
+                'comment' => '',
+            ]);
+        }
+
+        $record = Record::with('artist')->find($recordId);
+        return redirect('/artists/' . $record->artist_id)
+            ->with('success', 'Skivan har lagts till i din samling.');
+    }
+
+    /**
      * Update or delete a comment on a collection entry.
      */
     public function comment(Request $request): RedirectResponse

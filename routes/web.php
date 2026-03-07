@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -58,6 +59,9 @@ Route::post('/account/edit', [AccountController::class, 'update']);
 Route::post('/account/password', [AccountController::class, 'password']);
 Route::post('/account/unregister', [AccountController::class, 'unregister']);
 
+// Artist routes
+Route::get('/artists/{id}', [ArtistController::class, 'show'])->where('id', '[0-9]+');
+
 // Collection routes
 Route::get('/collection/record', [CollectionController::class, 'new']);
 Route::post('/collection/record', [CollectionController::class, 'create']);
@@ -66,3 +70,4 @@ Route::post('/collection/record/{id}', [CollectionController::class, 'update']);
 Route::get('/collection/delete/{id}', [CollectionController::class, 'delete']);
 Route::post('/collection/delete', [CollectionController::class, 'destroy']);
 Route::post('/collection/comment', [CollectionController::class, 'comment']);
+Route::post('/collection/add', [CollectionController::class, 'addExisting']);
