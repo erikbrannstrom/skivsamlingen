@@ -84,7 +84,7 @@ $(function() {
 @if(Auth::id() == $user->id)
 <div class="box">
 <h3>Alternativ</h3>
-<ul class="bullets">
+<ul>
     <li><a href="/users/{{ $user->username }}/export">Exportera skivsamling (XML)</a></li>
     <li><a href="/users/{{ $user->username }}/print">Visa utskriftsvy</a></li>
     <li><a href="/account/edit">Ändra dina uppgifter</a></li>
