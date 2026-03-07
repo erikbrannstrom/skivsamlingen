@@ -153,12 +153,17 @@
 <div id="page">
 <div id="content">
     @if(session('success'))
-        <div class="notice success">{{ session('success') }}</div>
+        <div class="success">{{ session('success') }}</div>
     @endif
     @if(session('error'))
-        <div class="notice error">{{ session('error') }}</div>
+        <div class="error">{{ session('error') }}</div>
     @endif
-    @yield('content')
+    <div class="layout">
+        <div class="main">@yield('content')</div>
+        @hasSection('sidebar')
+        <div class="sidebar">@yield('sidebar')</div>
+        @endif
+    </div>
 </div>
 
 <div id="footer">

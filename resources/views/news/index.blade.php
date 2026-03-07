@@ -1,8 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="layout">
-<div class="main">
 
 <h2>Nyheter</h2>
 
@@ -16,9 +14,9 @@
 <p>Inga nyheter att visa.</p>
 @endforelse
 
-</div> {{-- End: Main content --}}
+@endsection
 
-<div class="sidebar">
+@section('sidebar')
 
     <div class="box">
         <h3>Prenumerera via RSS</h3>
@@ -28,6 +26,4 @@
         <p><a href="/news/rss"><img src="/static/images/icons/feed-icon-28x28.png" /></a></p>
     </div>
 
-</div>
-</div> {{-- End: Layout --}}
 @endsection

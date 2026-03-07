@@ -92,8 +92,8 @@ $(function() {
 
 </div>
 
-<div style="text-align: right">
-<div class="buttons" style="display: inline-block; float: none;">
+<div class="form-actions">
+<div class="buttons">
     <button type="submit" class="positive">
         <img src="/static/images/icons/tick.png" alt=""/>
         Bli medlem

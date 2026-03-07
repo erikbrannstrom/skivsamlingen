@@ -1,8 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="layout">
-<div class="main"> {{-- Start: Main content --}}
 
 @guest
 <h2>Vad är Skivsamlingen?</h2>
@@ -32,7 +30,7 @@
 <div class="cols-2">
 <div>
 <h3>Medlemmar</h3>
-<table style="width: 100%" class="statistics" cellspacing="0">
+<table class="statistics" cellspacing="0">
 <tr>
     <th>Antal medlemmar</th>
     <td>{{ $members['total'] }}</td>
@@ -58,7 +56,7 @@
 
 <div>
 <h3>Största samlingarna</h3>
-<table style="width: 100%" class="statistics" cellspacing="0">
+<table class="statistics" cellspacing="0">
 @php $i = 1; @endphp
 @foreach($toplist as $user)
     <tr>
@@ -73,7 +71,7 @@
 <div class="cols-2">
 <div>
 <h3>Populäraste artisterna</h3>
-<table style="width: 100%" class="statistics" cellspacing="0">
+<table class="statistics" cellspacing="0">
 @php $i = 1; @endphp
 @foreach($popular_artists as $row)
     <tr>
@@ -87,7 +85,7 @@
 
 <div>
 <h3>Populäraste albumen</h3>
-<table style="width: 100%" class="statistics" cellspacing="0">
+<table class="statistics" cellspacing="0">
 @php $i = 1; @endphp
 @foreach($popular_albums as $row)
     <tr>
@@ -100,8 +98,9 @@
 </table>
 </div>
 </div>
-</div> {{-- End: Main content --}}
-<div class="sidebar"> {{-- Start: Sidebar --}}
+@endsection
+
+@section('sidebar')
 
 <div class="box">
 
@@ -136,6 +135,4 @@
 @endforeach
 </div>
 
-</div> {{-- End: Sidebar --}}
-</div> {{-- End: Layout --}}
 @endsection

@@ -21,10 +21,9 @@ $(function() {
 });
 </script>
 
-<div class="layout">
-<div class="main"> <!-- Start: Main content -->
 <h2>{{ $user->username }}</h2>
 
+<div class="page-nav">
 <x-collection-pagination
     :username="$user->username"
     :currentPage="$currentPage"
@@ -40,6 +39,7 @@ $(function() {
     :currentOrder="$order"
     :currentDirection="$direction"
 />
+</div>
 
 <table width="100%" cellspacing="0">
     @php
@@ -77,9 +77,9 @@ $(function() {
         @endphp
     @endforeach
 </table>
-</div> <!-- End: Main content -->
+@endsection
 
-<div class="sidebar"> <!-- Start: Sidebar -->
+@section('sidebar')
 
 @if(Auth::id() == $user->id)
 <div class="box">
@@ -142,6 +142,4 @@ $(function() {
 </ol>
 </div>
 
-</div> <!-- End: Sidebar -->
-</div> <!-- End: Layout -->
 @endsection
