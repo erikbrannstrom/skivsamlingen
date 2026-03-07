@@ -21,7 +21,8 @@ $(function() {
 });
 </script>
 
-<div class="grid_8"> <!-- Start: Main content -->
+<div class="layout">
+<div class="main"> <!-- Start: Main content -->
 <h2>{{ $user->username }}</h2>
 
 <x-collection-pagination
@@ -33,15 +34,12 @@ $(function() {
     :direction="$direction"
 />
 
-<div style="float: right">
 <x-sort-links
     :username="$user->username"
     :offset="$offset"
     :currentOrder="$order"
     :currentDirection="$direction"
 />
-</div>
-<div style="clear: both;"></div>
 
 <table width="100%" cellspacing="0">
     @php
@@ -58,7 +56,7 @@ $(function() {
         <td{{ Auth::id() == $user->id ? ' colspan="2"' : '' }} width="25%"><em>{{ $record->num_records }} {{ $record->num_records == 1 ? 'skiva' : 'skivor' }}</em></td>
     </tr>
         @endif
-    <tr style="background-color: #fff">
+    <tr>
         <td>{{ $record->title }}
         @if($record->pivot->comment)
             <img src="/static/images/icons/comment.png" title="{{ $record->pivot->comment }}" class="comment" />
@@ -81,7 +79,7 @@ $(function() {
 </table>
 </div> <!-- End: Main content -->
 
-<div class="grid_4 sidebar"> <!-- Start: Sidebar -->
+<div class="sidebar"> <!-- Start: Sidebar -->
 
 @if(Auth::id() == $user->id)
 <div class="box">
@@ -115,7 +113,6 @@ $(function() {
 <strong>E-post:</strong> <a href="mailto:{{ $user->email }}">{{ $user->email }}</a><br />
 @endif
 <strong>Medlem sedan:</strong> {{ $user->registered ? $user->registered->locale('sv')->isoFormat('D MMMM YYYY') : '' }}
-<div class="clear"></div>
 </div>
 
 @if($user->about)
@@ -146,4 +143,5 @@ $(function() {
 </div>
 
 </div> <!-- End: Sidebar -->
+</div> <!-- End: Layout -->
 @endsection

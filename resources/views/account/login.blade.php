@@ -1,8 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_12">
-
 <h2>Logga in</h2>
 
 <form method="post" action="/account/login">
@@ -31,6 +29,4 @@
 </form>
 
 <a href="/account/forgot">Glömt ditt lösenord?</a>
-
-</div>
 @endsection

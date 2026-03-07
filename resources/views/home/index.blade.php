@@ -1,7 +1,8 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_8 "> {{-- Start: Main content --}}
+<div class="layout">
+<div class="main"> {{-- Start: Main content --}}
 
 @guest
 <h2>Vad är Skivsamlingen?</h2>
@@ -28,7 +29,8 @@
 
 <h2>Statistik</h2>
 
-<div style="width: 48%; float: left;">
+<div class="cols-2">
+<div>
 <h3>Medlemmar</h3>
 <table style="width: 100%" class="statistics" cellspacing="0">
 <tr>
@@ -54,7 +56,7 @@
 </table>
 </div>
 
-<div style="width: 48%; float: right;">
+<div>
 <h3>Största samlingarna</h3>
 <table style="width: 100%" class="statistics" cellspacing="0">
 @php $i = 1; @endphp
@@ -67,8 +69,9 @@
 @endforeach
 </table>
 </div>
-<div style="clear:both"></div>
-<div style="width: 48%; float: left;">
+</div>
+<div class="cols-2">
+<div>
 <h3>Populäraste artisterna</h3>
 <table style="width: 100%" class="statistics" cellspacing="0">
 @php $i = 1; @endphp
@@ -82,7 +85,7 @@
 </table>
 </div>
 
-<div style="width: 48%; float: right;">
+<div>
 <h3>Populäraste albumen</h3>
 <table style="width: 100%" class="statistics" cellspacing="0">
 @php $i = 1; @endphp
@@ -96,8 +99,9 @@
 @endforeach
 </table>
 </div>
+</div>
 </div> {{-- End: Main content --}}
-<div id="" class="grid_4 sidebar"> {{-- Start: Sidebar --}}
+<div class="sidebar"> {{-- Start: Sidebar --}}
 
 <div class="box">
 
@@ -133,4 +137,5 @@
 </div>
 
 </div> {{-- End: Sidebar --}}
+</div> {{-- End: Layout --}}
 @endsection

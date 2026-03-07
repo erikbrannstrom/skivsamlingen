@@ -1,7 +1,8 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_8 "> {{-- Start: Main content --}}
+<div class="layout">
+<div class="main"> {{-- Start: Main content --}}
 
 <h2>Om Skivsamlingen</h2>
 
@@ -24,7 +25,7 @@
 <p>Skivsamlingen skapar endast cookies hos användare som loggar in och använder sidan. Eventuellt kan även tredjepartsannonsörer skapa cookies. Cookies kan enkelt rensas i de flesta webbläsare om så önskas.</p>
 
 </div> {{-- End: Main content --}}
-<div class="grid_4 sidebar"> {{-- Start: Sidebar --}}
+<div class="sidebar"> {{-- Start: Sidebar --}}
 
 <div class="box">
 
@@ -38,4 +39,5 @@
 </div>
 
 </div> {{-- End: Sidebar --}}
+</div> {{-- End: Layout --}}
 @endsection

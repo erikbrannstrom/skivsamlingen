@@ -17,7 +17,8 @@ $(function() {
 <form method="post" action="/account/register">
     @csrf
 
-<div class="grid_4">
+<div class="cols-3">
+<div>
 <h2>Obligatoriskt</h2>
 
 <label>Användarnamn</label>
@@ -52,7 +53,7 @@ $(function() {
 
 </div>
 
-<div class="grid_4">
+<div>
 <h2>Rekommenderat</h2>
 <label>E-post</label>
 @error('email')
@@ -63,7 +64,7 @@ $(function() {
 
 </div>
 
-<div class="grid_4">
+<div>
 <h2>Valfritt</h2>
 <label>Namn</label>
 @error('name')
@@ -89,17 +90,15 @@ $(function() {
 
 </div>
 
-<div class="clear"></div>
+</div>
 
-<div class="grid_4 push_8">
-
-<div class="buttons">
+<div style="text-align: right">
+<div class="buttons" style="display: inline-block; float: none;">
     <button type="submit" class="positive">
         <img src="/static/images/icons/tick.png" alt=""/>
         Bli medlem
     </button>
 </div>
-
 </div>
 
 </form>

@@ -1,7 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_12"> <!-- Start: Main content -->
 <h2>Sökresultat</h2>
 Din sökning efter <strong>{{ $query }}</strong> fick {{ count($users) }} {{ count($users) == 1 ? 'träff' : 'träffar' }}. En sökning ger maximalt 20 resultat.
 @if(count($users) > 0)
@@ -28,5 +27,4 @@ Din sökning efter <strong>{{ $query }}</strong> fick {{ count($users) }} {{ cou
 @endforeach
 </table>
 @endif
-</div>
 @endsection

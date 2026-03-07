@@ -1,0 +1,424 @@
+@charset "utf-8";
+
+/* Fonts
+-------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'BorisBlackBloxx';
+    src: url('borisblackbloxx-webfont.eot');
+    src: local('☺'),
+         url('borisblackbloxx-webfont.woff') format('woff'),
+         url('borisblackbloxx-webfont.ttf') format('truetype'),
+         url('borisblackbloxx-webfont.svg#webfontNW4CPWcX') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Reset + Base
+-------------------------------------------------------------- */
+
+* { margin: 0; padding: 0; }
+
+body {
+    font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    line-height: 1.7em;
+    color: #333;
+    background-color: #eaeaea;
+}
+
+img { border: 0; }
+
+p { margin-top: 0.6em; }
+
+a {
+    color: #3681a2;
+    background-color: transparent;
+    font-weight: normal;
+}
+
+h1, h2, h3 { font-family: Trebuchet, Tahoma, Arial, sans-serif; }
+
+h1 {
+    color: #444;
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #531a15;
+    border-bottom: 1px solid #cebebe;
+    margin: 0.5em 0;
+}
+
+h3 {
+    color: #73241d;
+    margin: 0.4em 0;
+    font-size: 1.2em;
+}
+
+td { padding: 0.1em 0.2em; }
+th { text-align: left; padding-right: 0.8em; }
+
+hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 0.5em 0;
+}
+
+code {
+    font-family: Monaco, Verdana, sans-serif;
+    font-size: 12px;
+    background-color: #f9f9f9;
+    border: 1px solid #D0D0D0;
+    color: #002166;
+    display: block;
+    margin: 14px 0;
+    padding: 12px 10px;
+}
+
+/* Layout
+-------------------------------------------------------------- */
+
+.layout {
+    display: flex;
+    gap: 20px;
+}
+
+.main {
+    flex: 2 1 0;
+    min-width: 0;
+}
+
+.sidebar {
+    flex: 1 1 0;
+    min-width: 0;
+    background-color: #eaeaea;
+}
+
+.cols-2 {
+    display: flex;
+    gap: 20px;
+}
+
+.cols-2 > * {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.cols-3 {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.cols-3 > * {
+    flex: 1 1 200px;
+    min-width: 0;
+}
+
+/* Structural IDs
+-------------------------------------------------------------- */
+
+#top {
+    height: 100px;
+    background: url('../images/vinyl-background.jpg') top left repeat-x;
+}
+
+#header {
+    max-width: 960px;
+    margin: 0 auto;
+    height: 90px;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 5px;
+}
+
+#menu {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    line-height: 30px;
+    padding: 2px;
+    margin: 0;
+}
+
+#menu a.item {
+    letter-spacing: 0.1em;
+    color: #fff;
+    font-size: 20px;
+    font-family: BorisBlackBloxx, "Arial Black", sans-serif;
+    height: 30px;
+    line-height: 28px;
+    display: block;
+    padding: 0 10px;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+#menu a.item:hover {
+    color: #000;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+#page {
+    background-color: #eaeaea;
+    padding: 15px;
+    background: url('../images/line-gradient.png') top left repeat-x;
+}
+
+#content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 10px 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+#footer {
+    max-width: 960px;
+    margin: 1em auto 0;
+    padding: 10px 5px;
+    border: 1px solid #ccc;
+    background-color: #000;
+    border-radius: 3px;
+    color: #f0f0f0;
+}
+
+#footer a { color: #f0f0f0; }
+
+/* Search input
+-------------------------------------------------------------- */
+
+input#query {
+    margin-left: auto;
+    border: 1px solid #333;
+    padding: 3px 3px 3px 20px;
+    border-radius: 3px;
+    height: 18px;
+    width: 267px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    background: #eedf9e url("../images/icons/search.png") no-repeat 3px 50%;
+    display: block;
+}
+
+input#query:hover,
+input#query:focus {
+    background: #efefef url("../images/icons/search.png") no-repeat 3px 50%;
+}
+
+.ui-menu .ui-menu-item a.total {
+    color: #666;
+    border-top: 1px solid #ccc;
+    padding-left: 10px;
+}
+
+/* Components
+-------------------------------------------------------------- */
+
+img.gravatar {
+    float: right;
+    margin: 0 0 3px 3px;
+    border: 2px solid #666;
+}
+
+ul.bullets {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.bullets li {
+    background: url("../images/icons/bullet-white-alt.png") no-repeat 0 50%;
+    padding-left: 20px;
+}
+
+ul.donate {
+    list-style: none;
+}
+
+ul.donate li {
+    display: inline-block;
+}
+
+.box {
+    background-color: #fafafa;
+    padding: 0.6em;
+    margin: 0.6em;
+    border: 1px solid #ccc;
+}
+
+.box h3 { margin: 0.2em 0; color: #73241d; }
+.box li { list-style-position: inside; }
+
+.sponsor { padding-top: 25px; }
+
+/* Tables
+-------------------------------------------------------------- */
+
+table.search { margin: 0.5em; }
+table.search th { border-bottom: 1px #eaeaea solid; }
+tr.artist td { border-bottom: 1px #eaeaea solid; font-size: 1.1em; padding: 0.1em 0; }
+tr.separator td, tr.separator th { border-bottom: 1px #ccc solid; }
+
+/* Pagination
+-------------------------------------------------------------- */
+
+.pagination {
+    display: block;
+    float: left;
+    border: 0;
+    margin: 2em 0 3em 0;
+}
+
+.pagination li {
+    background: transparent;
+    display: inline;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+    list-style: none;
+}
+
+.pagination a {
+    border: solid 1px #DDDDDD;
+    margin-right: 2px;
+}
+
+.pagination .off {
+    color: #666666;
+    float: left;
+    font-weight: bold;
+    padding: 4px 6px;
+    margin-right: 2px;
+}
+
+.pagination .title,
+.pagination.title {
+    color: #666;
+    float: left;
+    padding: 4px 10px;
+}
+
+.pagination .step a {
+    font-weight: bold;
+    border: solid 1px #FFFFFF;
+}
+
+.pagination .active {
+    color: #ff0084;
+    font-weight: bold;
+    float: left;
+    padding: 4px 6px;
+}
+
+.pagination a:link,
+.pagination a:visited {
+    color: #0063e3;
+    display: block;
+    float: left;
+    padding: 3px 6px;
+    text-decoration: none;
+}
+
+.pagination a:hover { border: solid 1px #666; }
+
+.order {
+    margin: 2em 0 3em 0;
+    float: right;
+}
+
+.order li.active { padding: 0; }
+.order .active a { border-color: #000; font-weight: bold; }
+.direction { margin: 2em 0; float: right; }
+
+/* Form fields
+-------------------------------------------------------------- */
+
+label {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 0.5em;
+}
+
+form span {
+    display: block;
+    font-size: 10px;
+}
+
+form span.text { font-size: 12px; }
+
+input.text, input.title,
+textarea, select {
+    margin: 0.5em 0;
+    border: 1px solid #bbb;
+}
+
+input.text:focus, input.title:focus,
+textarea:focus, select:focus {
+    border: 1px solid #666;
+}
+
+input.text,
+input.title { width: 290px; padding: 5px; }
+input.title { font-size: 1.5em; }
+textarea { width: 390px; height: 250px; padding: 5px; font-family: 'Lucida Grande', Verdana, sans-serif; font-size: 11px; }
+
+input.small { width: 100px; }
+input.x-small { width: 50px; }
+
+/* Buttons
+-------------------------------------------------------------- */
+
+.buttons a,
+.buttons button {
+    display: block;
+    float: left;
+    margin: 0 7px 0 0;
+    background-color: #f5f5f5;
+    border: 1px solid #dedede;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    font-size: 100%;
+    line-height: 130%;
+    text-decoration: none;
+    font-weight: bold;
+    color: #565656;
+    cursor: pointer;
+    padding: 5px 10px 6px 7px;
+}
+
+.buttons button {
+    width: auto;
+    overflow: visible;
+    padding: 5px 10px 5px 7px;
+    line-height: 17px;
+}
+
+.buttons button img,
+.buttons a img {
+    margin: 0 3px -3px 0 !important;
+    padding: 0;
+    border: none;
+    width: 16px;
+    height: 16px;
+}
+
+/* Alert boxes
+-------------------------------------------------------------- */
+
+.error,
+.notice,
+.success { padding: .8em; margin: 1em 0; border: 2px solid #ddd; }
+
+.error   { background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
+.notice  { background: #FFF6BF; color: #514721; border-color: #FFD324; }
+.success { background: #E6EFC2; color: #264409; border-color: #C6D880; }
+.error a   { color: #8a1f11; }
+.notice a  { color: #514721; }
+.success a { color: #264409; }
