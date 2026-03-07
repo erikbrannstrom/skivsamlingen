@@ -127,22 +127,24 @@
 
 <h1><img src="/static/images/skivsamlingen.png" alt="Skivsamlingen"></h1>
 
-<div id="menu">
-    <a href="/" class="item">hem</a>
-@auth
-    <a href="/collection/record" class="item">ny skiva</a>
-    <a href="/users/{{ Auth::user()->username }}" class="item">min profil</a>
-    <a href="/account/logout" class="item">logga ut</a>
-@else
-    <a href="/account/login" class="item">logga in</a>
-    <a href="/account/register" class="item">bli medlem</a>
-@endauth
+    <nav>
+        <div id="menu">
+            <a href="/" class="item">hem</a>
+        @auth
+            <a href="/collection/record" class="item">ny skiva</a>
+            <a href="/users/{{ Auth::user()->username }}" class="item">min profil</a>
+            <a href="/account/logout" class="item">logga ut</a>
+        @else
+            <a href="/account/login" class="item">logga in</a>
+            <a href="/account/register" class="item">bli medlem</a>
+        @endauth
+        </div>
 
-<form method="post" action="/users/search" name="search" id="search">
-    @csrf
-    <input type="text" name="query" id="query" placeholder="Sök medlemmar.." value="{{ old('query', '') }}" />
-</form>
-</div>
+        <form method="post" action="/users/search" name="search" id="search">
+            @csrf
+            <input type="text" name="query" id="query" placeholder="Sök medlemmar.." value="{{ old('query', '') }}" />
+        </form>
+    </nav>
 
 </div>
 
