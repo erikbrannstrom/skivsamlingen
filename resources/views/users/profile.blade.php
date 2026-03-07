@@ -35,8 +35,8 @@ $(function() {
 
 <div style="float: right">
 <x-sort-links
-    :username="$user->username"
-    :offset="$offset"
+    :baseUrl="'/users/' . $user->username . '?offset=' . $offset"
+    :sorts="['Artist' => 'artist', 'Format' => 'format', 'År' => 'year']"
     :currentOrder="$order"
     :currentDirection="$direction"
 />

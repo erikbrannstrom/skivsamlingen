@@ -6,6 +6,15 @@
 
 <h2>{{ $artist->display_name }}</h2>
 
+<x-sort-links
+    :baseUrl="'/artists/' . $artist->id"
+    :sorts="['Titel' => 'title', 'År' => 'year', 'Ägare' => 'owners']"
+    :currentOrder="$order"
+    :currentDirection="$direction"
+/>
+
+{{ $records->links('vendor.pagination.simple') }}
+
 <table width="100%" cellspacing="0">
     <tr>
         <th align="left">Titel</th>
@@ -24,7 +33,7 @@
         <td>{{ $record->users_count }}</td>
         @auth
         <td>
-            @if(in_array($record->id, $ownedRecordIds))
+            @if($ownedRecordIds->contains($record->id))
                 <img src="/static/images/icons/tick.png" width="14" title="I din samling" />
             @else
                 <form method="POST" action="/collection/add" style="display:inline" class="add-to-collection">

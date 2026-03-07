@@ -82,6 +82,93 @@ class ArtistTest extends TestCase
             ->assertDontSee('tick.png');
     }
 
+    public function test_default_sort_is_by_year_ascending(): void
+    {
+        $artist = Artist::factory()->create();
+        $record1 = Record::factory()->forArtist($artist)->create(['title' => 'B Album', 'year' => 2000]);
+        $record2 = Record::factory()->forArtist($artist)->create(['title' => 'A Album', 'year' => 1990]);
+
+        $response = $this->get('/artists/' . $artist->id);
+
+        $records = $response->viewData('records');
+        $this->assertEquals($record2->id, $records->first()->id);
+        $this->assertEquals($record1->id, $records->last()->id);
+    }
+
+    public function test_sort_by_title_ascending(): void
+    {
+        $artist = Artist::factory()->create();
+        $record1 = Record::factory()->forArtist($artist)->create(['title' => 'Zebra', 'year' => 2000]);
+        $record2 = Record::factory()->forArtist($artist)->create(['title' => 'Alpha', 'year' => 2000]);
+
+        $response = $this->get('/artists/' . $artist->id . '?order=title&dir=asc');
+
+        $records = $response->viewData('records');
+        $this->assertEquals($record2->id, $records->first()->id);
+        $this->assertEquals($record1->id, $records->last()->id);
+    }
+
+    public function test_sort_by_title_descending(): void
+    {
+        $artist = Artist::factory()->create();
+        $record1 = Record::factory()->forArtist($artist)->create(['title' => 'Zebra', 'year' => 2000]);
+        $record2 = Record::factory()->forArtist($artist)->create(['title' => 'Alpha', 'year' => 2000]);
+
+        $response = $this->get('/artists/' . $artist->id . '?order=title&dir=desc');
+
+        $records = $response->viewData('records');
+        $this->assertEquals($record1->id, $records->first()->id);
+        $this->assertEquals($record2->id, $records->last()->id);
+    }
+
+    public function test_sort_by_owner_count(): void
+    {
+        $artist = Artist::factory()->create();
+        $record1 = Record::factory()->forArtist($artist)->create(['title' => 'Popular', 'year' => 2000]);
+        $record2 = Record::factory()->forArtist($artist)->create(['title' => 'Obscure', 'year' => 2000]);
+
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        RecordUser::create(['user_id' => $user1->id, 'record_id' => $record1->id, 'comment' => '']);
+        RecordUser::create(['user_id' => $user2->id, 'record_id' => $record1->id, 'comment' => '']);
+
+        $response = $this->get('/artists/' . $artist->id . '?order=owners&dir=desc');
+
+        $records = $response->viewData('records');
+        $this->assertEquals($record1->id, $records->first()->id);
+        $this->assertEquals($record2->id, $records->last()->id);
+    }
+
+    public function test_invalid_order_falls_back_to_year(): void
+    {
+        $artist = Artist::factory()->create();
+        Record::factory()->forArtist($artist)->create(['title' => 'Test', 'year' => 2000]);
+
+        $this->get('/artists/' . $artist->id . '?order=invalid&dir=asc')
+            ->assertStatus(200)
+            ->assertViewHas('order', 'year');
+    }
+
+    public function test_invalid_direction_falls_back_to_asc(): void
+    {
+        $artist = Artist::factory()->create();
+        Record::factory()->forArtist($artist)->create(['title' => 'Test', 'year' => 2000]);
+
+        $this->get('/artists/' . $artist->id . '?order=title&dir=sideways')
+            ->assertStatus(200)
+            ->assertViewHas('direction', 'asc');
+    }
+
+    public function test_sort_links_are_present_in_view(): void
+    {
+        $artist = Artist::factory()->create();
+
+        $this->get('/artists/' . $artist->id)
+            ->assertSee('order=title')
+            ->assertSee('order=year')
+            ->assertSee('order=owners');
+    }
+
     public function test_add_to_collection_requires_auth(): void
     {
         $artist = Artist::factory()->create(['name' => 'Test']);
