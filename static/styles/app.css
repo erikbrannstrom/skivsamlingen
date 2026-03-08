@@ -121,7 +121,7 @@ hr.no-line {
 
 .layout {
     display: flex;
-    gap: var(--space-3);
+    gap: var(--space-4);
     padding: 0 var(--space-1);
 }
 
