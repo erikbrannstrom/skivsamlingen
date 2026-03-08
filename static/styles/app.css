@@ -403,16 +403,17 @@ input.x-small { width: 50px; }
     text-align: right;
 }
 
-.form-actions .buttons {
-    display: inline-block;
-    float: none;
+.buttons {
+    display: flex;
+    flex-direction: row;
 }
 
 /* Buttons
 -------------------------------------------------------------- */
 
 .buttons a,
-.buttons button {
+.buttons button,
+.buttons input[type="submit"] {
     display: flex;
     margin: 0 var(--space-1) 0 0;
     background-color: var(--color-bg-subtle);

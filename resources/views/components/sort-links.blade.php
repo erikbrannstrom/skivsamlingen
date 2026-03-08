@@ -1,22 +1,13 @@
 @props([
-    'username',
-    'offset' => 0,
+    'baseUrl',
+    'sorts',
     'currentOrder',
     'currentDirection',
 ])
 
 @php
-    $sorts = [
-        'Artist' => 'artist',
-        'Format' => 'format',
-        'År' => 'year',
-    ];
-
-    $buildUrl = function($field, $direction) use ($username, $offset) {
-        return "/users/{$username}?offset={$offset}&order={$field}&dir={$direction}";
-    };
+    $cleanUrl = strtok($baseUrl, '?');
 @endphp
-
 <ul class="pagination order">
 @foreach($sorts as $label => $field)
     @if($currentOrder === $field)
@@ -24,9 +15,9 @@
             $newDir = $currentDirection === 'asc' ? 'desc' : 'asc';
             $arrow = $currentDirection === 'desc' ? '↓' : '↑';
         @endphp
-        <li class="active"><a href="{{ $buildUrl($field, $newDir) }}">{{ $label }} {{ $arrow }}</a></li>
+        <li class="active"><a href="{{ $cleanUrl }}?order={{ $field }}&dir={{ $newDir }}">{{ $label }} {{ $arrow }}</a></li>
     @else
-        <li><a href="{{ $buildUrl($field, $currentDirection) }}">{{ $label }}</a></li>
+        <li><a href="{{ $cleanUrl }}?order={{ $field }}&dir={{ $currentDirection }}">{{ $label }}</a></li>
     @endif
 @endforeach
 </ul>

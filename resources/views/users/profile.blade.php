@@ -34,8 +34,8 @@ $(function() {
 />
 
 <x-sort-links
-    :username="$user->username"
-    :offset="$offset"
+    :baseUrl="'/users/' . $user->username"
+    :sorts="['Artist' => 'artist', 'Format' => 'format', 'År' => 'year']"
     :currentOrder="$order"
     :currentDirection="$direction"
 />
@@ -52,7 +52,7 @@ $(function() {
         @if($prev_artist === null || $prev_artist != $record->artist_id)
             @php $even = false; @endphp
     <tr class="artist">
-        <td width="70%"><strong>{{ $record->artist->getDisplayNameAttribute() }}</strong></td>
+        <td width="70%"><strong><a href="/artists/{{ $record->artist_id }}">{{ $record->artist->getDisplayNameAttribute() }}</a></strong></td>
         <td{!! Auth::id() == $user->id ? ' colspan="2"' : '' !!} width="25%"><em>{{ $record->num_records }} {{ $record->num_records == 1 ? 'skiva' : 'skivor' }}</em></td>
     </tr>
         @endif

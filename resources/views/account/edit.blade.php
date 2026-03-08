@@ -68,7 +68,8 @@ $(function() {
 <label>Skivor per sida</label> <input type="text" name="per_page" maxlength="6" class="text x-small" value="{{ old('per_page', $user->per_page) }}" />
 <span>Max 100 skivor per sida.</span>
 
-<br /><input type="submit" value="Klar" />
+<br />
+<div class="buttons"><input type="submit" value="Klar" /></div>
 </form>
 </div>
 
@@ -93,7 +94,8 @@ $(function() {
 @enderror
 <label>Upprepa lösenord</label> <input type="password" name="new_password_confirmation" maxlength="50" class="text" />
 
-<br /><input type="submit" value="Ändra" />
+<br />
+<div class="buttons"><input type="submit" value="Ändra" /></div>
 
 </form>
 
@@ -113,7 +115,8 @@ Om du av någon anledning inte längre vill att ditt konto på Skivsamlingen ska
 <label>Kontrollfält</label> <input type="text" name="confirmation" maxlength="50" class="text" />
 <span>Skriv "ta bort" i fältet ovan, utan citationstecken.</span>
 
-<br /><input type="submit" value="Ta bort" />
+<br />
+<div class="buttons"><input type="submit" value="Ta bort" /></div>
 </form>
 
 </div>

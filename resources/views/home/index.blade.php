@@ -81,7 +81,7 @@
     @foreach($popular_artists as $row)
         <tr>
             <td>{{ $i++ }}.</td>
-            <td>{{ $row->name }}</td>
+            <td><a href="/artists/{{ $row->id }}">{{ $row->name }}</a></td>
             <td>{{ $row->records }} skivor</td>
         </tr>
     @endforeach
@@ -95,8 +95,10 @@
     @foreach($popular_albums as $row)
         <tr>
             <td>{{ $i++ }}.</td>
-            <td><strong>{{ $row->name }}</strong><br />
-            {{ $row->title }}</td>
+            <td>
+                <strong><a href="/artists/{{ $row->artist_id }}">{{ $row->name }}</a></strong><br />
+                {{ $row->title }}
+            </td>
             <td>{{ $row->records }} skivor</td>
         </tr>
     @endforeach
