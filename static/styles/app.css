@@ -83,7 +83,7 @@ code {
 
 .layout {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     padding: 0 8px;
 }
 
@@ -99,7 +99,7 @@ code {
 
 .cols-2 {
     display: flex;
-    gap: 20px;
+    gap: 24px;
 }
 
 .cols-2 > * {
@@ -109,7 +109,7 @@ code {
 
 .cols-3 {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     flex-wrap: wrap;
 }
 
@@ -239,15 +239,13 @@ ul.donate li {
 .box {
     background-color: #fafafa;
     padding: 8px;
-    margin: 8px;
+    margin: 8px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 .box h3 { margin: 0.2em 0; color: #73241d; }
 .box li { list-style-position: inside; }
-
-.sponsor { padding-top: 25px; }
 
 /* Page navigation bar (pagination + sort links)
 -------------------------------------------------------------- */
@@ -261,7 +259,6 @@ ul.donate li {
 
 .page-nav .pagination,
 .page-nav .order {
-    float: none;
     margin: 0.5em 0;
 }
 
@@ -278,8 +275,7 @@ tr.separator td, tr.separator th { border-bottom: 1px #ccc solid; }
 -------------------------------------------------------------- */
 
 .pagination {
-    display: block;
-    float: left;
+    display: flex;
     border: 0;
     margin: 2em 0 3em 0;
 }
