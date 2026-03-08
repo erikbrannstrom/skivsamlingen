@@ -68,7 +68,7 @@ class StatisticsService
 
         return DB::table(DB::raw("({$topRecords->toSql()}) as top"))
             ->mergeBindings($topRecords)
-            ->select('records.title', 'artists.name', 'top.records')
+            ->select('records.title', 'artists.id AS artist_id', 'artists.name', 'top.records')
             ->join('records', 'records.id', '=', 'top.record_id')
             ->join('artists', 'artists.id', '=', 'records.artist_id')
             ->orderByDesc('top.records')
