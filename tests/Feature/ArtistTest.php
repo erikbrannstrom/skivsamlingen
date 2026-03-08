@@ -39,8 +39,7 @@ class ArtistTest extends TestCase
         $response = $this->get('/artists/' . $artist->id);
 
         $response->assertStatus(200)
-            ->assertSee('Kid A')
-            ->assertSee('2');
+            ->assertSeeInOrder(['Kid A', '2000', '2']);
     }
 
     public function test_artist_page_returns_404_for_missing_artist(): void

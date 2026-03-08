@@ -34,7 +34,7 @@ $(function() {
 />
 
 <x-sort-links
-    :baseUrl="'/users/' . $user->username . '?offset=' . $offset"
+    :baseUrl="'/users/' . $user->username"
     :sorts="['Artist' => 'artist', 'Format' => 'format', 'År' => 'year']"
     :currentOrder="$order"
     :currentDirection="$direction"
