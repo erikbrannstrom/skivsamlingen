@@ -11,7 +11,7 @@
     --color-bg:                #eaeaea;   /* page background */
     --color-surface:           #fff;      /* content/card background */
     --color-footer:            #000;      /* footer background */
-    --color-search-bg:         #eedf9e;   /* search input */
+    --color-search-bg:         #ede8d6;   /* search input */
 
     /* Alert colors */
     --color-error-bg:    #FBE3E4;
@@ -44,8 +44,8 @@
     --space-5:    40px;  /*  5   × 8px */
 
     /* Misc tokens */
-    --radius-sm:         3px;
-    --radius-md:         4px;
+    --radius-sm:         4px;
+    --radius-md:         8px;
     --content-max-width: 960px;
 }
 
@@ -303,11 +303,7 @@ ul.donate li {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-}
-
-.page-nav .pagination,
-.page-nav .order {
-    margin: 0.5em 0;
+    margin: var(--space-3) 0;
 }
 
 /* Tables
@@ -328,7 +324,6 @@ tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid;
     align-items: center;
     gap: var(--space-half);
     border: 0;
-    margin: 2em 0 3em 0;
 }
 
 .pagination li {
@@ -423,31 +418,28 @@ input.x-small { width: 50px; }
 
 .buttons a,
 .buttons button {
-    display: block;
-    float: left;
-    margin: 0 7px 0 0;
+    display: flex;
+    margin: 0 var(--space-1) 0 0;
     background-color: var(--color-bg-subtle);
     border: 1px solid var(--color-border-light);
     font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
-    font-size: 100%;
-    line-height: 130%;
     text-decoration: none;
     font-weight: bold;
     color: var(--color-text-muted);
     cursor: pointer;
-    padding: 5px 10px 6px 7px;
+    padding: var(--space-1);
 }
 
 .buttons button {
     width: auto;
     overflow: visible;
-    padding: 5px 10px 5px 7px;
     line-height: 17px;
 }
 
 .buttons button img,
 .buttons a img {
-    margin: 0 3px -3px 0 !important;
+    display: block;
+    margin-right: var(--space-1);
     padding: 0;
     border: none;
     width: var(--space-2);
