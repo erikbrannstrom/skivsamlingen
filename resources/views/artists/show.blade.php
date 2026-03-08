@@ -23,7 +23,7 @@
             <th align="left">Titel</th>
             <th align="left">År</th>
             <th align="left">Format</th>
-            <th align="left">Ägare</th>
+            <th width="1" align="left">Ägare</th>
             @auth
             <th></th>
             @endauth
@@ -33,7 +33,7 @@
             <td>{{ $record->title }}</td>
             <td>{{ $record->year }}</td>
             <td>{{ $record->format }}</td>
-            <td>{{ $record->users_count }}</td>
+            <td width="1">{{ $record->users_count }}</td>
             @auth
             <td>
                 @if($ownedRecordIds->contains($record->id))
