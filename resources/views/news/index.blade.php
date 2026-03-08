@@ -1,12 +1,10 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_8 ">
 
 <h2>Nyheter</h2>
 
 {{ $news->links('vendor.pagination.simple') }}
-<div style="clear: both"></div>
 
 @forelse($news as $item)
 <h2>{{ $item->title }}</h2>
@@ -16,9 +14,9 @@
 <p>Inga nyheter att visa.</p>
 @endforelse
 
-</div>
+@endsection
 
-<div class="grid_4 sidebar">
+@section('sidebar')
 
     <div class="box">
         <h3>Prenumerera via RSS</h3>
@@ -28,5 +26,4 @@
         <p><a href="/news/rss"><img src="/static/images/icons/feed-icon-28x28.png" /></a></p>
     </div>
 
-</div>
 @endsection

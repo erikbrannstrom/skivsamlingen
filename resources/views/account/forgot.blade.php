@@ -1,8 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_12">
-
 <h2>Glömt lösenord</h2>
 
 <p>Om du har angett en e-postadress för ditt konto så är det bara att fylla i den eller ditt
@@ -27,6 +25,4 @@
         </button>
     </div>
 </form>
-
-</div>
 @endsection

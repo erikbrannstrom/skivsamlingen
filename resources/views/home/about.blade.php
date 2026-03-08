@@ -1,7 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_8 "> {{-- Start: Main content --}}
 
 <h2>Om Skivsamlingen</h2>
 
@@ -23,8 +22,9 @@
 <h3>Hur besökaren kan undvika cookies</h3>
 <p>Skivsamlingen skapar endast cookies hos användare som loggar in och använder sidan. Eventuellt kan även tredjepartsannonsörer skapa cookies. Cookies kan enkelt rensas i de flesta webbläsare om så önskas.</p>
 
-</div> {{-- End: Main content --}}
-<div class="grid_4 sidebar"> {{-- Start: Sidebar --}}
+@endsection
+
+@section('sidebar')
 
 <div class="box">
 
@@ -37,5 +37,4 @@
 
 </div>
 
-</div> {{-- End: Sidebar --}}
 @endsection
