@@ -4,8 +4,6 @@
 <form method="post" action="/collection/delete">
 @csrf
 
-<div class="grid_12">
-
 <h2>Ta bort skiva</h2>
 
 <p>Är du säker på att du vill ta bort {{ $record->name }} - {{ $record->title }}?</p>
@@ -21,7 +19,5 @@
 </div>
 <a href="/users/{{ Auth::user()->username }}">Gå tillbaka</a>
 </p>
-
-</div>
 </form>
 @endsection

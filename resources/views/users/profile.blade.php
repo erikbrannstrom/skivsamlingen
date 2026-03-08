@@ -21,9 +21,9 @@ $(function() {
 });
 </script>
 
-<div class="grid_8"> <!-- Start: Main content -->
 <h2>{{ $user->username }}</h2>
 
+<div class="page-nav">
 <x-collection-pagination
     :username="$user->username"
     :currentPage="$currentPage"
@@ -33,7 +33,6 @@ $(function() {
     :direction="$direction"
 />
 
-<div style="float: right">
 <x-sort-links
     :baseUrl="'/users/' . $user->username . '?offset=' . $offset"
     :sorts="['Artist' => 'artist', 'Format' => 'format', 'År' => 'year']"
@@ -41,7 +40,6 @@ $(function() {
     :currentDirection="$direction"
 />
 </div>
-<div style="clear: both;"></div>
 
 <table width="100%" cellspacing="0">
     @php
@@ -55,10 +53,10 @@ $(function() {
             @php $even = false; @endphp
     <tr class="artist">
         <td width="70%"><strong><a href="/artists/{{ $record->artist_id }}">{{ $record->artist->getDisplayNameAttribute() }}</a></strong></td>
-        <td{{ Auth::id() == $user->id ? ' colspan="2"' : '' }} width="25%"><em>{{ $record->num_records }} {{ $record->num_records == 1 ? 'skiva' : 'skivor' }}</em></td>
+        <td{!! Auth::id() == $user->id ? ' colspan="2"' : '' !!} width="25%"><em>{{ $record->num_records }} {{ $record->num_records == 1 ? 'skiva' : 'skivor' }}</em></td>
     </tr>
         @endif
-    <tr style="background-color: #fff">
+    <tr>
         <td>{{ $record->title }}
         @if($record->pivot->comment)
             <img src="/static/images/icons/comment.png" title="{{ $record->pivot->comment }}" class="comment" />
@@ -79,14 +77,14 @@ $(function() {
         @endphp
     @endforeach
 </table>
-</div> <!-- End: Main content -->
+@endsection
 
-<div class="grid_4 sidebar"> <!-- Start: Sidebar -->
+@section('sidebar')
 
 @if(Auth::id() == $user->id)
 <div class="box">
 <h3>Alternativ</h3>
-<ul class="bullets">
+<ul>
     <li><a href="/users/{{ $user->username }}/export">Exportera skivsamling (XML)</a></li>
     <li><a href="/users/{{ $user->username }}/print">Visa utskriftsvy</a></li>
     <li><a href="/account/edit">Ändra dina uppgifter</a></li>
@@ -115,7 +113,6 @@ $(function() {
 <strong>E-post:</strong> <a href="mailto:{{ $user->email }}">{{ $user->email }}</a><br />
 @endif
 <strong>Medlem sedan:</strong> {{ $user->registered ? $user->registered->locale('sv')->isoFormat('D MMMM YYYY') : '' }}
-<div class="clear"></div>
 </div>
 
 @if($user->about)
@@ -145,5 +142,4 @@ $(function() {
 </ol>
 </div>
 
-</div> <!-- End: Sidebar -->
 @endsection

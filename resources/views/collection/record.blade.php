@@ -1,7 +1,8 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_6">
+<div class="cols-2">
+<div>
 @if($errors->any())
     @foreach($errors->all() as $error)
         <div class="error">{{ $error }}</div>
@@ -54,7 +55,7 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 </div>
 
 </div>
-<div class="grid_6">
+<div>
 @if($id > 0)
 <h2>Kommentera skiva</h2>
 
@@ -88,5 +89,6 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
     </div>
 @endif
 
+</div>
 </div>
 @endsection

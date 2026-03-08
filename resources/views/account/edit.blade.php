@@ -14,7 +14,8 @@ $(function() {
 });
 </script>
 
-<div style="width: 47%; float: left; padding: 0 1em;">
+<div class="cols-2">
+<div>
 <h2>Inställningar</h2>
 
 <form method="post" action="/account/edit">
@@ -71,7 +72,7 @@ $(function() {
 </form>
 </div>
 
-<div style="width: 47%; float: right; padding: 0 1em;">
+<div>
 
 <h2>Ändra lösenord</h2>
 
@@ -82,7 +83,7 @@ $(function() {
     <div class="error">{{ $message }}</div>
 @enderror
 <label>Nuvarande lösenord</label> <input type="password" name="current_password" maxlength="50" class="text" />
-<hr class="ruler" />
+<hr />
 @error('new_password')
     <div class="error">{{ $message }}</div>
 @enderror
@@ -115,5 +116,6 @@ Om du av någon anledning inte längre vill att ditt konto på Skivsamlingen ska
 <br /><input type="submit" value="Ta bort" />
 </form>
 
+</div>
 </div>
 @endsection

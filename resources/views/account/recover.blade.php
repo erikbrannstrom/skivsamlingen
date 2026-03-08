@@ -1,8 +1,6 @@
 @extends('layouts.application')
 
 @section('content')
-<div class="grid_12">
-
 <form method="post" action="/account/recover/{{ $username }}/{{ $hash }}">
     @csrf
 
@@ -24,6 +22,4 @@
 <br />
 <input type="submit" value="Ändra" />
 </form>
-
-</div>
 @endsection

@@ -6,14 +6,18 @@
 
 <h2>{{ $artist->display_name }}</h2>
 
-<x-sort-links
-    :baseUrl="'/artists/' . $artist->id"
-    :sorts="['Titel' => 'title', 'År' => 'year', 'Ägare' => 'owners']"
-    :currentOrder="$order"
-    :currentDirection="$direction"
-/>
+<div class="page-nav">
 
-{{ $records->links('vendor.pagination.simple') }}
+    {{ $records->links('vendor.pagination.simple') }}
+
+    <x-sort-links
+        :baseUrl="'/artists/' . $artist->id"
+        :sorts="['Titel' => 'title', 'År' => 'year', 'Ägare' => 'owners']"
+        :currentOrder="$order"
+        :currentDirection="$direction"
+    />
+
+</div>
 
 <table width="100%" cellspacing="0">
     <tr>
@@ -51,4 +55,3 @@
 
 </div>
 @endsection
-
