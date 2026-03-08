@@ -7,24 +7,37 @@
         <a href="{{ $paginator->previousPageUrl() }}">&lsaquo;</a>
     @endif
 
-    {{-- Pagination Elements --}}
-    @foreach ($elements as $element)
-        {{-- "Three Dots" Separator --}}
-        @if (is_string($element))
-            <span class="off">{{ $element }}</span>
-        @endif
+    @php
+        $current = $paginator->currentPage();
+        $last = $paginator->lastPage();
+        $from = max(1, $current - 2);
+        $to = min($last, $current + 2);
+    @endphp
 
-        {{-- Array Of Links --}}
-        @if (is_array($element))
-            @foreach ($element as $page => $url)
-                @if ($page == $paginator->currentPage())
-                    <span class="active">{{ $page }}</span>
-                @else
-                    <a href="{{ $url }}">{{ $page }}</a>
-                @endif
-            @endforeach
+    {{-- First page + dots --}}
+    @if ($from > 1)
+        <a href="{{ $paginator->url(1) }}">1</a>
+        @if ($from > 2)
+            <span class="off">...</span>
         @endif
-    @endforeach
+    @endif
+
+    {{-- Window around current page --}}
+    @for ($page = $from; $page <= $to; $page++)
+        @if ($page == $current)
+            <span class="active">{{ $page }}</span>
+        @else
+            <a href="{{ $paginator->url($page) }}">{{ $page }}</a>
+        @endif
+    @endfor
+
+    {{-- Dots + last page --}}
+    @if ($to < $last)
+        @if ($to < $last - 1)
+            <span class="off">...</span>
+        @endif
+        <a href="{{ $paginator->url($last) }}">{{ $last }}</a>
+    @endif
 
     {{-- Next Page Link --}}
     @if ($paginator->hasMorePages())
