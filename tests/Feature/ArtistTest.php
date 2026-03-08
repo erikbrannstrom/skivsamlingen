@@ -220,4 +220,123 @@ class ArtistTest extends TestCase
             ->post('/collection/add', ['record_id' => $record->id])
             ->assertRedirect('/artists/' . $artist->id);
     }
+
+    public function test_sidebar_shows_top_collectors(): void
+    {
+        $artist = Artist::factory()->create(['name' => 'Test Artist']);
+        $record1 = Record::factory()->forArtist($artist)->create();
+        $record2 = Record::factory()->forArtist($artist)->create();
+
+        $user1 = User::factory()->create(['username' => 'bigcollector']);
+        $user2 = User::factory()->create(['username' => 'smallcollector']);
+
+        RecordUser::create(['user_id' => $user1->id, 'record_id' => $record1->id, 'comment' => '']);
+        RecordUser::create(['user_id' => $user1->id, 'record_id' => $record2->id, 'comment' => '']);
+        RecordUser::create(['user_id' => $user2->id, 'record_id' => $record1->id, 'comment' => '']);
+
+        $response = $this->get('/artists/' . $artist->id);
+
+        $topCollectors = $response->viewData('topCollectors');
+        $this->assertCount(2, $topCollectors);
+        $this->assertEquals('bigcollector', $topCollectors->first()->username);
+        $this->assertEquals(2, $topCollectors->first()->record_count);
+        $this->assertEquals('smallcollector', $topCollectors->last()->username);
+        $this->assertEquals(1, $topCollectors->last()->record_count);
+    }
+
+    public function test_sidebar_top_collectors_limited_to_ten(): void
+    {
+        $artist = Artist::factory()->create();
+        $records = Record::factory()->forArtist($artist)->count(12)->create();
+
+        foreach ($records as $record) {
+            $user = User::factory()->create();
+            RecordUser::create(['user_id' => $user->id, 'record_id' => $record->id, 'comment' => '']);
+        }
+
+        $topCollectors = $this->get('/artists/' . $artist->id)->viewData('topCollectors');
+
+        $this->assertCount(10, $topCollectors);
+    }
+
+    public function test_sidebar_top_collectors_only_counts_this_artist(): void
+    {
+        $artist = Artist::factory()->create();
+        $otherArtist = Artist::factory()->create();
+        $record = Record::factory()->forArtist($artist)->create();
+        $otherRecord = Record::factory()->forArtist($otherArtist)->create();
+
+        $user = User::factory()->create(['username' => 'mixeduser']);
+        RecordUser::create(['user_id' => $user->id, 'record_id' => $record->id, 'comment' => '']);
+        RecordUser::create(['user_id' => $user->id, 'record_id' => $otherRecord->id, 'comment' => '']);
+
+        $topCollectors = $this->get('/artists/' . $artist->id)->viewData('topCollectors');
+
+        $this->assertEquals(1, $topCollectors->first()->record_count);
+    }
+
+    public function test_sidebar_shows_correct_total_copies(): void
+    {
+        $artist = Artist::factory()->create();
+        $record = Record::factory()->forArtist($artist)->create();
+
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        RecordUser::create(['user_id' => $user1->id, 'record_id' => $record->id, 'comment' => '']);
+        RecordUser::create(['user_id' => $user2->id, 'record_id' => $record->id, 'comment' => '']);
+
+        $response = $this->get('/artists/' . $artist->id);
+
+        $this->assertEquals(2, $response->viewData('totalCopies'));
+    }
+
+    public function test_sidebar_total_copies_excludes_other_artists(): void
+    {
+        $artist = Artist::factory()->create();
+        $otherArtist = Artist::factory()->create();
+        $record = Record::factory()->forArtist($artist)->create();
+        $otherRecord = Record::factory()->forArtist($otherArtist)->create();
+
+        $user = User::factory()->create();
+        RecordUser::create(['user_id' => $user->id, 'record_id' => $record->id, 'comment' => '']);
+        RecordUser::create(['user_id' => $user->id, 'record_id' => $otherRecord->id, 'comment' => '']);
+
+        $response = $this->get('/artists/' . $artist->id);
+
+        $this->assertEquals(1, $response->viewData('totalCopies'));
+    }
+
+    public function test_sidebar_shows_correct_total_records(): void
+    {
+        $artist = Artist::factory()->create();
+        Record::factory()->forArtist($artist)->count(3)->create();
+
+        $response = $this->get('/artists/' . $artist->id);
+
+        $this->assertEquals(3, $response->viewData('totalRecords'));
+    }
+
+    public function test_sidebar_renders_collector_links(): void
+    {
+        $artist = Artist::factory()->create();
+        $record = Record::factory()->forArtist($artist)->create();
+        $user = User::factory()->create(['username' => 'fanatic']);
+        RecordUser::create(['user_id' => $user->id, 'record_id' => $record->id, 'comment' => '']);
+
+        $this->get('/artists/' . $artist->id)
+            ->assertSee('fanatic')
+            ->assertSee('/users/fanatic');
+    }
+
+    public function test_sidebar_hides_top_collectors_when_no_owners(): void
+    {
+        $artist = Artist::factory()->create();
+        Record::factory()->forArtist($artist)->create();
+
+        $response = $this->get('/artists/' . $artist->id);
+
+        $topCollectors = $response->viewData('topCollectors');
+        $this->assertCount(0, $topCollectors);
+        $response->assertDontSee('Toppsamlare');
+    }
 }

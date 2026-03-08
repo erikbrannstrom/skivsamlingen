@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Artist;
 use App\Models\RecordUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ArtistController extends Controller
@@ -33,6 +35,20 @@ class ArtistController extends Controller
             ? Auth::user()->records()->where('records.artist_id', $artist->id)->pluck('records.id')
             : collect();
 
+        $topCollectors = User::select('users.username', DB::raw('COUNT(records_users.id) as record_count'))
+            ->join('records_users', 'users.id', '=', 'records_users.user_id')
+            ->join('records', 'records_users.record_id', '=', 'records.id')
+            ->where('records.artist_id', $artist->id)
+            ->groupBy('users.id', 'users.username')
+            ->orderByDesc('record_count')
+            ->limit(10)
+            ->get();
+
+        $totalCopies = DB::table('records_users')
+            ->join('records', 'records_users.record_id', '=', 'records.id')
+            ->where('records.artist_id', $artist->id)
+            ->count();
+
         return view('artists.show', [
             'artist' => $artist,
             'records' => $records,
@@ -40,6 +56,9 @@ class ArtistController extends Controller
             'order' => $order,
             'direction' => $direction,
             'page_title' => $artist->display_name,
+            'topCollectors' => $topCollectors,
+            'totalCopies' => $totalCopies,
+            'totalRecords' => $records->total(),
         ]);
     }
 }

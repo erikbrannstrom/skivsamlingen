@@ -2,7 +2,6 @@
 
 @section('content')
 <script type="text/javascript" src="/static/scripts/artists.js"></script>
-<div class="grid_12">
 
 <h2>{{ $artist->display_name }}</h2>
 
@@ -52,6 +51,19 @@
     </tr>
     @endforeach
 </table>
+@endsection
 
+@section('sidebar')
+
+@if($topCollectors->isNotEmpty())
+<div class="box">
+<h3>Toppsamlare</h3>
+<ol>
+@foreach($topCollectors as $collector)
+<li><a href="/users/{{ $collector->username }}">{{ $collector->username }}</a> &ndash; {{ $collector->record_count }} {{ $collector->record_count == 1 ? 'skiva' : 'skivor' }}</li>
+@endforeach
+</ol>
 </div>
+@endif
+
 @endsection
