@@ -116,16 +116,6 @@ hr.no-line {
     border: none !important;
 }
 
-code {
-    font-family: Monaco, Verdana, sans-serif;
-    font-size: 12px;
-    background-color: var(--color-bg-subtle);
-    border: 1px solid var(--color-border);
-    display: block;
-    margin: 14px 0;
-    padding: 12px 10px;
-}
-
 /* Layout
 -------------------------------------------------------------- */
 
