@@ -53,7 +53,7 @@ $(function() {
             @php $even = false; @endphp
     <tr class="artist">
         <td width="70%"><strong>{{ $record->artist->getDisplayNameAttribute() }}</strong></td>
-        <td{{ Auth::id() == $user->id ? ' colspan="2"' : '' }} width="25%"><em>{{ $record->num_records }} {{ $record->num_records == 1 ? 'skiva' : 'skivor' }}</em></td>
+        <td{!! Auth::id() == $user->id ? ' colspan="2"' : '' !!} width="25%"><em>{{ $record->num_records }} {{ $record->num_records == 1 ? 'skiva' : 'skivor' }}</em></td>
     </tr>
         @endif
     <tr>
