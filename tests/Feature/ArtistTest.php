@@ -275,46 +275,6 @@ class ArtistTest extends TestCase
         $this->assertEquals(1, $topCollectors->first()->record_count);
     }
 
-    public function test_sidebar_shows_correct_total_copies(): void
-    {
-        $artist = Artist::factory()->create();
-        $record = Record::factory()->forArtist($artist)->create();
-
-        $user1 = User::factory()->create();
-        $user2 = User::factory()->create();
-        RecordUser::create(['user_id' => $user1->id, 'record_id' => $record->id, 'comment' => '']);
-        RecordUser::create(['user_id' => $user2->id, 'record_id' => $record->id, 'comment' => '']);
-
-        $response = $this->get('/artists/' . $artist->id);
-
-        $this->assertEquals(2, $response->viewData('totalCopies'));
-    }
-
-    public function test_sidebar_total_copies_excludes_other_artists(): void
-    {
-        $artist = Artist::factory()->create();
-        $otherArtist = Artist::factory()->create();
-        $record = Record::factory()->forArtist($artist)->create();
-        $otherRecord = Record::factory()->forArtist($otherArtist)->create();
-
-        $user = User::factory()->create();
-        RecordUser::create(['user_id' => $user->id, 'record_id' => $record->id, 'comment' => '']);
-        RecordUser::create(['user_id' => $user->id, 'record_id' => $otherRecord->id, 'comment' => '']);
-
-        $response = $this->get('/artists/' . $artist->id);
-
-        $this->assertEquals(1, $response->viewData('totalCopies'));
-    }
-
-    public function test_sidebar_shows_correct_total_records(): void
-    {
-        $artist = Artist::factory()->create();
-        Record::factory()->forArtist($artist)->count(3)->create();
-
-        $response = $this->get('/artists/' . $artist->id);
-
-        $this->assertEquals(3, $response->viewData('totalRecords'));
-    }
 
     public function test_sidebar_renders_collector_links(): void
     {

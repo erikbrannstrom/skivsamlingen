@@ -44,11 +44,6 @@ class ArtistController extends Controller
             ->limit(10)
             ->get();
 
-        $totalCopies = DB::table('records_users')
-            ->join('records', 'records_users.record_id', '=', 'records.id')
-            ->where('records.artist_id', $artist->id)
-            ->count();
-
         return view('artists.show', [
             'artist' => $artist,
             'records' => $records,
@@ -57,8 +52,6 @@ class ArtistController extends Controller
             'direction' => $direction,
             'page_title' => $artist->display_name,
             'topCollectors' => $topCollectors,
-            'totalCopies' => $totalCopies,
-            'totalRecords' => $records->total(),
         ]);
     }
 }

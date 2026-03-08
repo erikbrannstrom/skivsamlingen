@@ -215,7 +215,7 @@ class CollectionController extends Controller
             ]);
         }
 
-        $record = Record::with('artist')->find($recordId);
+        $record = Record::find($recordId);
         return redirect('/artists/' . $record->artist_id)
             ->with('success', 'Skivan har lagts till i din samling.');
     }
