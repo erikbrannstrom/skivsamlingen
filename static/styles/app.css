@@ -8,8 +8,8 @@
     --color-brand:             #531a15;   /* headings, accents */
     --color-link:              #3681a2;
     --color-text:              #333;
-    --color-bg:                #eaeaea;   /* page background */
-    --color-surface:           #fff;      /* content/card background */
+    --color-bg:                #f0f0f0;   /* page background */
+    --color-surface:           #fefefe;      /* content/card background */
     --color-footer:            #000;      /* footer background */
     --color-search-bg:         #ede8d6;   /* search input */
 
@@ -277,7 +277,7 @@ ul.donate li {
 
 .box {
     background-color: var(--color-bg-subtle);
-    padding: var(--space-1);
+    padding: var(--space-1) var(--space-2);
     margin: var(--space-1) 0;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -303,7 +303,11 @@ ul.donate li {
 table.statistics { width: 100%; }
 table.search { margin: 0.5em; }
 table.search th { border-bottom: 1px var(--color-bg) solid; }
-tr.artist td { border-bottom: 1px var(--color-bg) solid; font-size: 1.1em; padding: 0.1em 0; }
+tr.artist td {
+    border-bottom: 1px var(--color-bg) solid;
+    font-size: 1.1em;
+    padding-top: var(--space-1);
+}
 tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid; }
 
 /* Pagination
