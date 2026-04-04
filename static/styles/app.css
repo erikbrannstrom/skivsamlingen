@@ -4,14 +4,16 @@
 -------------------------------------------------------------- */
 
 :root {
-    /* Base colors — change these for theming */
-    --color-brand:             #531a15;   /* headings, accents */
-    --color-link:              #3681a2;
-    --color-text:              #333;
-    --color-bg:                #f0f0f0;   /* page background */
-    --color-surface:           #fefefe;      /* content/card background */
-    --color-footer:            #000;      /* footer background */
-    --color-search-bg:         #ede8d6;   /* search input */
+    /* Base colors */
+    --color-brand:             #C5391A;   /* vintage warm red — like a 70s record label */
+    --color-accent:            #E8843A;   /* amber orange — warm secondary pop */
+    --color-link:              #1E5FA8;   /* confident deep blue */
+    --color-text:              #1A1A2E;   /* deep navy-black — richer than flat #333 */
+    --color-bg:                #F5F0E8;   /* warm parchment */
+    --color-surface:           #FFFFFF;   /* clean white surface */
+    --color-footer:            #1A1A2E;   /* deep navy footer */
+    --color-search-bg:         #EDE8D6;   /* warm beige */
+    --color-header-bg:         #F7F2EA;   /* light warm cream for header */
 
     /* Alert colors */
     --color-error-bg:    #FBE3E4;
@@ -22,46 +24,38 @@
     --color-success-text:#264409;
 
     /* Derived colors */
-    --color-text-muted:     color-mix(in srgb, var(--color-text) 75%, white);
-    --color-footer-text:    color-mix(in srgb, var(--color-surface) 94%, black);
-    --color-bg-subtle:      color-mix(in srgb, var(--color-bg) 20%, var(--color-surface));
-    --color-border:         color-mix(in srgb, var(--color-bg) 87%, black);
-    --color-border-light:   color-mix(in srgb, var(--color-bg) 94%, black);
-    --color-border-input:   color-mix(in srgb, var(--color-bg) 80%, black);
-    --color-border-brand:   color-mix(in srgb, var(--color-brand) 30%, white);
-    --color-header-bg:      color-mix(in srgb, var(--color-footer) 45%, transparent);
-    --color-menu-hover-bg:  color-mix(in srgb, var(--color-surface) 50%, transparent);
-    --color-error-border:   color-mix(in srgb, var(--color-error-bg) 85%, black);
-    --color-notice-border:  color-mix(in srgb, var(--color-notice-bg) 85%, black);
-    --color-success-border: color-mix(in srgb, var(--color-success-bg) 85%, black);
+    --color-text-muted:     color-mix(in srgb, var(--color-text) 55%, white);
+    --color-footer-text:    color-mix(in srgb, var(--color-surface) 88%, #8899BB);
+    --color-bg-subtle:      color-mix(in srgb, var(--color-bg) 60%, var(--color-surface));
+    --color-border:         color-mix(in srgb, var(--color-bg) 60%, #C8BAA0);
+    --color-border-light:   color-mix(in srgb, var(--color-bg) 80%, #C8BAA0);
+    --color-border-input:   color-mix(in srgb, var(--color-bg) 50%, #B0A090);
+    --color-border-brand:   color-mix(in srgb, var(--color-brand) 35%, white);
+    --color-menu-hover-bg:  var(--color-brand);
+    --color-error-border:   color-mix(in srgb, var(--color-error-bg) 75%, #8a1f11);
+    --color-notice-border:  color-mix(in srgb, var(--color-notice-bg) 75%, #514721);
+    --color-success-border: color-mix(in srgb, var(--color-success-bg) 75%, #264409);
 
     /* Spacing — 8px grid */
-    --space-half: 4px;   /*  0.5 × 8px */
-    --space-1:    8px;   /*  1   × 8px */
-    --space-2:    16px;  /*  2   × 8px */
-    --space-3:    24px;  /*  3   × 8px */
-    --space-4:    32px;  /*  4   × 8px */
-    --space-5:    40px;  /*  5   × 8px */
+    --space-half: 4px;
+    --space-1:    8px;
+    --space-2:    16px;
+    --space-3:    24px;
+    --space-4:    32px;
+    --space-5:    40px;
+
+    /* Fonts */
+    --font-logo:     'Abril Fatface', Georgia, serif;
+    --font-nav:      'Lora', Georgia, sans-serif;
+    --font-heading:  'Lora', Georgia, serif;
+    --font-body:     'Lora', Georgia, serif;
 
     /* Misc tokens */
     --radius-sm:         4px;
     --radius-md:         8px;
-    --content-max-width: 960px;
+    --content-max-width: 1080px;
 }
 
-/* Fonts
--------------------------------------------------------------- */
-
-@font-face {
-    font-family: 'BorisBlackBloxx';
-    src: url('borisblackbloxx-webfont.eot');
-    src: local('☺'),
-         url('borisblackbloxx-webfont.woff') format('woff'),
-         url('borisblackbloxx-webfont.ttf') format('truetype'),
-         url('borisblackbloxx-webfont.svg#webfontNW4CPWcX') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
 
 /* Reset + Base
 -------------------------------------------------------------- */
@@ -69,8 +63,8 @@
 * { margin: 0; padding: 0; }
 
 body {
-    font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 14px;
     line-height: 1.7em;
     color: var(--color-text);
     background-color: var(--color-bg);
@@ -86,21 +80,31 @@ a {
     font-weight: normal;
 }
 
-h1, h2, h3 { font-family: Trebuchet, Tahoma, Arial, sans-serif; }
+a:hover {
+    color: var(--color-brand);
+}
+
+h1, h2, h3 { font-family: var(--font-heading); }
 
 h1 {
     font-size: 1.6em;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 h2 {
-    font-size: 1.5em;
+    font-size: 1.35em;
+    font-weight: 600;
     margin: 0.5em 0;
+    color: var(--color-brand);
+    letter-spacing: 0;
 }
 
 h3 {
     margin: 0.4em 0;
-    font-size: 1.2em;
+    font-size: 1.1em;
+    font-weight: 400;
+    color: var(--color-brand);
+    letter-spacing: 0;
 }
 
 td { padding: 0.1em 0.2em; }
@@ -159,54 +163,131 @@ hr.no-line {
 /* Structural IDs
 -------------------------------------------------------------- */
 
+/*
+ * Header — single horizontal row: logo badge left, nav+search right.
+ * Light warm cream background. Overflow hidden clips the groove rings.
+ * The rings are anchored at the far right edge and bleed off-screen,
+ * giving a subtle half-disc record motif without dominating the layout.
+ */
 #top {
-    height: 100px;
-    background: url('../images/vinyl-background.jpg') top left repeat-x;
+    height: 72px;
+    overflow: hidden;
+    background-color: var(--color-header-bg);
+    /* Groove rings centred on the right edge, radiating inward */
+    background-image:
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            rgba(197, 57, 26, 0.13) 0px,  rgba(197, 57, 26, 0.13) 22px, transparent 22px),
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            transparent 32px, rgba(197, 57, 26, 0.10) 32px, rgba(197, 57, 26, 0.10) 33px, transparent 33px),
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            transparent 44px, rgba(197, 57, 26, 0.08) 44px, rgba(197, 57, 26, 0.08) 45px, transparent 45px),
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            transparent 58px, rgba(197, 57, 26, 0.06) 58px, rgba(197, 57, 26, 0.06) 59px, transparent 59px),
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            transparent 74px, rgba(197, 57, 26, 0.04) 74px, rgba(197, 57, 26, 0.04) 75px, transparent 75px),
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            transparent 92px, rgba(197, 57, 26, 0.03) 92px, rgba(197, 57, 26, 0.03) 93px, transparent 93px),
+        radial-gradient(circle at calc(100% + 10px) 50%,
+            transparent 112px, rgba(197, 57, 26, 0.02) 112px, rgba(197, 57, 26, 0.02) 113px, transparent 113px);
+    border-top: 4px solid var(--color-brand);
+    border-bottom: 1px solid rgba(197, 57, 26, 0.18);
 }
 
+/*
+ * Single-row flex: logo badge pinned left, nav+search fill the right.
+ * Everything vertically centred.
+ */
 #header {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    height: 90px;
-    background: var(--color-header-bg);
-    padding: 5px;
+    height: 72px;
+    background: transparent;
+    padding: 0 var(--space-2);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
 }
 
-#header nav {
+/* Logo — inline record icon + text stack, no background needed */
+#header h1 {
+    flex-shrink: 0;
     display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    padding: 0;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.logo-record {
+    display: block;
+    flex-shrink: 0;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.logo-tagline {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.logo-name {
+    font-family: var(--font-logo);
+    font-size: 36px;
+    color: var(--color-brand);
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+/* Nav fills remaining space; menu links left, search pushed right */
+#header nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
 #menu {
     display: flex;
     align-items: center;
-    height: 30px;
-    line-height: 30px;
-    padding: 2px;
+    gap: 2px;
+    padding: 0;
     margin: 0;
 }
 
 #menu a.item {
-    letter-spacing: 0.1em;
-    color: var(--color-surface);
-    font-size: 20px;
-    font-family: BorisBlackBloxx, "Arial Black", sans-serif;
-    height: 30px;
-    line-height: 28px;
+    letter-spacing: 0.03em;
+    color: var(--color-text);
+    font-size: 17px;
+    font-weight: 600;
+    font-family: var(--font-nav);
     display: block;
-    padding: 0 10px;
-    margin: 0 10px;
+    padding: 6px 12px;
+    margin: 0;
     text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: color 0.12s ease, background-color 0.12s ease;
+    line-height: 1.1;
 }
 
 #menu a.item:hover {
-    color: var(--color-footer);
-    background: var(--color-menu-hover-bg);
+    color: var(--color-surface);
+    background: var(--color-brand);
 }
 
 #page {
     padding: 15px;
-    background: url('../images/line-gradient.png') top left repeat-x;
+    background: linear-gradient(to bottom, #E8DFD0 0px, var(--color-bg) 32px);
 }
 
 #content {
@@ -216,40 +297,47 @@ hr.no-line {
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
     border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(26, 26, 46, 0.06);
 }
 
 #footer {
     max-width: var(--content-max-width);
     margin: 1em auto 0;
     padding: 10px 5px;
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(197, 57, 26, 0.25);
+    border-top: 3px solid var(--color-brand);
     background-color: var(--color-footer);
     border-radius: var(--radius-sm);
     color: var(--color-footer-text);
 }
 
-#footer a { color: var(--color-footer-text); }
+#footer a {
+    color: var(--color-footer-text);
+}
+
+#footer a:hover {
+    color: var(--color-accent);
+}
 
 /* Search input
 -------------------------------------------------------------- */
 
 input#query {
-    margin-left: auto;
-    border: 1px solid var(--color-text);
-    padding: var(--space-half);
-    padding-left: var(--space-3);
+    border: 1px solid var(--color-border-input);
+    padding: 5px var(--space-half) 5px var(--space-3);
     border-radius: var(--radius-sm);
-    height: 18px;
-    width: 267px;
-    margin-top: var(--space-half);
-    margin-bottom: var(--space-half);
-    background: var(--color-search-bg) url("../images/icons/search.png") no-repeat 3px 50%;
+    height: 20px;
+    width: 220px;
+    background: var(--color-search-bg) url("../images/icons/search.png") no-repeat 5px 50%;
     display: block;
+    transition: border-color 0.15s ease;
 }
 
 input#query:hover,
 input#query:focus {
     background: var(--color-bg-subtle) url("../images/icons/search.png") no-repeat 3px 50%;
+    border-color: var(--color-brand);
+    outline: none;
 }
 
 .ui-menu .ui-menu-item a.total {
@@ -264,7 +352,8 @@ input#query:focus {
 img.gravatar {
     float: right;
     margin: 0 0 var(--space-half) var(--space-half);
-    border: 2px solid var(--color-text-muted);
+    border: 2px solid var(--color-border-brand);
+    border-radius: var(--radius-sm);
 }
 
 ul.donate {
@@ -278,8 +367,9 @@ ul.donate li {
 .box {
     background-color: var(--color-bg-subtle);
     padding: var(--space-1) var(--space-2);
-    margin: var(--space-1) 0;
+    margin: var(--space-2) 0;
     border: 1px solid var(--color-border);
+    border-left: 3px solid color-mix(in srgb, var(--color-brand) 50%, white);
     border-radius: var(--radius-md);
 }
 
@@ -333,6 +423,7 @@ tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid;
 .pagination a {
     border: solid 1px var(--color-border-light);
     padding: var(--space-half) var(--space-1);
+    border-radius: var(--radius-sm);
 }
 
 .pagination .off {
@@ -353,11 +444,12 @@ tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid;
 }
 
 .pagination a:hover {
-    border: solid 1px var(--color-text-muted);
+    border: solid 1px var(--color-brand);
+    color: var(--color-brand);
 }
 
 .order li.active { padding: 0; }
-.order .active a { border-color: var(--color-footer); font-weight: bold; }
+.order .active a { border-color: var(--color-brand); font-weight: bold; color: var(--color-brand); }
 .direction { margin: 2em 0; float: right; }
 
 /* Form fields
@@ -381,17 +473,20 @@ input.text, input.title,
 textarea, select {
     margin: 0.5em 0;
     border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.15s ease;
 }
 
 input.text:focus, input.title:focus,
 textarea:focus, select:focus {
-    border: 1px solid var(--color-text-muted);
+    border: 1px solid var(--color-brand);
+    outline: none;
 }
 
 input.text,
 input.title { width: 290px; padding: 5px; }
 input.title { font-size: 1.5em; }
-textarea { width: 390px; height: 250px; padding: 5px; font-family: 'Lucida Grande', Verdana, sans-serif; font-size: 11px; }
+textarea { width: 390px; height: 250px; padding: 5px; font-family: var(--font-body); font-size: 11px; }
 
 input.small { width: 100px; }
 input.x-small { width: 50px; }
@@ -417,13 +512,22 @@ input.x-small { width: 50px; }
     display: flex;
     margin: 0 var(--space-1) 0 0;
     background-color: var(--color-bg-subtle);
-    border: 1px solid var(--color-border-light);
-    font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    border: 1px solid var(--color-border);
+    font-family: var(--font-body);
     text-decoration: none;
     font-weight: bold;
     color: var(--color-text-muted);
     cursor: pointer;
     padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.buttons a:hover,
+.buttons button:hover,
+.buttons input[type="submit"]:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
 }
 
 .buttons button {
@@ -447,7 +551,7 @@ input.x-small { width: 50px; }
 
 .error,
 .notice,
-.success { padding: .8em; margin: 1em 0; border: 2px solid var(--color-border); }
+.success { padding: .8em; margin: 1em 0; border: 2px solid var(--color-border); border-radius: var(--radius-sm); }
 
 .error   { background: var(--color-error-bg);   color: var(--color-error-text);   border-color: var(--color-error-border); }
 .notice  { background: var(--color-notice-bg);  color: var(--color-notice-text);  border-color: var(--color-notice-border); }

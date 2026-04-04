@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $page_title ?? 'Skivsamlingen' }}</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Jost:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link href="/static/styles/app.css" rel="stylesheet">
     <link href="/static/styles/tipTip.css" rel="stylesheet" media="screen">
     <link rel="shortcut icon" href="/static/favicon.ico">
@@ -125,7 +128,22 @@
 
 <div id="header">
 
-<h1><img src="/static/images/skivsamlingen.png" alt="Skivsamlingen"></h1>
+<h1>
+    <svg class="logo-record" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="40" height="40" aria-hidden="true">
+        <circle cx="22" cy="22" r="21" fill="#1A1A2E"/>
+        <circle cx="22" cy="22" r="19" fill="none" stroke="#2A2A3E" stroke-width="0.9"/>
+        <circle cx="22" cy="22" r="16" fill="none" stroke="#252535" stroke-width="0.7"/>
+        <circle cx="22" cy="22" r="13" fill="none" stroke="#2A2A3E" stroke-width="0.6"/>
+        <circle cx="22" cy="22" r="10" fill="none" stroke="#252535" stroke-width="0.5"/>
+        <circle cx="22" cy="22" r="8" fill="#C5391A"/>
+        <circle cx="22" cy="22" r="6" fill="none" stroke="#E86040" stroke-width="0.5"/>
+        <circle cx="22" cy="22" r="2.5" fill="#1A1A2E"/>
+    </svg>
+    <span class="logo-text">
+        <span class="logo-name">Skivsamlingen</span>
+        <span class="logo-tagline">musik är en livsstil.</span>
+    </span>
+</h1>
 
     <nav>
         <div id="menu">

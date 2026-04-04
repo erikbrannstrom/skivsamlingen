@@ -13,7 +13,7 @@
     <circle cx="25" cy="25" r="15" fill="none" stroke="#1e1e1e" stroke-width="0.7"/>
     <circle cx="25" cy="25" r="13" fill="none" stroke="#252525" stroke-width="0.8"/>
     <circle cx="25" cy="25" r="11" fill="none" stroke="#1e1e1e" stroke-width="0.6"/>
-    <circle cx="25" cy="25" r="9" fill="#e8674a"/>
-    <circle cx="25" cy="25" r="7.5" fill="none" stroke="#f0896e" stroke-width="0.6"/>
+    <circle cx="25" cy="25" r="9" fill="#C5391A"/>
+    <circle cx="25" cy="25" r="7.5" fill="none" stroke="#E86040" stroke-width="0.6"/>
     <circle cx="25" cy="25" r="2" fill="#0a0a0a"/>
 </svg>
