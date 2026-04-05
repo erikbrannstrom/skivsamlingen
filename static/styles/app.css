@@ -48,8 +48,8 @@
     --content-padding: var(--space-2);
     --logo-gap:        10px;
     --form-padding:    var(--space-1);
-    --alert-padding:   var(--space-2);
-    --alert-margin:    var(--space-2);
+    --alert-padding:   var(--space-1);
+    --alert-margin:    var(--space-1);
 
     /* Fonts */
     --font-logo:     'Abril Fatface', Georgia, serif;
@@ -207,7 +207,7 @@ hr.no-line {
 #header {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: var(--space-2) var(--space-1);
+    padding: var(--space-2) 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -603,7 +603,7 @@ a.rss-link {
 .success {
     padding: var(--alert-padding);
     margin: var(--alert-margin) 0;
-    border: 2px solid var(--color-border);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
 }
 

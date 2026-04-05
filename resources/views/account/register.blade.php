@@ -95,7 +95,6 @@ $(function() {
 <div class="form-actions">
 <div class="buttons">
     <button type="submit" class="positive">
-        <img src="/static/images/icons/tick.png" alt=""/>
         Bli medlem
     </button>
 </div>

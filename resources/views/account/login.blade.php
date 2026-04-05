@@ -22,11 +22,13 @@
     <br />
     <div class="buttons">
         <button type="submit" class="positive">
-            <img src="/static/images/icons/tick.png" alt=""/>
             Logga in
         </button>
     </div>
 </form>
 
+<hr />
+
 <a href="/account/forgot">Glömt ditt lösenord?</a>
+
 @endsection
