@@ -43,6 +43,14 @@
     --space-4:    32px;
     --space-5:    40px;
 
+    /* Structural spacing */
+    --page-padding:    var(--space-2);
+    --content-padding: var(--space-2);
+    --logo-gap:        10px;
+    --form-padding:    var(--space-1);
+    --alert-padding:   var(--space-2);
+    --alert-margin:    var(--space-2);
+
     /* Fonts */
     --font-logo:     'Abril Fatface', Georgia, serif;
     --font-nav:      'Lora', Georgia, sans-serif;
@@ -99,13 +107,13 @@ h1 {
 h2 {
     font-size: 1.35em;
     font-weight: 600;
-    margin: 0.5em 0;
+    margin: var(--space-1) 0;
     color: var(--color-brand);
     letter-spacing: 0;
 }
 
 h3 {
-    margin: 0.4em 0;
+    margin: var(--space-half) 0;
     font-size: 1.1em;
     font-weight: 400;
     color: var(--color-brand);
@@ -210,7 +218,7 @@ hr.no-line {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--logo-gap);
     background: none;
     padding: 0;
     line-height: 1;
@@ -252,6 +260,7 @@ hr.no-line {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--space-2);
 }
 
 #menu {
@@ -281,14 +290,14 @@ hr.no-line {
 }
 
 #page {
-    padding: 15px;
+    padding: var(--page-padding);
     background: linear-gradient(to bottom, #E8DFD0 0px, var(--color-bg) 32px);
 }
 
 #content {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: var(--space-2);
+    padding: var(--content-padding);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
     border-radius: var(--radius-sm);
@@ -297,13 +306,16 @@ hr.no-line {
 
 #footer {
     max-width: var(--content-max-width);
-    margin: 1em auto 0;
+    margin: var(--space-2) auto 0;
     padding: var(--space-2);
     border: 1px solid rgba(197, 57, 26, 0.25);
     border-top: 3px solid var(--color-brand);
     background-color: var(--color-footer);
     border-radius: var(--radius-sm);
     color: var(--color-on-dark-bg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
 }
 
 #footer a {
@@ -316,6 +328,11 @@ hr.no-line {
 
 /* Search input
 -------------------------------------------------------------- */
+
+#search {
+    display: flex;
+    align-items: center;
+}
 
 input#query {
     border: 1px solid rgba(255, 255, 255, 0.20);
@@ -357,10 +374,9 @@ img.gravatar {
 
 ul.donate {
     list-style: none;
-}
-
-ul.donate li {
-    display: inline-block;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
 }
 
 .box {
@@ -372,7 +388,7 @@ ul.donate li {
     border-radius: var(--radius-md);
 }
 
-.box h3 { margin: 0.2em 0; }
+.box h3 { margin: var(--space-half) 0; }
 .box li { list-style-position: inside; }
 
 /* Page navigation bar (pagination + sort links)
@@ -383,6 +399,7 @@ ul.donate li {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: var(--space-2);
     margin: var(--space-3) 0;
 }
 
@@ -390,7 +407,7 @@ ul.donate li {
 -------------------------------------------------------------- */
 
 table.statistics { width: 100%; }
-table.search { margin: 0.5em; }
+table.search { margin: var(--space-1); }
 table.search th { border-bottom: 1px var(--color-bg) solid; }
 tr.artist td {
     border-bottom: 1px var(--color-bg) solid;
@@ -408,6 +425,7 @@ tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid;
     align-items: center;
     gap: var(--space-half);
     border: 0;
+    flex-wrap: wrap;
 }
 
 .pagination li {
@@ -432,7 +450,6 @@ tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid;
 
 .pagination .active {
     font-weight: bold;
-    float: left;
     padding: var(--space-half) var(--space-1);
 }
 
@@ -449,7 +466,6 @@ tr.separator td, tr.separator th { border-bottom: 1px var(--color-border) solid;
 
 .order li.active { padding: 0; }
 .order .active a { border-color: var(--color-brand); font-weight: bold; color: var(--color-brand); }
-.direction { margin: 2em 0; float: right; }
 
 /* Form fields
 -------------------------------------------------------------- */
@@ -458,7 +474,7 @@ label {
     display: block;
     font-size: 1.2em;
     font-weight: bold;
-    margin-top: 0.5em;
+    margin-top: var(--space-1);
 }
 
 form span {
@@ -470,7 +486,7 @@ form span.text { font-size: 12px; }
 
 input.text, input.title,
 textarea, select {
-    margin: 0.5em 0;
+    margin: var(--space-1) 0;
     border: 1px solid var(--color-border-input);
     border-radius: var(--radius-sm);
     transition: border-color 0.15s ease;
@@ -483,9 +499,9 @@ textarea:focus, select:focus {
 }
 
 input.text,
-input.title { width: 290px; padding: 5px; }
+input.title { width: 290px; max-width: 100%; padding: var(--form-padding); }
 input.title { font-size: 1.5em; }
-textarea { width: 390px; height: 250px; padding: 5px; font-family: var(--font-body); font-size: 11px; }
+textarea { width: 390px; max-width: 100%; height: 250px; padding: var(--form-padding); font-family: var(--font-body); font-size: 11px; }
 
 input.small { width: 100px; }
 input.x-small { width: 50px; }
@@ -494,12 +510,15 @@ input.x-small { width: 50px; }
 -------------------------------------------------------------- */
 
 .form-actions {
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .buttons {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-1);
 }
 
 /* Buttons
@@ -509,7 +528,7 @@ input.x-small { width: 50px; }
 .buttons button,
 .buttons input[type="submit"] {
     display: flex;
-    margin: 0 var(--space-1) 0 0;
+    align-items: center;
     background-color: var(--color-bg-subtle);
     border: 1px solid var(--color-border);
     font-family: var(--font-body);
@@ -550,7 +569,12 @@ input.x-small { width: 50px; }
 
 .error,
 .notice,
-.success { padding: .8em; margin: 1em 0; border: 2px solid var(--color-border); border-radius: var(--radius-sm); }
+.success {
+    padding: var(--alert-padding);
+    margin: var(--alert-margin) 0;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
 
 .error   { background: var(--color-error-bg);   color: var(--color-error-text);   border-color: var(--color-error-border); }
 .notice  { background: var(--color-notice-bg);  color: var(--color-notice-text);  border-color: var(--color-notice-border); }
@@ -558,3 +582,101 @@ input.x-small { width: 50px; }
 .error a   { color: var(--color-error-text); }
 .notice a  { color: var(--color-notice-text); }
 .success a { color: var(--color-success-text); }
+
+/* Mobile — 768px breakpoint
+-------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    :root {
+        --page-padding:    var(--space-1);
+        --content-padding: var(--space-1);
+    }
+
+    /* Stack header: logo on top, nav below */
+    #header {
+        flex-wrap: wrap;
+        gap: var(--space-1);
+        padding: var(--space-1);
+    }
+
+    #header h1 {
+        flex: 1 0 100%;
+    }
+
+    /* Nav: menu links wrap, search goes below */
+    #header nav {
+        flex: 1 0 100%;
+        flex-wrap: wrap;
+        gap: var(--space-1);
+    }
+
+    #menu {
+        flex-wrap: wrap;
+        gap: var(--space-half);
+    }
+
+    #menu a.item {
+        font-size: 15px;
+        padding: var(--space-half) var(--space-1);
+    }
+
+    /* Hide search on mobile — too cramped in stacked header */
+    #search {
+        display: none;
+    }
+
+    .logo-name {
+        font-size: 28px;
+    }
+
+    /* Stack main + sidebar vertically */
+    .layout {
+        flex-direction: column;
+        gap: var(--space-2);
+        padding: 0;
+    }
+
+    /* Stack two-column grids */
+    .cols-2 {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+
+    /* Tables scroll horizontally rather than overflow */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Full-width form inputs */
+    input.text,
+    input.title,
+    textarea,
+    select {
+        width: 100%;
+    }
+
+    /* Footer wraps on small screens */
+    #footer {
+        flex-wrap: wrap;
+        gap: var(--space-1);
+    }
+}
+
+/* Small mobile — 480px breakpoint
+-------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .logo-name {
+        font-size: 24px;
+    }
+
+    .logo-tagline {
+        font-size: 9px;
+    }
+
+    #menu a.item {
+        font-size: 14px;
+    }
+}
