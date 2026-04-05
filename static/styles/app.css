@@ -217,12 +217,15 @@ hr.no-line {
 /* Logo — inline record icon + text stack, no background needed */
 #header h1 {
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: var(--logo-gap);
     background: none;
     padding: 0;
     line-height: 1;
+}
+
+#header h1 a {
+    display: flex;
+    align-items: center;
+    gap: var(--logo-gap);
     text-decoration: none;
 }
 
