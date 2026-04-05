@@ -7,13 +7,13 @@
     /* Base colors */
     --color-brand:             #C5391A;   /* vintage warm red — like a 70s record label */
     --color-accent:            #E8843A;   /* amber orange — warm secondary pop */
-    --color-link:              #1E5FA8;   /* confident deep blue */
+    --color-link:              #1B6878;   /* warm teal — bridges navy and parchment without the cool corporate blue */
     --color-text:              #1A1A2E;   /* deep navy-black — richer than flat #333 */
     --color-bg:                #F5F0E8;   /* warm parchment */
     --color-surface:           #FFFFFF;   /* clean white surface */
     --color-footer:            #1A1A2E;   /* deep navy footer */
     --color-search-bg:         #EDE8D6;   /* warm beige */
-    --color-header-bg:         #F7F2EA;   /* light warm cream for header */
+    --color-header-bg:         #12192E;   /* dark navy header */
 
     /* Alert colors */
     --color-error-bg:    #FBE3E4;
@@ -59,6 +59,12 @@
 
 /* Reset + Base
 -------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
 * { margin: 0; padding: 0; }
 
@@ -170,27 +176,8 @@ hr.no-line {
  * giving a subtle half-disc record motif without dominating the layout.
  */
 #top {
-    height: 72px;
-    overflow: hidden;
     background-color: var(--color-header-bg);
-    /* Groove rings centred on the right edge, radiating inward */
-    background-image:
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            rgba(197, 57, 26, 0.13) 0px,  rgba(197, 57, 26, 0.13) 22px, transparent 22px),
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            transparent 32px, rgba(197, 57, 26, 0.10) 32px, rgba(197, 57, 26, 0.10) 33px, transparent 33px),
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            transparent 44px, rgba(197, 57, 26, 0.08) 44px, rgba(197, 57, 26, 0.08) 45px, transparent 45px),
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            transparent 58px, rgba(197, 57, 26, 0.06) 58px, rgba(197, 57, 26, 0.06) 59px, transparent 59px),
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            transparent 74px, rgba(197, 57, 26, 0.04) 74px, rgba(197, 57, 26, 0.04) 75px, transparent 75px),
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            transparent 92px, rgba(197, 57, 26, 0.03) 92px, rgba(197, 57, 26, 0.03) 93px, transparent 93px),
-        radial-gradient(circle at calc(100% + 10px) 50%,
-            transparent 112px, rgba(197, 57, 26, 0.02) 112px, rgba(197, 57, 26, 0.02) 113px, transparent 113px);
-    border-top: 4px solid var(--color-brand);
-    border-bottom: 1px solid rgba(197, 57, 26, 0.18);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /*
@@ -200,9 +187,7 @@ hr.no-line {
 #header {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    height: 72px;
-    background: transparent;
-    padding: 0 var(--space-2);
+    padding: var(--space-2) var(--space-1);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -235,7 +220,7 @@ hr.no-line {
 .logo-tagline {
     font-family: var(--font-body);
     font-size: 10px;
-    color: var(--color-text-muted);
+    color: rgba(255, 255, 255, 0.5);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     line-height: 1;
@@ -244,7 +229,7 @@ hr.no-line {
 .logo-name {
     font-family: var(--font-logo);
     font-size: 36px;
-    color: var(--color-brand);
+    color: #C4A44E;
     letter-spacing: 0.01em;
     line-height: 1;
 }
@@ -267,7 +252,7 @@ hr.no-line {
 
 #menu a.item {
     letter-spacing: 0.03em;
-    color: var(--color-text);
+    color: rgba(255, 255, 255, 0.85);
     font-size: 17px;
     font-weight: 600;
     font-family: var(--font-nav);
@@ -293,7 +278,7 @@ hr.no-line {
 #content {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: 10px 5px;
+    padding: var(--space-2);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
     border-radius: var(--radius-sm);
@@ -303,7 +288,7 @@ hr.no-line {
 #footer {
     max-width: var(--content-max-width);
     margin: 1em auto 0;
-    padding: 10px 5px;
+    padding: var(--space-2);
     border: 1px solid rgba(197, 57, 26, 0.25);
     border-top: 3px solid var(--color-brand);
     background-color: var(--color-footer);
@@ -323,19 +308,24 @@ hr.no-line {
 -------------------------------------------------------------- */
 
 input#query {
-    border: 1px solid var(--color-border-input);
-    padding: 5px var(--space-half) 5px var(--space-3);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    padding: var(--space-1);
+    padding-left: var(--space-3);
     border-radius: var(--radius-sm);
-    height: 20px;
     width: 220px;
-    background: var(--color-search-bg) url("../images/icons/search.png") no-repeat 5px 50%;
+    background: rgba(255, 255, 255, 0.10) url("../images/icons/search.png") no-repeat 5px 50%;
+    color: rgba(255, 255, 255, 0.9);
     display: block;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+input#query::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 input#query:hover,
 input#query:focus {
-    background: var(--color-bg-subtle) url("../images/icons/search.png") no-repeat 3px 50%;
+    background: rgba(255, 255, 255, 0.15) url("../images/icons/search.png") no-repeat 3px 50%;
     border-color: var(--color-brand);
     outline: none;
 }

@@ -130,14 +130,14 @@
 
 <h1>
     <svg class="logo-record" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="40" height="40" aria-hidden="true">
-        <circle cx="22" cy="22" r="21" fill="#1A1A2E"/>
-        <circle cx="22" cy="22" r="19" fill="none" stroke="#2A2A3E" stroke-width="0.9"/>
-        <circle cx="22" cy="22" r="16" fill="none" stroke="#252535" stroke-width="0.7"/>
-        <circle cx="22" cy="22" r="13" fill="none" stroke="#2A2A3E" stroke-width="0.6"/>
-        <circle cx="22" cy="22" r="10" fill="none" stroke="#252535" stroke-width="0.5"/>
-        <circle cx="22" cy="22" r="8" fill="#C5391A"/>
-        <circle cx="22" cy="22" r="6" fill="none" stroke="#E86040" stroke-width="0.5"/>
-        <circle cx="22" cy="22" r="2.5" fill="#1A1A2E"/>
+        <circle cx="22" cy="22" r="21" fill="#2A3352"/>
+        <circle cx="22" cy="22" r="19" fill="none" stroke="#4A5275" stroke-width="0.9"/>
+        <circle cx="22" cy="22" r="16" fill="none" stroke="#3D4565" stroke-width="0.7"/>
+        <circle cx="22" cy="22" r="13" fill="none" stroke="#4A5275" stroke-width="0.6"/>
+        <circle cx="22" cy="22" r="10" fill="none" stroke="#3D4565" stroke-width="0.5"/>
+        <circle cx="22" cy="22" r="8" fill="#C4A44E"/>
+        <circle cx="22" cy="22" r="6" fill="none" stroke="#D4B86A" stroke-width="0.5"/>
+        <circle cx="22" cy="22" r="2.5" fill="#12192E"/>
     </svg>
     <span class="logo-text">
         <span class="logo-name">Skivsamlingen</span>
@@ -185,7 +185,7 @@
 </div>
 
 <div id="footer">
-<a href="/about">Om Skivsamlingen</a> | Denna webbsida använder <a href="/about">cookies</a>.
+    <a href="/about">Om Skivsamlingen</a> | Denna webbsida använder <a href="/about">cookies</a>.
 </div>
 
 </div>
