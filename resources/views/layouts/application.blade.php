@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Jost:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link href="/static/styles/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="/static/styles/tipTip.css" rel="stylesheet" media="screen">
     <link rel="shortcut icon" href="/static/favicon.ico">
     <link href="/static/styles/custom-theme/jquery-ui-1.8.2.custom.css" rel="stylesheet">
@@ -160,7 +161,7 @@
 
         <form method="post" action="/users/search" name="search" id="search">
             @csrf
-            <input type="text" name="query" id="query" placeholder="Sök medlemmar.." value="{{ old('query', '') }}" />
+            <input type="text" name="query" id="query" placeholder="Sök medlemmar..." value="{{ old('query', '') }}" />
         </form>
     </nav>
 

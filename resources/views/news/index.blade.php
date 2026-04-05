@@ -23,7 +23,7 @@
         <p>Vill du enkelt hålla koll på när det sker uppdateringar på Skivsamlingen?</p>
         <p>Allt du behöver är en RSS-läsare där du kan
             lägga till vår RSS-feed. Klicka på ikonen nedan för adressen!</p>
-        <p><a href="/news/rss"><img src="/static/images/icons/feed-icon-28x28.png" /></a></p>
+        <p><a href="/news/rss" title="RSS-feed" class="rss-link"><i class="fa-solid fa-rss"></i></a></p>
     </div>
 
 @endsection

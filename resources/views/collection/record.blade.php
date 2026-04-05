@@ -42,13 +42,13 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 <br />
 <div class="buttons">
     <button type="submit" class="positive">
-        <img src="/static/images/icons/tick.png" alt=""/>
+        <i class="fa-solid fa-check" aria-hidden="true"></i>
         {{ $id == 0 ? 'Lägg till' : 'Spara' }}
     </button>
 </form>
 @if($id > 0)
     <a href="/collection/delete/{{ $record->id }}" class="positive button">
-        <img src="/static/images/icons/delete-icon.png" alt=""/>
+        <i class="fa-solid fa-trash" aria-hidden="true"></i>
         Ta bort skiva
     </a>
 @endif
@@ -73,7 +73,7 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
 
     <div class="buttons">
         <button type="submit" class="positive">
-            <img src="/static/images/icons/tick.png" alt=""/>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
             Spara
         </button>
 </form>
@@ -82,7 +82,7 @@ För samlingsskivor med blandade artister, använd gärna Various eller V/A. Max
     <input type="hidden" name="record" value="{{ $record->id }}" />
     <input type="hidden" name="action" value="delete" />
     <button type="submit" class="positive">
-        <img src="/static/images/icons/delete-icon.png" alt=""/>
+        <i class="fa-solid fa-trash" aria-hidden="true"></i>
         Ta bort kommentar
     </button>
 </form>

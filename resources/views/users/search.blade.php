@@ -15,9 +15,9 @@ Din sökning efter <strong>{{ $query }}</strong> fick {{ count($users) }} {{ cou
 <tr>
     <td>
         @if($user->sex == 'm')
-            <img src="/static/images/icons/male.png" />
+            <i class="fa-solid fa-mars" title="Man"></i>
         @elseif($user->sex == 'f')
-            <img src="/static/images/icons/female.png" />
+            <i class="fa-solid fa-venus" title="Kvinna"></i>
         @endif
     </td>
     <td><a href="/users/{{ $user->username }}">{{ $user->username }}</a></td>

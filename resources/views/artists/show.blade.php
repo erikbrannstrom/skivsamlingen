@@ -37,13 +37,13 @@
             @auth
             <td>
                 @if($ownedRecordIds->contains($record->id))
-                    <img src="/static/images/icons/tick.png" width="14" title="I din samling" />
+                    <i class="fa-solid fa-check icon-owned" title="I din samling"></i>
                 @else
-                    <form method="POST" action="/collection/add" style="display:inline" class="add-to-collection">
+                    <form method="POST" action="/collection/add" class="add-to-collection">
                         @csrf
                         <input type="hidden" name="record_id" value="{{ $record->id }}" />
                         <input type="hidden" name="record_title" value="{{ $record->title }}" />
-                        <button type="submit" style="background:none;border:none;padding:0;cursor:pointer;" title="Lägg till i din samling"><img src="/static/images/icons/add.png" width="14" /></button>
+                        <button type="submit" title="Lägg till i din samling"><i class="fa-solid fa-plus"></i></button>
                     </form>
                 @endif
             </td>

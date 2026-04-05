@@ -59,7 +59,7 @@ $(function() {
     <tr>
         <td>{{ $record->title }}
         @if($record->pivot->comment)
-            <img src="/static/images/icons/comment.png" title="{{ $record->pivot->comment }}" class="comment" />
+            <i class="fa-solid fa-comment comment" title="{{ $record->pivot->comment }}"></i>
         @endif
         </td>
         @if($record->year && $record->format)
@@ -68,7 +68,7 @@ $(function() {
             <td>{{ $record->year }} {{ $record->format }}</td>
         @endif
         @if(Auth::id() == $user->id)
-            <td width="20" valign="middle" align="center"><a href="/collection/record/{{ $record->pivot->id }}"><img src="/static/images/icons/edit.png" width="14" /></a></td>
+            <td width="20" valign="middle" align="center"><a href="/collection/record/{{ $record->pivot->id }}"><i class="fa-solid fa-pen icon-edit"></i></a></td>
         @endif
     </tr>
         @php

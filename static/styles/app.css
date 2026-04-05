@@ -186,6 +186,7 @@ hr.no-line {
     position: relative;
     background-color: var(--color-header-bg);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 8px rgba(26, 26, 46, 0.1);
 }
 
 /* Grain texture — fractal noise at low opacity gives the surface a rough, matte quality */
@@ -301,7 +302,7 @@ hr.no-line {
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
     border-radius: var(--radius-sm);
-    box-shadow: 0 2px 8px rgba(26, 26, 46, 0.06);
+    box-shadow: 0 2px 8px rgba(26, 26, 46, 0.1);
 }
 
 #footer {
@@ -340,7 +341,7 @@ input#query {
     padding-left: var(--space-3);
     border-radius: var(--radius-sm);
     width: 220px;
-    background: rgba(255, 255, 255, 0.10) url("../images/icons/search.png") no-repeat 5px 50%;
+    background: rgba(255, 255, 255, 0.10) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='14' height='14'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z'/%3E%3C/svg%3E") no-repeat 7px 50%;
     color: var(--color-on-dark-bg);
     display: block;
     transition: border-color 0.15s ease, background-color 0.15s ease;
@@ -514,15 +515,15 @@ input.x-small { width: 50px; }
     justify-content: flex-end;
 }
 
+/* Buttons
+-------------------------------------------------------------- */
+
 .buttons {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--space-1);
 }
-
-/* Buttons
--------------------------------------------------------------- */
 
 .buttons a,
 .buttons button,
@@ -534,9 +535,9 @@ input.x-small { width: 50px; }
     font-family: var(--font-body);
     text-decoration: none;
     font-weight: bold;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     cursor: pointer;
-    padding: var(--space-1);
+    padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-sm);
     transition: border-color 0.15s ease, color 0.15s ease;
 }
@@ -555,13 +556,43 @@ input.x-small { width: 50px; }
 }
 
 .buttons button img,
-.buttons a img {
+.buttons a img,
+.buttons button i,
+.buttons a i {
     display: block;
     margin-right: var(--space-1);
     padding: 0;
     border: none;
     width: var(--space-2);
     height: var(--space-2);
+    font-size: var(--space-2);
+}
+
+/* Collection table action icons */
+.icon-owned { color: var(--color-accent); }
+
+.add-to-collection button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Comment indicator inline icon */
+i.comment {
+    font-size: 0.8em;
+    opacity: 0.6;
+    margin-left: var(--space-half);
+}
+
+/* Inline record-edit icon */
+.icon-edit { font-size: 0.8em; }
+
+/* RSS feed link */
+a.rss-link {
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    display: inline-block;
 }
 
 /* Alert boxes
@@ -585,6 +616,12 @@ input.x-small { width: 50px; }
 
 /* Mobile — 768px breakpoint
 -------------------------------------------------------------- */
+
+@media (max-width: 1080px) {
+    #search {
+        display: none;
+    }
+}
 
 @media (max-width: 768px) {
     :root {
@@ -618,11 +655,6 @@ input.x-small { width: 50px; }
     #menu a.item {
         font-size: 15px;
         padding: var(--space-half) var(--space-1);
-    }
-
-    /* Hide search on mobile — too cramped in stacked header */
-    #search {
-        display: none;
     }
 
     .logo-name {

@@ -13,7 +13,7 @@
 <p>
 <div class="buttons">
     <button type="submit" class="positive">
-        <img src="/static/images/icons/delete-icon.png" alt=""/>
+        <i class="fa-solid fa-trash" aria-hidden="true"></i>
         Ta bort
     </button>
 </div>
