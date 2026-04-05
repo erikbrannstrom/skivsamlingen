@@ -11,9 +11,8 @@
     --color-text:              #1A1A2E;   /* deep navy-black — richer than flat #333 */
     --color-bg:                #F5F0E8;   /* warm parchment */
     --color-surface:           #FFFFFF;   /* clean white surface */
-    --color-footer:            #1A1A2E;   /* deep navy footer */
-    --color-search-bg:         #EDE8D6;   /* warm beige */
     --color-header-bg:         #12192E;   /* dark navy header */
+    --color-footer:            var(--color-header-bg);
 
     /* Alert colors */
     --color-error-bg:    #FBE3E4;
@@ -24,8 +23,8 @@
     --color-success-text:#264409;
 
     /* Derived colors */
+    --color-on-dark-bg:   rgba(255, 255, 255, 0.85);  /* primary text on dark/navy surfaces */
     --color-text-muted:     color-mix(in srgb, var(--color-text) 55%, white);
-    --color-footer-text:    color-mix(in srgb, var(--color-surface) 88%, #8899BB);
     --color-bg-subtle:      color-mix(in srgb, var(--color-bg) 60%, var(--color-surface));
     --color-border:         color-mix(in srgb, var(--color-bg) 60%, #C8BAA0);
     --color-border-light:   color-mix(in srgb, var(--color-bg) 80%, #C8BAA0);
@@ -220,7 +219,7 @@ hr.no-line {
 .logo-tagline {
     font-family: var(--font-body);
     font-size: 10px;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--color-on-dark-bg);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     line-height: 1;
@@ -252,7 +251,7 @@ hr.no-line {
 
 #menu a.item {
     letter-spacing: 0.03em;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--color-on-dark-bg);
     font-size: 17px;
     font-weight: 600;
     font-family: var(--font-nav);
@@ -293,11 +292,11 @@ hr.no-line {
     border-top: 3px solid var(--color-brand);
     background-color: var(--color-footer);
     border-radius: var(--radius-sm);
-    color: var(--color-footer-text);
+    color: var(--color-on-dark-bg);
 }
 
 #footer a {
-    color: var(--color-footer-text);
+    color: var(--color-on-dark-bg);
 }
 
 #footer a:hover {
@@ -314,18 +313,17 @@ input#query {
     border-radius: var(--radius-sm);
     width: 220px;
     background: rgba(255, 255, 255, 0.10) url("../images/icons/search.png") no-repeat 5px 50%;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--color-on-dark-bg);
     display: block;
     transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 input#query::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--color-on-dark-bg);
 }
 
 input#query:hover,
 input#query:focus {
-    background: rgba(255, 255, 255, 0.15) url("../images/icons/search.png") no-repeat 3px 50%;
     border-color: var(--color-brand);
     outline: none;
 }
